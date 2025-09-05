@@ -1,0 +1,121 @@
+{
+  "months": {
+  "1": {
+    "name": "January",
+    "phrases": [
+      "New Year's Day",
+      "Martin Luther King Jr. Day"
+    ]
+  },
+  "2": {
+    "name": "February",
+    "phrases": [
+      "Groundhog Day",
+      "Valentine's Day",
+      "Presidents' Day"
+    ]
+  },
+  "3": {
+    "name": "March",
+    "phrases": [
+      "St. Patrick's Day",
+      "Palm Sunday",
+      "Good Friday",
+      "Easter"
+    ]
+  },
+  "4": {
+    "name": "April",
+    "phrases": [
+      "April Fools' Day",
+      "Earth Day",
+      "Arbor Day"
+    ]
+  },
+  "5": {
+    "name": "May",
+    "phrases": [
+      "Mother's Day",
+      "Memorial Day"
+    ]
+  },
+  "6": {
+    "name": "June",
+    "phrases": [
+      "Flag Day",
+      "Juneteenth",
+      "Father's Day"
+    ]
+  },
+  "7": {
+    "name": "July",
+    "phrases": [
+      "Independence Day"
+    ]
+  },
+  "8": {
+    "name": "August",
+    "phrases": [
+      "Back to School"
+    ]
+  },
+  "9": {
+    "name": "September",
+    "phrases": [
+      "Labor Day",
+      "Patriot Day",
+      "Grandparents Day"
+    ]
+  },
+  "10": {
+    "name": "October",
+    "phrases": [
+      "Columbus Day",
+      "Halloween"
+    ]
+  },
+  "11": {
+    "name": "November",
+    "phrases": [
+      "Veterans Day",
+      "Thanksgiving"
+    ]
+  },
+  "12": {
+    "name": "December",
+    "phrases": [
+      "Christmas Eve",
+      "Christmas",
+      "New Year's Eve"
+    ]
+  }
+},
+
+  
+  
+  
+  "quotes": [
+  {
+    "text": "The only way to do great work is to love what you do.",
+    "author": "Steve Jobs"
+  },
+  {
+    "text": "In the middle of every difficulty lies opportunity.",
+    "author": "Albert Einstein"
+  },
+  {
+    "text": "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+    "author": "Winston Churchill"
+  },
+  {
+    "text": "Do what you can, with what you have, where you are.",
+    "author": "Theodore Roosevelt"
+  },
+  {
+    "text": "Happiness is not something ready-made. It comes from your own actions.",
+    "author": "Dalai Lama"
+  }
+]
+
+ 
+}

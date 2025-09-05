@@ -1,0 +1,45 @@
+{
+  "services": [
+    {
+      "column": 1,
+      "description": "",
+      "name": "Quote",
+      "type": "quote"
+    },
+    {
+      "column": 1,
+      "description": "",
+      "name": "Calendar",
+      "type": "calendar"
+    },
+    {
+      "column": 2,
+      "description": "",
+      "name": "AdGaurd",
+      "type": "url",
+      "url": "http://192.168.1.99"
+    },
+    {
+      "column": 0,
+      "description": "",
+      "name": "Home Assistant",
+      "type": "url",
+      "url": "http://192.168.1.100:8123"
+    },
+    {
+      "name": "Search",
+      "description": "",
+      "type": "search",
+      "column": 1,
+      "search_url": "https://www.google.com/search?q={query}"
+    },
+    {
+      "name": "My Notes",
+      "description": "",
+      "type": "notes",
+      "column": 2,
+      "notes_content": "Note this"
+    }
+  ],
+  "last_updated": "2025-09-05T01:05:07.540640"
+}

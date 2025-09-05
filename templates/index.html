@@ -1,0 +1,2341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCOS Homepage</title>
+	<!--
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='all.css') }}">
+	-->
+<link rel="stylesheet" href="{{ url_for('static', filename='all.css') }}">
+
+
+	<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(-45deg, #f8fafc, #e2e8f0, #ddd6fe, #fce7f3);
+    background-size: 400% 400%;
+    animation: subtleFlow 25s ease infinite;
+    color: #1e293b;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+@keyframes subtleFlow {
+    0% { background-position: 0% 50%; }
+    33% { background-position: 100% 50%; }
+    66% { background-position: 50% 100%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 25%),
+        radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 25%);
+    animation: floatingOrbs 30s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes floatingOrbs {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(20px, -20px) scale(1.1); }
+}
+
+
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    position: relative;
+}
+
+.columns-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    align-items: flex-start;
+}
+
+.column[data-column="1"] {
+    min-width: 300px;
+}
+
+.column[data-column="0"], 
+.column[data-column="2"] {
+    width: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+	
+/* Calendar card container */
+.calendar-content {
+    background: rgba(236, 72, 153, 0.05);
+    border: 1px solid rgba(236, 72, 153, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 0.5rem;
+    box-sizing: border-box;   /* include padding in width */
+    width: 100%;
+    max-width: 450px;
+	min-width: 450px;                /* match calendar card with */
+}
+
+
+/* Quote card container */
+.quote-content {
+    background: rgba(139, 92, 246, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 8px;
+    padding: 12px;                  /* match calendar padding */
+    margin-top: 0.5rem;
+    box-sizing: border-box;          /* include padding in width */
+    width: 100%;
+     max-width: 450px;                /* match calendar card width */
+	 min-width: 450px;                /* match calendar card with */
+    overflow-wrap: break-word;       /* wrap long words */
+    word-break: break-word;          /* wrap long words */
+}
+
+/* Quote text */
+.quote-text {
+    font-size: 0.875rem;
+    color: #6b21a8;
+    line-height: 1.4;
+    white-space: pre-wrap;           /* preserves line breaks and wraps text */
+    overflow-wrap: break-word;       /* wrap long words */
+    word-break: break-word;          /* wrap long words */
+}
+
+
+
+
+
+
+.service-card {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        .admin-indicator {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: #f59e0b;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            z-index: 1000;
+            display: none;
+        }
+
+        .admin-indicator.show {
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.4);
+        }
+
+
+
+
+
+
+        .column.drag-over {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .services-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+
+
+
+        .service-card.url::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card.search::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #10b981, #059669);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card.notes::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card.quote::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card.calendar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ec4899, #be185d);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card.iframe::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #a855f7, #7c3aed);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .service-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .service-card.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 0.5rem;
+        }
+
+        .service-title-url {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .service-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .service-info p {
+            color: #64748b;
+            font-size: 0.75rem;
+            margin: 0.25rem 0 0 0;
+            line-height: 1.3;
+        }
+
+        .service-type-badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .service-type-badge.url {
+            background: rgba(59, 130, 246, 0.1);
+            color: #1d4ed8;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .service-type-badge.search {
+            background: rgba(16, 185, 129, 0.1);
+            color: #047857;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .service-type-badge.notes {
+            background: rgba(245, 158, 11, 0.1);
+            color: #b45309;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .service-type-badge.quote {
+            background: rgba(139, 92, 246, 0.1);
+            color: #6b21a8;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .service-type-badge.calendar {
+            background: rgba(236, 72, 153, 0.1);
+            color: #be185d;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .service-type-badge.iframe {
+            background: rgba(168, 85, 247, 0.1);
+            color: #7c3aed;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .service-actions {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .service-card:hover .service-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            width: 26px;
+            height: 26px;
+            border: none;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.05);
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .action-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: scale(1.05);
+        }
+
+        .action-btn.edit:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .action-btn.delete:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #10b981;
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .notes-content {
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: #92400e;
+        }
+
+
+
+.icon-option {
+    padding: 15px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: rgba(255,255,255,0.8);
+	
+}
+
+.icon-option:hover {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
+    transform: scale(1.05);
+}
+
+.icon-option i {
+    font-size: 1.5rem;
+    color: #374151;
+}
+
+
+
+        .quote-author {
+            font-size: 0.75rem;
+            color: #8b5cf6;
+            text-align: right;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal h2 {
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            color: #1e293b;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-group small {
+            color: #64748b;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #64748b;
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #475569;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #dc2626;
+        }
+
+        .type-specific-fields {
+            display: none;
+        }
+
+        .type-specific-fields.show {
+            display: block;
+        }
+
+
+select[id*="day-"], 
+select[id*="month-"], 
+select[id*="year-"], 
+select[id*="phrase-"] {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    background: transparent !important;
+    border: 1px solid rgba(236, 72, 153, 0.3) !important;
+    outline: none;
+    overflow-y: auto;
+    padding: 4px 8px;
+}
+
+select[id*="day-"]::-webkit-scrollbar, 
+select[id*="month-"]::-webkit-scrollbar, 
+select[id*="year-"]::-webkit-scrollbar, 
+select[id*="phrase-"]::-webkit-scrollbar {
+    display: none;
+}
+
+/* Enable mouse wheel scrolling */
+select[id*="day-"], 
+select[id*="month-"], 
+select[id*="year-"], 
+select[id*="phrase-"] {
+    -webkit-overflow-scrolling: touch;
+}
+
+
+
+@media (max-width: 1024px) {
+    .container {
+        max-width: 100%;
+        padding: 1rem;
+    }
+    
+    .columns-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1rem;
+        grid-template-columns: none !important;
+    }
+    
+    .column {
+        width: 100% !important;
+        min-width: unset !important;
+        max-width: 100% !important;
+    }
+    
+    .column[data-column="0"], 
+    .column[data-column="1"], 
+    .column[data-column="2"] {
+        width: 100% !important;
+        min-width: unset !important;
+    }
+		    /* Calendar card container */
+    .calendar-content {
+        max-width: none;
+        min-width: 0;
+        width: 100%; /* Make it full width */
+    }
+
+    /* Quote card container */
+    .quote-content {
+        max-width: none;
+        min-width: 0;
+        width: 100%; /* Make it full width */
+    }
+}
+
+@media (max-width: 760px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .controls {
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+    
+
+
+    
+
+    
+	
+	    /* Calendar card container */
+    .calendar-content {
+        max-width: none;
+        min-width: 0;
+        width: 100%; /* Make it full width */
+    }
+
+    /* Quote card container */
+    .quote-content {
+        max-width: none;
+        min-width: 0;
+        width: 100%; /* Make it full width */
+    }
+	
+	
+	
+	
+	
+    /* Service card mobile adjustments */
+    .service-card {
+        margin-bottom: 0.5rem;
+    }
+    
+    .service-top-row {
+        flex-wrap: wrap;
+    }
+    
+    .service-actions {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 349px) {
+    .container {
+        padding: 0.75rem;
+    }
+
+    .service-card {
+        padding: 0.5rem;
+    }
+
+    /* Calendar card container */
+    .calendar-content {
+        max-width: none;
+        min-width: 0;
+        width: 100%; /* Make it full width */
+    }
+
+    /* Quote card container */
+    .quote-content {
+        max-width: none;
+        min-width: 0;
+        width: 100%; /* Make it full width */
+    }
+}
+ 
+	
+
+@media (max-width: 768px) {
+    body::before, body::after {
+        display: none;
+    }
+    
+    body {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        animation: none;
+    }
+}
+	
+	
+    .btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .service-card {
+        padding: 0.5rem;
+    }
+}
+
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if admin_mode %}
+        <div class="admin-indicator show">
+            <i class="fas fa-shield-alt"></i> Admin Mode
+        </div>
+        {% endif %}
+
+        <div class="header">
+            <h1>BCOS</h1>
+			
+			<!--
+			<h1><i class="fas fa-th-large"></i> Dashboard</h1>
+            <p>Your personalized home dashboard</p>
+			-->
+        </div>
+
+        {% if admin_mode %}
+        <div class="controls">
+            <button class="btn btn-primary" onclick="showAddModal()">
+                <i class="fas fa-plus"></i> Add Tile
+            </button>
+            <button class="btn btn-secondary" onclick="exportServices()">
+                <i class="fas fa-download"></i> Export
+            </button>
+            <button class="btn btn-secondary" onclick="importServices()">
+                <i class="fas fa-upload"></i> Import
+            </button>
+            <button class="btn btn-danger" onclick="adminLogout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+        {% endif %}
+
+        <div class="columns-container" id="columnsContainer">
+            <div class="column" data-column="0">
+                <div class="services-list" id="column0"></div>
+            </div>
+            <div class="column" data-column="1">
+                <div class="services-list" id="column1"></div>
+            </div>
+            <div class="column" data-column="2">
+                <div class="services-list" id="column2"></div>
+            </div>
+        </div>
+
+        <div id="loadingState" class="loading" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading tiles...</p>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal" id="serviceModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add Tile</h2>
+            <div class="form-group">
+                <label for="serviceName">Tile Name</label>
+                <input type="text" id="serviceName" placeholder="e.g., My Notes">
+				
+				
+				
+<div class="form-group">
+    <label for="serviceIcon">Icon</label>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <input type="text" id="serviceIcon" placeholder="Icon class"  style="flex: 1;">
+        <button type="button" class="btn btn-secondary" onclick="showIconPicker()" style="padding: 8px 16px;">
+            <i class="fas fa-icons"></i> Choose
+        </button>
+    </div>
+</div>
+				
+				
+				
+            </div>
+            <div class="form-group">
+                <label for="serviceDescription">Description</label>
+                <input type="text" id="serviceDescription" placeholder="Brief description">
+            </div>
+            <div class="form-group">
+                <label for="serviceType">Tile Type</label>
+                <select id="serviceType" onchange="handleTypeChange()">
+                    <option value="url">URL Link</option>
+                    <option value="search">Search Engine</option>
+                    <option value="notes">Notes</option>
+                    <option value="quote">Quote of the Day</option>
+                    <option value="calendar">Calendar/Date</option>
+                    <option value="iframe">Iframe</option>
+                </select>
+            </div>
+            
+            <!-- URL Type Fields -->
+            <div class="type-specific-fields show" id="urlFields">
+                <div class="form-group">
+                    <label for="serviceUrl">URL</label>
+                    <input type="text" id="serviceUrl" placeholder="e.g., http://192.168.1.100:8080">
+                </div>
+            </div>
+            
+            <!-- Search Type Fields -->
+            <div class="type-specific-fields" id="searchFields">
+                <div class="form-group">
+                    <label for="searchUrl">Search URL Template</label>
+                    <input type="text" id="searchUrl" placeholder="e.g., https://www.google.com/search?q={query}">
+                    <small>Use {query} as placeholder for search terms</small>
+                </div>
+            </div>
+            
+            <!-- Notes Type Fields -->
+            <div class="type-specific-fields" id="notesFields">
+                <div class="form-group">
+                    <label for="notesContent">Notes Content</label>
+                    <textarea id="notesContent" placeholder="Enter your notes here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Calendar Type Fields -->
+            <div class="type-specific-fields" id="calendarFields">
+                <div class="form-group">
+                    <small>Calendar tiles automatically use current date and configurable phrases.</small>
+                </div>
+            </div>
+            
+            <!-- Iframe Type Fields -->
+            <div class="type-specific-fields" id="iframeFields">
+                <div class="form-group">
+                    <label for="iframeUrl">Iframe URL</label>
+                    <input type="text" id="iframeUrl" placeholder="e.g., https://example.com">
+                </div>
+                <div class="form-group">
+                    <label for="iframeWidth">Width</label>
+                    <select id="iframeWidth">
+                        <option value="auto">Auto</option>
+                        <option value="300px">300px</option>
+                        <option value="400px">400px</option>
+                        <option value="500px">500px</option>
+                        <option value="600px">600px</option>
+                        <option value="100%">100%</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="iframeHeight">Height</label>
+                    <select id="iframeHeight">
+                        <option value="auto">Auto (300px)</option>
+                        <option value="200px">200px</option>
+                        <option value="300px">300px</option>
+                        <option value="400px">400px</option>
+                        <option value="500px">500px</option>
+                        <option value="600px">600px</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="serviceColumn">Column</label>
+                <select id="serviceColumn">
+                    <option value="0">Column 1</option>
+                    <option value="1">Column 2</option>
+                    <option value="2">Column 3</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="hideModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveService()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleImport(event)">
+
+
+
+
+<!-- Icon Picker Modal -->
+<div class="modal" id="iconPickerModal">
+    <div class="modal-content" style="max-width: 600px;">
+        <h2>Select Icon</h2>
+        <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 0px; max-height: 400px; overflow-y: auto;">
+<div class="icon-option" data-icon="fas fa-home"><i class="fas fa-home"></i></div>
+<div class="icon-option" data-icon="fas fa-server"><i class="fas fa-server"></i></div>
+<div class="icon-option" data-icon="fas fa-desktop"><i class="fas fa-desktop"></i></div>
+<div class="icon-option" data-icon="fas fa-laptop"><i class="fas fa-laptop"></i></div>
+<div class="icon-option" data-icon="fas fa-mobile-alt"><i class="fas fa-mobile-alt"></i></div>
+<div class="icon-option" data-icon="fas fa-wifi"><i class="fas fa-wifi"></i></div>
+<div class="icon-option" data-icon="fas fa-cloud"><i class="fas fa-cloud"></i></div>
+<div class="icon-option" data-icon="fas fa-database"><i class="fas fa-database"></i></div>
+<div class="icon-option" data-icon="fas fa-tv"><i class="fas fa-tv"></i></div>
+<div class="icon-option" data-icon="fas fa-gamepad"><i class="fas fa-gamepad"></i></div>
+<div class="icon-option" data-icon="fas fa-music"><i class="fas fa-music"></i></div>
+<div class="icon-option" data-icon="fas fa-video"><i class="fas fa-video"></i></div>
+<div class="icon-option" data-icon="fas fa-camera"><i class="fas fa-camera"></i></div>
+<div class="icon-option" data-icon="fas fa-folder"><i class="fas fa-folder"></i></div>
+<div class="icon-option" data-icon="fas fa-file"><i class="fas fa-file"></i></div>
+<div class="icon-option" data-icon="fas fa-book"><i class="fas fa-book"></i></div>
+<div class="icon-option" data-icon="fas fa-cog"><i class="fas fa-cog"></i></div>
+<div class="icon-option" data-icon="fas fa-tools"><i class="fas fa-tools"></i></div>
+<div class="icon-option" data-icon="fas fa-chart-bar"><i class="fas fa-chart-bar"></i></div>
+<div class="icon-option" data-icon="fas fa-fire"><i class="fas fa-fire"></i></div>
+
+<div class="icon-option" data-icon="fas fa-envelope"><i class="fas fa-envelope"></i></div>
+<div class="icon-option" data-icon="fas fa-user"><i class="fas fa-user"></i></div>
+<div class="icon-option" data-icon="fas fa-users"><i class="fas fa-users"></i></div>
+<div class="icon-option" data-icon="fas fa-search"><i class="fas fa-search"></i></div>
+<div class="icon-option" data-icon="fas fa-lock"><i class="fas fa-lock"></i></div>
+<div class="icon-option" data-icon="fas fa-unlock"><i class="fas fa-unlock"></i></div>
+<div class="icon-option" data-icon="fas fa-heart"><i class="fas fa-heart"></i></div>
+<div class="icon-option" data-icon="fas fa-star"><i class="fas fa-star"></i></div>
+<div class="icon-option" data-icon="fas fa-comment"><i class="fas fa-comment"></i></div>
+<div class="icon-option" data-icon="fas fa-bell"><i class="fas fa-bell"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar"><i class="fas fa-calendar"></i></div>
+<div class="icon-option" data-icon="fas fa-map-marker-alt"><i class="fas fa-map-marker-alt"></i></div>
+<div class="icon-option" data-icon="fas fa-shopping-cart"><i class="fas fa-shopping-cart"></i></div>
+<div class="icon-option" data-icon="fas fa-paper-plane"><i class="fas fa-paper-plane"></i></div>
+<div class="icon-option" data-icon="fas fa-lightbulb"><i class="fas fa-lightbulb"></i></div>
+<div class="icon-option" data-icon="fas fa-gift"><i class="fas fa-gift"></i></div>
+<div class="icon-option" data-icon="fas fa-flag"><i class="fas fa-flag"></i></div>
+<div class="icon-option" data-icon="fas fa-map"><i class="fas fa-map"></i></div>
+<div class="icon-option" data-icon="fas fa-clock"><i class="fas fa-clock"></i></div>
+<div class="icon-option" data-icon="fas fa-bug"><i class="fas fa-bug"></i></div>
+<div class="icon-option" data-icon="fas fa-paperclip"><i class="fas fa-paperclip"></i></div>
+<div class="icon-option" data-icon="fas fa-thumbtack"><i class="fas fa-thumbtack"></i></div>
+<div class="icon-option" data-icon="fas fa-trash"><i class="fas fa-trash"></i></div>
+<div class="icon-option" data-icon="fas fa-pen"><i class="fas fa-pen"></i></div>
+<div class="icon-option" data-icon="fas fa-edit"><i class="fas fa-edit"></i></div>
+<div class="icon-option" data-icon="fas fa-clipboard"><i class="fas fa-clipboard"></i></div>
+<div class="icon-option" data-icon="fas fa-paper-plane"><i class="fas fa-paper-plane"></i></div>
+<div class="icon-option" data-icon="fas fa-exclamation-triangle"><i class="fas fa-exclamation-triangle"></i></div>
+<div class="icon-option" data-icon="fas fa-check-circle"><i class="fas fa-check-circle"></i></div>
+<div class="icon-option" data-icon="fas fa-times-circle"><i class="fas fa-times-circle"></i></div>
+<div class="icon-option" data-icon="fas fa-question-circle"><i class="fas fa-question-circle"></i></div>
+<div class="icon-option" data-icon="fas fa-info-circle"><i class="fas fa-info-circle"></i></div>
+<div class="icon-option" data-icon="fas fa-lightning"><i class="fas fa-bolt"></i></div>
+<div class="icon-option" data-icon="fas fa-snowflake"><i class="fas fa-snowflake"></i></div>
+<div class="icon-option" data-icon="fas fa-leaf"><i class="fas fa-leaf"></i></div>
+<div class="icon-option" data-icon="fas fa-globe"><i class="fas fa-globe"></i></div>
+<div class="icon-option" data-icon="fas fa-plane"><i class="fas fa-plane"></i></div>
+<div class="icon-option" data-icon="fas fa-car"><i class="fas fa-car"></i></div>
+<div class="icon-option" data-icon="fas fa-bicycle"><i class="fas fa-bicycle"></i></div>
+<div class="icon-option" data-icon="fas fa-ship"><i class="fas fa-ship"></i></div>
+<div class="icon-option" data-icon="fas fa-truck"><i class="fas fa-truck"></i></div>
+<div class="icon-option" data-icon="fas fa-motorcycle"><i class="fas fa-motorcycle"></i></div>
+<div class="icon-option" data-icon="fas fa-subway"><i class="fas fa-subway"></i></div>
+<div class="icon-option" data-icon="fas fa-bus"><i class="fas fa-bus"></i></div>
+<div class="icon-option" data-icon="fas fa-taxi"><i class="fas fa-taxi"></i></div>
+<div class="icon-option" data-icon="fas fa-train"><i class="fas fa-train"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-full"><i class="fas fa-battery-full"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-half"><i class="fas fa-battery-half"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-empty"><i class="fas fa-battery-empty"></i></div>
+<div class="icon-option" data-icon="fas fa-plug"><i class="fas fa-plug"></i></div>
+<div class="icon-option" data-icon="fas fa-lightbulb"><i class="fas fa-lightbulb"></i></div>
+<div class="icon-option" data-icon="fas fa-microphone"><i class="fas fa-microphone"></i></div>
+<div class="icon-option" data-icon="fas fa-volume-up"><i class="fas fa-volume-up"></i></div>
+<div class="icon-option" data-icon="fas fa-volume-mute"><i class="fas fa-volume-mute"></i></div>
+<div class="icon-option" data-icon="fas fa-headphones"><i class="fas fa-headphones"></i></div>
+<div class="icon-option" data-icon="fas fa-magnet"><i class="fas fa-magnet"></i></div>
+<div class="icon-option" data-icon="fas fa-shield-alt"><i class="fas fa-shield-alt"></i></div>
+<div class="icon-option" data-icon="fas fa-key"><i class="fas fa-key"></i></div>
+<div class="icon-option" data-icon="fas fa-wallet"><i class="fas fa-wallet"></i></div>
+<div class="icon-option" data-icon="fas fa-credit-card"><i class="fas fa-credit-card"></i></div>
+<div class="icon-option" data-icon="fas fa-coins"><i class="fas fa-coins"></i></div>
+<div class="icon-option" data-icon="fas fa-chart-line"><i class="fas fa-chart-line"></i></div>
+<div class="icon-option" data-icon="fas fa-bolt"><i class="fas fa-bolt"></i></div>
+<div class="icon-option" data-icon="fas fa-code"><i class="fas fa-code"></i></div>
+<div class="icon-option" data-icon="fas fa-terminal"><i class="fas fa-terminal"></i></div>
+<div class="icon-option" data-icon="fas fa-network-wired"><i class="fas fa-network-wired"></i></div>
+<div class="icon-option" data-icon="fas fa-rss"><i class="fas fa-rss"></i></div>
+<div class="icon-option" data-icon="fas fa-wrench"><i class="fas fa-wrench"></i></div>
+<div class="icon-option" data-icon="fas fa-hammer"><i class="fas fa-hammer"></i></div>
+<div class="icon-option" data-icon="fas fa-broom"><i class="fas fa-broom"></i></div>
+<div class="icon-option" data-icon="fas fa-archive"><i class="fas fa-archive"></i></div>
+<div class="icon-option" data-icon="fas fa-box"><i class="fas fa-box"></i></div>
+<div class="icon-option" data-icon="fas fa-paperclip"><i class="fas fa-paperclip"></i></div>
+<div class="icon-option" data-icon="fas fa-paint-brush"><i class="fas fa-paint-brush"></i></div>
+<div class="icon-option" data-icon="fas fa-pencil-alt"><i class="fas fa-pencil-alt"></i></div>
+<div class="icon-option" data-icon="fas fa-ruler"><i class="fas fa-ruler"></i></div>
+<div class="icon-option" data-icon="fas fa-compass"><i class="fas fa-compass"></i></div>
+<div class="icon-option" data-icon="fas fa-map-signs"><i class="fas fa-map-signs"></i></div>
+<div class="icon-option" data-icon="fas fa-hand-paper"><i class="fas fa-hand-paper"></i></div>
+<div class="icon-option" data-icon="fas fa-hand-rock"><i class="fas fa-hand-rock"></i></div>
+<div class="icon-option" data-icon="fas fa-hand-scissors"><i class="fas fa-hand-scissors"></i></div>
+<div class="icon-option" data-icon="fas fa-hand-lizard"><i class="fas fa-hand-lizard"></i></div>
+<div class="icon-option" data-icon="fas fa-hand-spock"><i class="fas fa-hand-spock"></i></div>
+<div class="icon-option" data-icon="fas fa-rocket"><i class="fas fa-rocket"></i></div>
+<div class="icon-option" data-icon="fas fa-atom"><i class="fas fa-atom"></i></div>
+<div class="icon-option" data-icon="fas fa-flask"><i class="fas fa-flask"></i></div>
+<div class="icon-option" data-icon="fas fa-microscope"><i class="fas fa-microscope"></i></div>
+<div class="icon-option" data-icon="fas fa-brain"><i class="fas fa-brain"></i></div>
+<div class="icon-option" data-icon="fas fa-syringe"><i class="fas fa-syringe"></i></div>
+<div class="icon-option" data-icon="fas fa-heartbeat"><i class="fas fa-heartbeat"></i></div>
+<div class="icon-option" data-icon="fas fa-stethoscope"><i class="fas fa-stethoscope"></i></div>
+<div class="icon-option" data-icon="fas fa-pills"><i class="fas fa-pills"></i></div>
+<div class="icon-option" data-icon="fas fa-hospital"><i class="fas fa-hospital"></i></div>
+<div class="icon-option" data-icon="fas fa-ambulance"><i class="fas fa-ambulance"></i></div>
+<div class="icon-option" data-icon="fas fa-first-aid"><i class="fas fa-first-aid"></i></div>
+<div class="icon-option" data-icon="fas fa-hands-helping"><i class="fas fa-hands-helping"></i></div>
+<div class="icon-option" data-icon="fas fa-pray"><i class="fas fa-pray"></i></div>
+<div class="icon-option" data-icon="fas fa-church"><i class="fas fa-church"></i></div>
+<div class="icon-option" data-icon="fas fa-book-open"><i class="fas fa-book-open"></i></div>
+<div class="icon-option" data-icon="fas fa-graduation-cap"><i class="fas fa-graduation-cap"></i></div>
+<div class="icon-option" data-icon="fas fa-university"><i class="fas fa-university"></i></div>
+<div class="icon-option" data-icon="fas fa-address-book"><i class="fas fa-address-book"></i></div>
+<div class="icon-option" data-icon="fas fa-address-card"><i class="fas fa-address-card"></i></div>
+<div class="icon-option" data-icon="fas fa-adjust"><i class="fas fa-adjust"></i></div>
+<div class="icon-option" data-icon="fas fa-air-freshener"><i class="fas fa-air-freshener"></i></div>
+<div class="icon-option" data-icon="fas fa-align-center"><i class="fas fa-align-center"></i></div>
+<div class="icon-option" data-icon="fas fa-align-justify"><i class="fas fa-align-justify"></i></div>
+<div class="icon-option" data-icon="fas fa-align-left"><i class="fas fa-align-left"></i></div>
+<div class="icon-option" data-icon="fas fa-align-right"><i class="fas fa-align-right"></i></div>
+<div class="icon-option" data-icon="fas fa-allergies"><i class="fas fa-allergies"></i></div>
+<div class="icon-option" data-icon="fas fa-ambulance"><i class="fas fa-ambulance"></i></div>
+<div class="icon-option" data-icon="fas fa-american-sign-language-interpreting"><i class="fas fa-american-sign-language-interpreting"></i></div>
+<div class="icon-option" data-icon="fas fa-anchor"><i class="fas fa-anchor"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-double-down"><i class="fas fa-angle-double-down"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-double-left"><i class="fas fa-angle-double-left"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-double-right"><i class="fas fa-angle-double-right"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-double-up"><i class="fas fa-angle-double-up"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-down"><i class="fas fa-angle-down"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-left"><i class="fas fa-angle-left"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-right"><i class="fas fa-angle-right"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-up"><i class="fas fa-angle-up"></i></div>
+<div class="icon-option" data-icon="fas fa-ankh"><i class="fas fa-ankh"></i></div>
+<div class="icon-option" data-icon="fas fa-apple-alt"><i class="fas fa-apple-alt"></i></div>
+<div class="icon-option" data-icon="fas fa-archive"><i class="fas fa-archive"></i></div>
+<div class="icon-option" data-icon="fas fa-archway"><i class="fas fa-archway"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-alt-circle-down"><i class="fas fa-arrow-alt-circle-down"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-alt-circle-left"><i class="fas fa-arrow-alt-circle-left"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-alt-circle-right"><i class="fas fa-arrow-alt-circle-right"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-alt-circle-up"><i class="fas fa-arrow-alt-circle-up"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-circle-down"><i class="fas fa-arrow-circle-down"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-circle-left"><i class="fas fa-arrow-circle-left"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-circle-right"><i class="fas fa-arrow-circle-right"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-circle-up"><i class="fas fa-arrow-circle-up"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-down"><i class="fas fa-arrow-down"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-left"><i class="fas fa-arrow-left"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-right"><i class="fas fa-arrow-right"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-up"><i class="fas fa-arrow-up"></i></div>
+<div class="icon-option" data-icon="fas fa-arrows-alt"><i class="fas fa-arrows-alt"></i></div>
+<div class="icon-option" data-icon="fas fa-arrows-alt-h"><i class="fas fa-arrows-alt-h"></i></div>
+<div class="icon-option" data-icon="fas fa-arrows-alt-v"><i class="fas fa-arrows-alt-v"></i></div>
+<div class="icon-option" data-icon="fas fa-assistive-listening-systems"><i class="fas fa-assistive-listening-systems"></i></div>
+<div class="icon-option" data-icon="fas fa-asterisk"><i class="fas fa-asterisk"></i></div>
+<div class="icon-option" data-icon="fas fa-at"><i class="fas fa-at"></i></div>
+<div class="icon-option" data-icon="fas fa-atlas"><i class="fas fa-atlas"></i></div>
+<div class="icon-option" data-icon="fas fa-atom"><i class="fas fa-atom"></i></div>
+<div class="icon-option" data-icon="fas fa-audio-description"><i class="fas fa-audio-description"></i></div>
+<div class="icon-option" data-icon="fas fa-award"><i class="fas fa-award"></i></div>
+<div class="icon-option" data-icon="fas fa-baby"><i class="fas fa-baby"></i></div>
+<div class="icon-option" data-icon="fas fa-baby-carriage"><i class="fas fa-baby-carriage"></i></div>
+<div class="icon-option" data-icon="fas fa-backspace"><i class="fas fa-backspace"></i></div>
+<div class="icon-option" data-icon="fas fa-backward"><i class="fas fa-backward"></i></div>
+<div class="icon-option" data-icon="fas fa-bacon"><i class="fas fa-bacon"></i></div>
+<div class="icon-option" data-icon="fas fa-bacteria"><i class="fas fa-bacteria"></i></div>
+<div class="icon-option" data-icon="fas fa-bacterium"><i class="fas fa-bacterium"></i></div>
+<div class="icon-option" data-icon="fas fa-badge"><i class="fas fa-badge"></i></div>
+<div class="icon-option" data-icon="fas fa-balance-scale"><i class="fas fa-balance-scale"></i></div>
+<div class="icon-option" data-icon="fas fa-balance-scale-left"><i class="fas fa-balance-scale-left"></i></div>
+<div class="icon-option" data-icon="fas fa-balance-scale-right"><i class="fas fa-balance-scale-right"></i></div>
+<div class="icon-option" data-icon="fas fa-ban"><i class="fas fa-ban"></i></div>
+<div class="icon-option" data-icon="fas fa-band-aid"><i class="fas fa-band-aid"></i></div>
+<div class="icon-option" data-icon="fas fa-barcode"><i class="fas fa-barcode"></i></div>
+<div class="icon-option" data-icon="fas fa-bars"><i class="fas fa-bars"></i></div>
+<div class="icon-option" data-icon="fas fa-baseball-ball"><i class="fas fa-baseball-ball"></i></div>
+<div class="icon-option" data-icon="fas fa-basketball-ball"><i class="fas fa-basketball-ball"></i></div>
+<div class="icon-option" data-icon="fas fa-bath"><i class="fas fa-bath"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-empty"><i class="fas fa-battery-empty"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-full"><i class="fas fa-battery-full"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-half"><i class="fas fa-battery-half"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-quarter"><i class="fas fa-battery-quarter"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-three-quarters"><i class="fas fa-battery-three-quarters"></i></div>
+<div class="icon-option" data-icon="fas fa-bed"><i class="fas fa-bed"></i></div>
+<div class="icon-option" data-icon="fas fa-beer"><i class="fas fa-beer"></i></div>
+<div class="icon-option" data-icon="fas fa-bell"><i class="fas fa-bell"></i></div>
+<div class="icon-option" data-icon="fas fa-bell-slash"><i class="fas fa-bell-slash"></i></div>
+<div class="icon-option" data-icon="fas fa-bezier-curve"><i class="fas fa-bezier-curve"></i></div>
+<div class="icon-option" data-icon="fas fa-bible"><i class="fas fa-bible"></i></div>
+<div class="icon-option" data-icon="fas fa-bicycle"><i class="fas fa-bicycle"></i></div>
+<div class="icon-option" data-icon="fas fa-biking"><i class="fas fa-biking"></i></div>
+<div class="icon-option" data-icon="fas fa-binoculars"><i class="fas fa-binoculars"></i></div>
+<div class="icon-option" data-icon="fas fa-biohazard"><i class="fas fa-biohazard"></i></div>
+<div class="icon-option" data-icon="fas fa-birthday-cake"><i class="fas fa-birthday-cake"></i></div>
+<div class="icon-option" data-icon="fas fa-blender"><i class="fas fa-blender"></i></div>
+<div class="icon-option" data-icon="fas fa-blind"><i class="fas fa-blind"></i></div>
+<div class="icon-option" data-icon="fas fa-blog"><i class="fas fa-blog"></i></div>
+<div class="icon-option" data-icon="fas fa-bold"><i class="fas fa-bold"></i></div>
+<div class="icon-option" data-icon="fas fa-bolt"><i class="fas fa-bolt"></i></div>
+<div class="icon-option" data-icon="fas fa-bomb"><i class="fas fa-bomb"></i></div>
+<div class="icon-option" data-icon="fas fa-bone"><i class="fas fa-bone"></i></div>
+<div class="icon-option" data-icon="fas fa-bong"><i class="fas fa-bong"></i></div>
+<div class="icon-option" data-icon="fas fa-book"><i class="fas fa-book"></i></div>
+<div class="icon-option" data-icon="fas fa-book-dead"><i class="fas fa-book-dead"></i></div>
+<div class="icon-option" data-icon="fas fa-book-medical"><i class="fas fa-book-medical"></i></div>
+<div class="icon-option" data-icon="fas fa-book-open"><i class="fas fa-book-open"></i></div>
+<div class="icon-option" data-icon="fas fa-book-reader"><i class="fas fa-book-reader"></i></div>
+<div class="icon-option" data-icon="fas fa-books"><i class="fas fa-books"></i></div>
+<div class="icon-option" data-icon="fas fa-boom"><i class="fas fa-boom"></i></div>
+<div class="icon-option" data-icon="fas fa-bowling-ball"><i class="fas fa-bowling-ball"></i></div>
+<div class="icon-option" data-icon="fas fa-box"><i class="fas fa-box"></i></div>
+<div class="icon-option" data-icon="fas fa-box-open"><i class="fas fa-box-open"></i></div>
+<div class="icon-option" data-icon="fas fa-boxes"><i class="fas fa-boxes"></i></div>
+<div class="icon-option" data-icon="fas fa-braille"><i class="fas fa-braille"></i></div>
+<div class="icon-option" data-icon="fas fa-brain"><i class="fas fa-brain"></i></div>
+<div class="icon-option" data-icon="fas fa-bread-slice"><i class="fas fa-bread-slice"></i></div>
+<div class="icon-option" data-icon="fas fa-briefcase"><i class="fas fa-briefcase"></i></div>
+<div class="icon-option" data-icon="fas fa-briefcase-medical"><i class="fas fa-briefcase-medical"></i></div>
+<div class="icon-option" data-icon="fas fa-broadcast-tower"><i class="fas fa-broadcast-tower"></i></div>
+<div class="icon-option" data-icon="fas fa-broom"><i class="fas fa-broom"></i></div>
+<div class="icon-option" data-icon="fas fa-brush"><i class="fas fa-brush"></i></div>
+<div class="icon-option" data-icon="fas fa-bug"><i class="fas fa-bug"></i></div>
+<div class="icon-option" data-icon="fas fa-building"><i class="fas fa-building"></i></div>
+<div class="icon-option" data-icon="fas fa-bullhorn"><i class="fas fa-bullhorn"></i></div>
+<div class="icon-option" data-icon="fas fa-bullseye"><i class="fas fa-bullseye"></i></div>
+<div class="icon-option" data-icon="fas fa-burn"><i class="fas fa-burn"></i></div>
+<div class="icon-option" data-icon="fas fa-bus"><i class="fas fa-bus"></i></div>
+<div class="icon-option" data-icon="fas fa-bus-alt"><i class="fas fa-bus-alt"></i></div>
+<div class="icon-option" data-icon="fas fa-business-time"><i class="fas fa-business-time"></i></div>
+<div class="icon-option" data-icon="fas fa-calculator"><i class="fas fa-calculator"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar"><i class="fas fa-calendar"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-alt"><i class="fas fa-calendar-alt"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-check"><i class="fas fa-calendar-check"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-day"><i class="fas fa-calendar-day"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-minus"><i class="fas fa-calendar-minus"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-plus"><i class="fas fa-calendar-plus"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-times"><i class="fas fa-calendar-times"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-week"><i class="fas fa-calendar-week"></i></div>
+
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="hideIconPicker()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+        let services = [];
+        let editingIndex = -1;
+        let draggedService = null;
+        let calendarConfig = {};
+        let isAdminMode = {{ admin_mode|tojson }};
+		
+		const serviceIcons = {
+			url: 'fas fa-external-link-alt',
+			search: 'fas fa-search',
+			notes: 'fas fa-sticky-note',
+			quote: 'fas fa-quote-right',
+			calendar: 'fas fa-calendar-alt',
+			iframe: 'fas fa-window-maximize'
+		};
+
+        // Initialize the app
+		document.addEventListener('DOMContentLoaded', async function() {
+			await loadCalendarConfig(); // wait for config before using it
+			loadServices();
+			if (isAdminMode) {
+				setupDragAndDrop();
+			}
+		
+			// Now safe to generate options
+			const optionsHtml = generatePhraseOptions(1); 
+			//console.log(optionsHtml);
+		});
+
+
+        // API functions
+        async function apiRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                //console.error('API request failed:', error);
+                showError('Failed to communicate with server: ' + error.message);
+                throw error;
+            }
+        }
+
+        // Load services from server
+        async function loadServices() {
+            showLoading(true);
+            try {
+                const data = await apiRequest('/api/services');
+                services = data.services || [];
+                renderServices();
+            } catch (error) {
+                showError('Failed to load services from server');
+                services = [];
+                renderServices();
+            }
+            showLoading(false);
+        }
+
+        // Load calendar configuration
+        async function loadCalendarConfig() {
+            try {
+                const data = await apiRequest('/api/calendar-config');
+                calendarConfig = data.config || {};
+            } catch (error) {
+                //console.error('Failed to load calendar config:', error);
+                calendarConfig = {};
+            }
+        }
+
+        // Save services to server
+        async function saveServicesToServer() {
+            try {
+                await apiRequest('/api/services', {
+                    method: 'POST',
+                    body: JSON.stringify({ services })
+                });
+            } catch (error) {
+                showError('Failed to save services to server');
+                throw error;
+            }
+        }
+
+        // Render services grid
+        function renderServices() {
+            // Clear all columns
+            for (let i = 0; i < 3; i++) {
+                const column = document.getElementById(`column${i}`);
+                column.innerHTML = '';
+            }
+
+            if (services.length === 0) {
+                document.getElementById('column1').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-th-large"></i>
+                        <h3>No tiles configured</h3>
+                        <p>Add your first tile to get started</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group services by column
+            services.forEach((service, index) => {
+                const column = Math.max(0, Math.min(2, service.column || 0));
+                const card = createServiceCard(service, index);
+                document.getElementById(`column${column}`).appendChild(card);
+            });
+
+            // Initialize quotes after rendering
+            setTimeout(() => {
+                services.forEach((service, index) => {
+                    if (service.type === 'quote') {
+                        loadQuoteForCard(index);
+                    }
+                });
+            }, 100);
+        }
+
+        // Create service card element
+        function createServiceCard(service, index) {
+            const card = document.createElement('div');
+            card.className = `service-card ${service.type}`;
+            if (isAdminMode) {
+                card.draggable = true;
+            }
+            card.dataset.serviceIndex = index;
+            
+            let cardContent = '';
+            
+            switch (service.type) {
+                case 'url':
+                    cardContent = createUrlCard(service, index);
+                    break;
+                case 'search':
+                    cardContent = createSearchCard(service, index);
+                    break;
+                case 'notes':
+                    cardContent = createNotesCard(service, index);
+                    break;
+                case 'quote':
+                    cardContent = createQuoteCard(service, index);
+                    break;
+                case 'calendar':
+                    cardContent = createCalendarCard(service, index);
+                    break;
+                case 'iframe':
+                    cardContent = createIframeCard(service, index);
+                    break;
+                default:
+                    cardContent = createUrlCard(service, index);
+            }
+            
+            card.innerHTML = cardContent;
+            
+            // Add click handler for URL type only
+            if (service.type === 'url') {
+                card.addEventListener('click', (e) => {
+                    if (!card.classList.contains('dragging')) {
+                        let url = service.url;
+                        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                            url = 'http://' + url;
+                        }
+                        window.open(url, '_blank');
+                    }
+                });
+            }
+            
+            return card;
+        }
+
+        function createUrlCard(service, index) {
+            return `
+                <div class="service-header">
+                    <div class="service-top-row">
+                        <div class="service-title-url">
+                            <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
+							
+                            <!-- <div class="service-type-badge url">URL</div> -->
+                        </div>
+                        ${isAdminMode ? `<div class="service-actions">
+                            <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteService(event, ${index})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>` : ''}
+                    </div>
+                </div>
+                ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+                <div class="service-info"><p style="font-family: monospace; color: #3b82f6;">${service.url}</p></div>
+            `;
+        }
+
+        function createSearchCard(service, index) {
+            return `
+                <div class="service-header">
+                    <div class="service-top-row">
+                        <div class="service-title-url">
+                            <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
+                            
+							<!--<div class="service-type-badge search">SEARCH</div> -->
+                        </div>
+                        ${isAdminMode ? `<div class="service-actions">
+                            <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteService(event, ${index})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>` : ''}
+                    </div>
+                </div>
+                ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+                <input type="text" class="search-box" placeholder="Search..." 
+                       onkeypress="handleSearch(event, '${service.search_url}')"
+                       onclick="event.stopPropagation()">
+            `;
+        }
+
+        function createNotesCard(service, index) {
+            return `
+                <div class="service-header">
+                    <div class="service-top-row">
+                        <div class="service-title-url">
+                            <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
+                            <!-- <div class="service-type-badge notes">NOTES</div>-->
+                        </div>
+                        ${isAdminMode ? `<div class="service-actions">
+                            <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteService(event, ${index})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>` : ''}
+                    </div>
+                </div>
+                ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+                <div class="notes-content">${(service.notes_content || '').replace(/\n/g, '<br>')}</div>
+            `;
+        }
+
+        function createQuoteCard(service, index) {
+    return `
+        <div class="service-header">
+            <div class="service-top-row">
+                <div class="service-title-url">
+                    <h3>
+                        <i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}
+                    </h3>
+                    <!--<div class="service-type-badge quote">QUOTE</div>-->
+                </div>
+                ${isAdminMode ? `<div class="service-actions">
+                    <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn delete" onclick="deleteService(event, ${index})" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>` : ''}
+            </div>
+        </div>
+        ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+        
+        <div class="quote-content" id="quote-${index}">
+            <div class="quote-text" style="
+                white-space: pre-wrap;       /* preserves line breaks and wraps text */
+                overflow-wrap: break-word;   /* wrap long words */
+                word-break: break-word;      /* wrap long words */
+            ">
+                Loading quote...
+            </div>
+            <div class="quote-author"></div>
+        </div>
+    `;
+}
+
+
+        function createCalendarCard(service, index) {
+            const today = new Date();
+            const day = today.getDate();
+            const month = today.getMonth() + 1;
+            const year = today.getFullYear();
+            
+            return `
+                <div class="service-header">
+                    <div class="service-top-row">
+                        <div class="service-title-url">
+                            <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
+                            <!--<div class="service-type-badge calendar">CALENDAR</div>-->
+                        </div>
+                        ${isAdminMode ? `<div class="service-actions">
+                            <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteService(event, ${index})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>` : ''}
+                    </div>
+                </div>
+                ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+				
+<div class="calendar-content" style=" background: rgba(236, 72, 153, 0.05);border: 1px solid rgba(236, 72, 153, 0.2);border-radius: 8px;padding: 12px;margin-top: 0.5rem;box-sizing: border-box;">
+
+    <!-- Flex container for selects -->
+    <div style="
+        display: flex;
+        gap: 8px;
+        justify-content: center;  /* centers all selects horizontally */
+        align-items: flex-start;
+        flex-wrap: wrap;          /* allows wrapping on small screens */
+        margin-bottom: 8px;
+    ">
+        <select id="day-${index}" onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;max-width: 300px;border: 1px solid rgba(236, 72, 153, 0.3);border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+            ${generateDayOptions(day)}
+        </select>
+
+        <select id="month-${index}"  onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;max-width: 300px;border: 1px solid rgba(236, 72, 153, 0.3);border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+            ${generateMonthOptions(month)}
+        </select>
+
+        <select id="year-${index}" onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;max-width: 300px;border: 1px solid rgba(236, 72, 153, 0.3);border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+            ${generateYearOptions(year)}
+        </select>
+
+        <select id="phrase-${index}" onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;min-width: 100px;max-width: 300px;border: 1px solid rgba(236, 72, 153, 0.3);border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+            ${generatePhraseOptions(month)}
+        </select>
+    </div>
+
+    <!-- Formatted phrase display -->
+<div id="formatted-phrase-${index}" style="
+    font-weight: 600;
+    color: #be185d;
+    margin-bottom: 8px;
+    padding: 8px;
+   
+    border-radius: 4px;
+    text-align: center;
+    word-break: break-word;
+">
+    ${day} ${getMonthName(month)} ${year}
+</div>
+
+    <!-- Copy button -->
+    <button onclick="copyToClipboard('formatted-phrase-${index}')" style="
+        width: 100%;
+        padding: 6px 12px;
+        background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        cursor: pointer;
+    ">
+        <i class="fas fa-copy"></i> Copy to Clipboard
+    </button>
+</div>
+
+												
+            `;
+        }
+
+        function createIframeCard(service, index) {
+            const width = service.iframe_width === 'auto' ? '100%' : service.iframe_width;
+            const height = service.iframe_height === 'auto' ? '300px' : service.iframe_height;
+            
+            return `
+                <div class="service-header">
+                    <div class="service-top-row">
+                        <div class="service-title-url">
+                            <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
+                            <!--<div class="service-type-badge iframe">IFRAME</div>-->
+                        </div>
+                        ${isAdminMode ? `<div class="service-actions">
+                            <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteService(event, ${index})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>` : ''}
+                    </div>
+                </div>
+                ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+				
+				<div style="margin-top: 0.5rem;">
+					<iframe src="${service.iframe_url}" 
+							width="${width}" 
+							height="${height}"
+							style="border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; max-width: 100%;"
+							frameborder="0"
+							sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+							referrerpolicy="no-referrer-when-downgrade"
+							allowfullscreen>
+					</iframe>
+					<!--
+					<div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
+						Note: Some sites may block embedding. <a href="${service.iframe_url}" target="_blank" style="color: #3b82f6;">Open in new tab</a>
+					</div>
+					-->
+				</div>
+            `;
+        }
+
+
+
+
+
+
+function showIconPicker() {
+    document.getElementById('iconPickerModal').classList.add('show');
+}
+
+function hideIconPicker() {
+    document.getElementById('iconPickerModal').classList.remove('show');
+}
+
+// Add click handlers for icon selection
+document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.icon-option')) {
+            const iconClass = e.target.closest('.icon-option').dataset.icon;
+            document.getElementById('serviceIcon').value = iconClass;
+            hideIconPicker();
+        }
+    });
+    
+    // Close icon picker when clicking outside
+    document.getElementById('iconPickerModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideIconPicker();
+        }
+    });
+});
+
+
+
+
+
+
+function getPhraseCount(monthNumber) {
+    if (!calendarConfig.months || !calendarConfig.months[monthNumber]) return 3;
+    const phrases = calendarConfig.months[monthNumber].phrases || [];
+    return Math.max(3, phrases.length);
+}
+
+		function generateDayOptions(selectedDay) {
+			let options = '';
+			for (let i = 1; i <= 31; i++) {
+				options += `<option value="${i}" ${i === selectedDay ? 'selected' : ''}>${i}</option>`;
+			}
+			return options;
+		}
+		
+		function generateYearOptions(selectedYear) {
+			const currentYear = new Date().getFullYear();
+			const years = [currentYear - 1, currentYear, currentYear + 1];
+			
+			return years.map(year => 
+				`<option value="${year}" ${year === selectedYear ? 'selected' : ''}>${year}</option>`
+			).join('');
+		}
+
+
+        // Helper functions for calendar
+        function generateMonthOptions(selectedMonth) {
+            const months = [
+                {value: 1, name: 'Января'}, {value: 2, name: 'Февраля'}, {value: 3, name: 'Марта'},
+                {value: 4, name: 'Апреля'}, {value: 5, name: 'Мая'}, {value: 6, name: 'Июня'},
+                {value: 7, name: 'Июля'}, {value: 8, name: 'Августа'}, {value: 9, name: 'Сентября'},
+                {value: 10, name: 'Октября'}, {value: 11, name: 'Ноября'}, {value: 12, name: 'Декабря'}
+            ];
+            
+            return months.map(month => 
+                `<option value="${month.value}" ${month.value === selectedMonth ? 'selected' : ''}>${month.name}</option>`
+            ).join('');
+        }
+
+		function generatePhraseOptions(monthNumber) {
+			if (!calendarConfig.months || !calendarConfig.months[monthNumber.toString()]) {
+				return '<option value="">No phrases available</option>';
+			}
+			
+			const phrases = calendarConfig.months[monthNumber.toString()].phrases || [];
+			if (phrases.length === 0) {
+				return '<option value="">No phrases available</option>';
+			}
+			
+			return phrases.map(phrase => `<option value="${phrase}">${phrase}</option>`).join('');
+		}
+
+        function getMonthName(monthNumber) {
+            const monthNames = {
+                1: 'Января', 2: 'Февраля', 3: 'Марта', 4: 'Апреля',
+                5: 'Мая', 6: 'Июня', 7: 'Июля', 8: 'Августа',
+                9: 'Сентября', 10: 'Октября', 11: 'Ноября', 12: 'Декабря'
+            };
+            return monthNames[monthNumber] || monthNumber;
+        }
+
+async function updateCalendarPhrase(event, index) {
+    const day = document.getElementById(`day-${index}`).value;
+    const month = document.getElementById(`month-${index}`).value;
+    const year = document.getElementById(`year-${index}`).value;
+    const phrase = document.getElementById(`phrase-${index}`).value;
+
+    try {
+        const response = await apiRequest('/api/calendar-phrase', {
+            method: 'POST',
+            body: JSON.stringify({ day, month, year, phrase })
+        });
+
+        if (response.success) {
+            document.getElementById(`formatted-phrase-${index}`).textContent = response.formatted_phrase.trim();
+        }
+
+        // Update phrase options when month changes
+        if (event && event.target && event.target.id.includes('month-')) {
+            const phraseSelect = document.getElementById(`phrase-${index}`);
+            const daySelect = document.getElementById(`day-${index}`);
+            const yearSelect = document.getElementById(`year-${index}`);
+
+            const newOptions = generatePhraseOptions(parseInt(month));
+            const newSize = getPhraseCount(parseInt(month));
+
+            phraseSelect.innerHTML = newOptions;
+            phraseSelect.setAttribute('size', newSize);
+            daySelect.setAttribute('size', newSize);
+            yearSelect.setAttribute('size', newSize);
+        }
+    } catch (error) {
+        //console.error('Failed to update calendar phrase:', error);
+    }
+}
+
+
+async function copyToClipboard(elementId) {
+    const element = document.getElementById(elementId);
+    const text = element.textContent.trim(); // Remove leading/trailing spaces
+    
+    try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+        } else {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+        }
+        
+        // Visual feedback
+        const originalBg = element.style.background;
+        element.style.background = 'rgba(34, 197, 94, 0.2)';
+        setTimeout(() => {
+            element.style.background = originalBg;
+        }, 500);
+        
+        showSuccess('Copied to clipboard!');
+    } catch (error) {
+        //console.error('Failed to copy to clipboard:', error);
+        showError('Failed to copy to clipboard');
+    }
+}
+
+        // Load quotes for quote cards
+        async function loadQuoteForCard(index) {
+            try {
+                const response = await apiRequest('/api/quote');
+                if (response.success) {
+                    const quoteElement = document.getElementById(`quote-${index}`);
+                    if (quoteElement) {
+                        quoteElement.innerHTML = `
+                            <div class="quote-text">"${response.quote.text}"</div>
+                            <div class="quote-author">— ${response.quote.author}</div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                //console.error('Failed to load quote:', error);
+            }
+        }
+
+        // Handle search functionality
+        function handleSearch(event, searchUrl) {
+            if (event.key === 'Enter') {
+                const query = event.target.value.trim();
+                if (query) {
+                    const url = searchUrl.replace('{query}', encodeURIComponent(query));
+                    window.open(url, '_blank');
+                }
+            }
+        }
+
+        // Handle type change in modal
+        function handleTypeChange() {
+            const serviceType = document.getElementById('serviceType').value;
+            
+            // Hide all type-specific fields
+            document.querySelectorAll('.type-specific-fields').forEach(field => {
+                field.classList.remove('show');
+            });
+            
+            // Show relevant fields
+            const fieldsId = serviceType + 'Fields';
+            const fieldsElement = document.getElementById(fieldsId);
+            if (fieldsElement) {
+                fieldsElement.classList.add('show');
+            }
+        }
+
+        // Drag and drop functions (admin only)
+        function setupDragAndDrop() {
+            if (!isAdminMode) return;
+            
+            for (let i = 0; i < 3; i++) {
+                const column = document.querySelector(`.column[data-column="${i}"]`);
+                const servicesList = document.getElementById(`column${i}`);
+                
+                column.addEventListener('dragover', handleDragOver);
+                column.addEventListener('drop', handleDrop);
+                column.addEventListener('dragenter', handleDragEnter);
+                column.addEventListener('dragleave', handleDragLeave);
+                
+                servicesList.addEventListener('dragover', handleColumnDragOver);
+                servicesList.addEventListener('drop', handleColumnDrop);
+            }
+
+            document.addEventListener('dragstart', handleDragStart);
+            document.addEventListener('dragend', handleDragEnd);
+        }
+
+        function handleDragStart(e) {
+            if (!e.target.classList.contains('service-card')) return;
+            
+            draggedService = e.target;
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(e) {
+            if (!e.target.classList.contains('service-card')) return;
+            
+            e.target.classList.remove('dragging');
+            draggedService = null;
+            
+            document.querySelectorAll('.column').forEach(col => {
+                col.classList.remove('drag-over');
+            });
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDragEnter(e) {
+            if (e.target.closest('.column')) {
+                e.target.closest('.column').classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            const column = e.target.closest('.column');
+            if (column && !column.contains(e.relatedTarget)) {
+                column.classList.remove('drag-over');
+            }
+        }
+
+        function handleColumnDragOver(e) {
+            e.preventDefault();
+            if (!draggedService) return;
+
+            const servicesList = e.currentTarget;
+            const afterElement = getDragAfterElement(servicesList, e.clientY);
+            
+            if (afterElement == null) {
+                servicesList.appendChild(draggedService);
+            } else {
+                servicesList.insertBefore(draggedService, afterElement);
+            }
+        }
+
+        function handleColumnDrop(e) {
+            e.preventDefault();
+            if (!draggedService) return;
+            
+            const servicesList = e.currentTarget;
+            const column = servicesList.closest('.column');
+            const newColumn = parseInt(column.dataset.column);
+            const serviceIndex = parseInt(draggedService.dataset.serviceIndex);
+            
+            services[serviceIndex].column = newColumn;
+            reorderServicesArray();
+            
+            saveServicesToServer().then(() => {
+                renderServices();
+            }).catch(() => {
+                loadServices();
+            });
+        }
+
+        async function handleDrop(e) {
+            e.preventDefault();
+            
+            const column = e.target.closest('.column');
+            if (!column || !draggedService) return;
+            
+            const newColumn = parseInt(column.dataset.column);
+            const serviceIndex = parseInt(draggedService.dataset.serviceIndex);
+            
+            services[serviceIndex].column = newColumn;
+            
+            try {
+                await saveServicesToServer();
+                renderServices();
+            } catch (error) {
+                loadServices();
+            }
+            
+            column.classList.remove('drag-over');
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.service-card:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function reorderServicesArray() {
+            const newServices = [];
+            
+            for (let col = 0; col < 3; col++) {
+                const columnElement = document.getElementById(`column${col}`);
+                const cards = columnElement.querySelectorAll('.service-card');
+                
+                cards.forEach(card => {
+                    const index = parseInt(card.dataset.serviceIndex);
+                    const service = { ...services[index] };
+                    service.column = col;
+                    newServices.push(service);
+                });
+            }
+            
+            services = newServices;
+        }
+
+        // Modal and service management functions
+        function showAddModal() {
+            editingIndex = -1;
+            document.getElementById('modalTitle').textContent = 'Add Tile';
+            
+            // Reset form
+            document.getElementById('serviceName').value = '';
+            document.getElementById('serviceDescription').value = '';
+            document.getElementById('serviceType').value = 'url';
+            document.getElementById('serviceColumn').value = '0';
+			document.getElementById('serviceIcon').value = '';
+            
+            // Reset type-specific fields
+            document.getElementById('serviceUrl').value = '';
+            document.getElementById('searchUrl').value = '';
+            document.getElementById('notesContent').value = '';
+            document.getElementById('iframeUrl').value = '';
+            document.getElementById('iframeWidth').value = 'auto';
+            document.getElementById('iframeHeight').value = 'auto';
+            
+            handleTypeChange();
+            document.getElementById('serviceModal').classList.add('show');
+        }
+
+        function editService(event, index) {
+            event.stopPropagation();
+            editingIndex = index;
+            const service = services[index];
+            
+            document.getElementById('modalTitle').textContent = 'Edit Tile';
+            document.getElementById('serviceName').value = service.name;
+            document.getElementById('serviceDescription').value = service.description || '';
+            document.getElementById('serviceType').value = service.type;
+            document.getElementById('serviceColumn').value = service.column || 0;
+			document.getElementById('serviceIcon').value = service.icon || '';
+            
+            // Populate type-specific fields
+            switch (service.type) {
+                case 'url':
+                    document.getElementById('serviceUrl').value = service.url || '';
+                    break;
+                case 'search':
+                    document.getElementById('searchUrl').value = service.search_url || '';
+                    break;
+                case 'notes':
+                    document.getElementById('notesContent').value = service.notes_content || '';
+                    break;
+                case 'iframe':
+                    document.getElementById('iframeUrl').value = service.iframe_url || '';
+                    document.getElementById('iframeWidth').value = service.iframe_width || 'auto';
+                    document.getElementById('iframeHeight').value = service.iframe_height || 'auto';
+                    break;
+            }
+            
+            handleTypeChange();
+            document.getElementById('serviceModal').classList.add('show');
+        }
+
+        async function deleteService(event, index) {
+            event.stopPropagation();
+            if (confirm('Are you sure you want to delete this tile?')) {
+                services.splice(index, 1);
+                try {
+                    await saveServicesToServer();
+                    renderServices();
+                } catch (error) {
+                    loadServices();
+                }
+            }
+        }
+
+        async function saveService() {
+            const name = document.getElementById('serviceName').value.trim();
+            const description = document.getElementById('serviceDescription').value.trim();
+            const type = document.getElementById('serviceType').value;
+            const column = parseInt(document.getElementById('serviceColumn').value);
+
+
+            if (!name) {
+                alert('Please fill in the tile name.');
+                return;
+            }
+
+            const service = { name, description, type, column };
+			const icon = document.getElementById('serviceIcon').value.trim();
+			if (icon) service.icon = icon;
+
+            // Add type-specific data
+            switch (type) {
+                case 'url':
+                    const url = document.getElementById('serviceUrl').value.trim();
+                    if (!url) {
+                        alert('Please fill in the URL.');
+                        return;
+                    }
+                    service.url = url;
+                    break;
+                case 'search':
+                    const searchUrl = document.getElementById('searchUrl').value.trim();
+                    if (!searchUrl) {
+                        alert('Please fill in the search URL template.');
+                        return;
+                    }
+                    service.search_url = searchUrl;
+                    break;
+                case 'notes':
+                    service.notes_content = document.getElementById('notesContent').value.trim();
+                    break;
+                case 'iframe':
+                    const iframeUrl = document.getElementById('iframeUrl').value.trim();
+                    if (!iframeUrl) {
+                        alert('Please fill in the iframe URL.');
+                        return;
+                    }
+                    service.iframe_url = iframeUrl;
+                    service.iframe_width = document.getElementById('iframeWidth').value;
+                    service.iframe_height = document.getElementById('iframeHeight').value;
+                    break;
+            }
+
+            if (editingIndex >= 0) {
+                services[editingIndex] = service;
+            } else {
+                services.push(service);
+            }
+
+            try {
+                await saveServicesToServer();
+                renderServices();
+                hideModal();
+            } catch (error) {
+                // Error already shown
+            }
+        }
+
+        function hideModal() {
+            document.getElementById('serviceModal').classList.remove('show');
+        }
+
+        async function adminLogout() {
+            if (confirm('Are you sure you want to logout from admin panel?')) {
+                try {
+                    await apiRequest('/admin/logout', { method: 'POST' });
+                    window.location.href = '/';
+                } catch (error) {
+                    showError('Failed to logout');
+                }
+            }
+        }
+
+        // Export/Import functions
+        async function exportServices() {
+            try {
+                const exportData = {
+                    services: services,
+                    calendarConfig: calendarConfig,
+                    exportDate: new Date().toISOString()
+                };
+                
+                const data = JSON.stringify(exportData, null, 2);
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'dashboard-export.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                showError('Failed to export data');
+            }
+        }
+
+        function importServices() {
+            document.getElementById('fileInput').click();
+        }
+
+        async function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    
+                    if (imported.services && Array.isArray(imported.services)) {
+                        services = imported.services.map(service => ({
+                            ...service,
+                            column: service.column || 0,
+                            type: service.type || 'url'
+                        }));
+                        
+                        await saveServicesToServer();
+                        
+                        if (imported.calendarConfig) {
+                            calendarConfig = imported.calendarConfig;
+                            await apiRequest('/api/calendar-config', {
+                                method: 'POST',
+                                body: JSON.stringify({ config: calendarConfig })
+                            });
+                        }
+                        
+                        renderServices();
+                        showSuccess('Data imported successfully!');
+                    } else {
+                        alert('Invalid file format. Please select a valid export file.');
+                    }
+                } catch (error) {
+                    alert('Error reading file. Please select a valid JSON file.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Utility functions
+        function showLoading(show) {
+            document.getElementById('loadingState').style.display = show ? 'block' : 'none';
+        }
+
+        function showError(message) {
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+            
+            document.querySelector('.container').insertBefore(errorDiv, document.querySelector('.columns-container'));
+            
+            setTimeout(() => {
+                if (errorDiv.parentNode) {
+                    errorDiv.remove();
+                }
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            document.querySelectorAll('.success-message, .error-message').forEach(el => el.remove());
+            
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.style.cssText = `
+                background: rgba(34, 197, 94, 0.1);
+                border: 1px solid rgba(34, 197, 94, 0.3);
+                border-radius: 12px;
+                padding: 1rem;
+                margin: 1rem 0;
+                color: #15803d;
+            `;
+            successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            
+            document.querySelector('.container').insertBefore(successDiv, document.querySelector('.columns-container'));
+            
+            setTimeout(() => {
+                if (successDiv.parentNode) {
+                    successDiv.remove();
+                }
+            }, 3000);
+        }
+
+        // Event listeners
+        document.getElementById('serviceModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideModal();
+            } else if (isAdminMode && e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                showAddModal();
+            }
+        });
+    </script>
+</body>
+</html>
