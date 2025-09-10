@@ -1133,16 +1133,7 @@ select[id*="phrase-"] {
 				}
 			});
 
-			// PREVENT MODAL BACKDROP CLICKS USING EVENT DELEGATION
-			document.addEventListener('click', function(e) {
-				// If clicking on modal backdrop (not modal content), prevent default
-				if (e.target.classList.contains('modal') && e.target.classList.contains('show')) {
-					e.preventDefault();
-					e.stopPropagation();
-					// DO NOT close the modal - just prevent the event
-					console.log('Modal backdrop clicked - preventing close');
-				}
-			});
+			// Modal backdrop clicks no longer close the modal
 
 			// PREVENT MODAL CONTENT CLICKS FROM BUBBLING UP USING EVENT DELEGATION
 			document.addEventListener('click', function(e) {
