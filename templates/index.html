@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCOS Homepage</title>
+    <title>Homepage</title>
 	<!--
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='all.css') }}">
 	-->
@@ -61,7 +61,7 @@ body::before {
 
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 1.5rem;
     position: relative;
@@ -69,20 +69,26 @@ body::before {
 
 .columns-container {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1fr 2fr 1fr;
     gap: 1.5rem;
     margin-bottom: 2rem;
     align-items: flex-start;
 }
 
 .column[data-column="1"] {
-    min-width: 300px;
+   /* min-width: 300px;*/
 }
 
-.column[data-column="0"], 
-.column[data-column="2"] {
-    width: 100%;
-}
+
+
+
+
+
+
+
+
+
+
 
 	
 /* Calendar card container */
@@ -91,7 +97,7 @@ body::before {
     border: 1px solid rgba(236, 72, 153, 0.2);
     border-radius: 8px;
     padding: 12px;
-    margin-top: 0.5rem;
+    margin: 0.5rem auto 0 auto;
     box-sizing: border-box;   /* include padding in width */
     width: 100%;
     max-width: 450px;
@@ -105,7 +111,7 @@ body::before {
     border: 1px solid rgba(139, 92, 246, 0.2);
     border-radius: 8px;
     padding: 12px;                  /* match calendar padding */
-    margin-top: 0.5rem;
+    margin: 0.5rem auto 0 auto;
     box-sizing: border-box;          /* include padding in width */
     width: 100%;
      max-width: 450px;                /* match calendar card width */
@@ -124,6 +130,11 @@ body::before {
     word-break: break-word;          /* wrap long words */
 }
 
+
+
+
+
+
 .service-card {
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(20px);
@@ -138,6 +149,8 @@ body::before {
     max-width: 100%;
     box-sizing: border-box;
 }
+
+
 
         .header {
             text-align: center;
@@ -234,6 +247,11 @@ body::before {
             box-shadow: 0 8px 30px rgba(239, 68, 68, 0.4);
         }
 
+
+
+
+
+
         .column.drag-over {
             background: rgba(59, 130, 246, 0.1);
             border-color: rgba(59, 130, 246, 0.3);
@@ -244,6 +262,9 @@ body::before {
             flex-direction: column;
             gap: 0.75rem;
         }
+
+
+
 
         .service-card.url::before {
             content: '';
@@ -486,6 +507,8 @@ body::before {
             color: #92400e;
         }
 
+
+
 .icon-option {
     padding: 15px;
     border: 1px solid rgba(0,0,0,0.1);
@@ -494,6 +517,7 @@ body::before {
     cursor: pointer;
     transition: all 0.2s ease;
     background: rgba(255,255,255,0.8);
+	
 }
 
 .icon-option:hover {
@@ -506,6 +530,8 @@ body::before {
     font-size: 1.5rem;
     color: #374151;
 }
+
+
 
         .quote-author {
             font-size: 0.75rem;
@@ -649,6 +675,7 @@ body::before {
             display: block;
         }
 
+
 select[id*="day-"], 
 select[id*="month-"], 
 select[id*="year-"], 
@@ -675,6 +702,14 @@ select[id*="month-"],
 select[id*="year-"], 
 select[id*="phrase-"] {
     -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 1400px) {
+    .calendar-content,
+    .quote-content {
+        min-width: 0;
+        max-width: 100%;
+    }
 }
 
 @media (max-width: 1024px) {
@@ -732,6 +767,12 @@ select[id*="phrase-"] {
         padding: 8px 16px;
         font-size: 0.85rem;
     }
+    
+
+
+    
+
+    
 	
 	    /* Calendar card container */
     .calendar-content {
@@ -746,6 +787,10 @@ select[id*="phrase-"] {
         min-width: 0;
         width: 100%; /* Make it full width */
     }
+	
+	
+	
+	
 	
     /* Service card mobile adjustments */
     .service-card {
@@ -784,6 +829,8 @@ select[id*="phrase-"] {
         width: 100%; /* Make it full width */
     }
 }
+ 
+	
 
 @media (max-width: 768px) {
     body::before, body::after {
@@ -795,7 +842,8 @@ select[id*="phrase-"] {
         animation: none;
     }
 }
-
+	
+	
     .btn {
         padding: 8px 12px;
         font-size: 0.8rem;
@@ -804,6 +852,10 @@ select[id*="phrase-"] {
     .service-card {
         padding: 0.5rem;
     }
+}
+
+
+        }
     </style>
 </head>
 <body>
@@ -815,7 +867,12 @@ select[id*="phrase-"] {
         {% endif %}
 
         <div class="header">
-            <h1>BCOS</h1>
+            <h1>Homepage</h1>
+			
+			<!--
+			<h1><i class="fas fa-th-large"></i> Dashboard</h1>
+            <p>Your personalized home dashboard</p>
+			-->
         </div>
 
         {% if admin_mode %}
@@ -861,6 +918,8 @@ select[id*="phrase-"] {
                 <label for="serviceName">Tile Name</label>
                 <input type="text" id="serviceName" placeholder="e.g., My Notes">
 				
+				
+				
 <div class="form-group">
     <label for="serviceIcon">Icon</label>
     <div style="display: flex; gap: 10px; align-items: center;">
@@ -870,6 +929,8 @@ select[id*="phrase-"] {
         </button>
     </div>
 </div>
+				
+				
 				
             </div>
             <div class="form-group">
@@ -967,6 +1028,9 @@ select[id*="phrase-"] {
 
     <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleImport(event)">
 
+
+
+
 <!-- Icon Picker Modal -->
 <div class="modal" id="iconPickerModal">
     <div class="modal-content" style="max-width: 600px;">
@@ -992,6 +1056,7 @@ select[id*="phrase-"] {
 <div class="icon-option" data-icon="fas fa-tools"><i class="fas fa-tools"></i></div>
 <div class="icon-option" data-icon="fas fa-chart-bar"><i class="fas fa-chart-bar"></i></div>
 <div class="icon-option" data-icon="fas fa-fire"><i class="fas fa-fire"></i></div>
+
 <div class="icon-option" data-icon="fas fa-envelope"><i class="fas fa-envelope"></i></div>
 <div class="icon-option" data-icon="fas fa-user"><i class="fas fa-user"></i></div>
 <div class="icon-option" data-icon="fas fa-users"><i class="fas fa-users"></i></div>
@@ -1093,12 +1158,138 @@ select[id*="phrase-"] {
 <div class="icon-option" data-icon="fas fa-book-open"><i class="fas fa-book-open"></i></div>
 <div class="icon-option" data-icon="fas fa-graduation-cap"><i class="fas fa-graduation-cap"></i></div>
 <div class="icon-option" data-icon="fas fa-university"><i class="fas fa-university"></i></div>
+<div class="icon-option" data-icon="fas fa-address-book"><i class="fas fa-address-book"></i></div>
+<div class="icon-option" data-icon="fas fa-address-card"><i class="fas fa-address-card"></i></div>
+<div class="icon-option" data-icon="fas fa-adjust"><i class="fas fa-adjust"></i></div>
+<div class="icon-option" data-icon="fas fa-air-freshener"><i class="fas fa-air-freshener"></i></div>
+<div class="icon-option" data-icon="fas fa-align-center"><i class="fas fa-align-center"></i></div>
+<div class="icon-option" data-icon="fas fa-align-justify"><i class="fas fa-align-justify"></i></div>
+<div class="icon-option" data-icon="fas fa-align-left"><i class="fas fa-align-left"></i></div>
+<div class="icon-option" data-icon="fas fa-align-right"><i class="fas fa-align-right"></i></div>
+<div class="icon-option" data-icon="fas fa-allergies"><i class="fas fa-allergies"></i></div>
+<div class="icon-option" data-icon="fas fa-ambulance"><i class="fas fa-ambulance"></i></div>
+<div class="icon-option" data-icon="fas fa-american-sign-language-interpreting"><i class="fas fa-american-sign-language-interpreting"></i></div>
+<div class="icon-option" data-icon="fas fa-anchor"><i class="fas fa-anchor"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-double-down"><i class="fas fa-angle-double-down"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-double-left"><i class="fas fa-angle-double-left"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-double-right"><i class="fas fa-angle-double-right"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-double-up"><i class="fas fa-angle-double-up"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-down"><i class="fas fa-angle-down"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-left"><i class="fas fa-angle-left"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-right"><i class="fas fa-angle-right"></i></div>
+<div class="icon-option" data-icon="fas fa-angle-up"><i class="fas fa-angle-up"></i></div>
+<div class="icon-option" data-icon="fas fa-ankh"><i class="fas fa-ankh"></i></div>
+<div class="icon-option" data-icon="fas fa-apple-alt"><i class="fas fa-apple-alt"></i></div>
+<div class="icon-option" data-icon="fas fa-archive"><i class="fas fa-archive"></i></div>
+<div class="icon-option" data-icon="fas fa-archway"><i class="fas fa-archway"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-alt-circle-down"><i class="fas fa-arrow-alt-circle-down"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-alt-circle-left"><i class="fas fa-arrow-alt-circle-left"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-alt-circle-right"><i class="fas fa-arrow-alt-circle-right"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-alt-circle-up"><i class="fas fa-arrow-alt-circle-up"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-circle-down"><i class="fas fa-arrow-circle-down"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-circle-left"><i class="fas fa-arrow-circle-left"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-circle-right"><i class="fas fa-arrow-circle-right"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-circle-up"><i class="fas fa-arrow-circle-up"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-down"><i class="fas fa-arrow-down"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-left"><i class="fas fa-arrow-left"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-right"><i class="fas fa-arrow-right"></i></div>
+<div class="icon-option" data-icon="fas fa-arrow-up"><i class="fas fa-arrow-up"></i></div>
+<div class="icon-option" data-icon="fas fa-arrows-alt"><i class="fas fa-arrows-alt"></i></div>
+<div class="icon-option" data-icon="fas fa-arrows-alt-h"><i class="fas fa-arrows-alt-h"></i></div>
+<div class="icon-option" data-icon="fas fa-arrows-alt-v"><i class="fas fa-arrows-alt-v"></i></div>
+<div class="icon-option" data-icon="fas fa-assistive-listening-systems"><i class="fas fa-assistive-listening-systems"></i></div>
+<div class="icon-option" data-icon="fas fa-asterisk"><i class="fas fa-asterisk"></i></div>
+<div class="icon-option" data-icon="fas fa-at"><i class="fas fa-at"></i></div>
+<div class="icon-option" data-icon="fas fa-atlas"><i class="fas fa-atlas"></i></div>
+<div class="icon-option" data-icon="fas fa-atom"><i class="fas fa-atom"></i></div>
+<div class="icon-option" data-icon="fas fa-audio-description"><i class="fas fa-audio-description"></i></div>
+<div class="icon-option" data-icon="fas fa-award"><i class="fas fa-award"></i></div>
+<div class="icon-option" data-icon="fas fa-baby"><i class="fas fa-baby"></i></div>
+<div class="icon-option" data-icon="fas fa-baby-carriage"><i class="fas fa-baby-carriage"></i></div>
+<div class="icon-option" data-icon="fas fa-backspace"><i class="fas fa-backspace"></i></div>
+<div class="icon-option" data-icon="fas fa-backward"><i class="fas fa-backward"></i></div>
+<div class="icon-option" data-icon="fas fa-bacon"><i class="fas fa-bacon"></i></div>
+<div class="icon-option" data-icon="fas fa-bacteria"><i class="fas fa-bacteria"></i></div>
+<div class="icon-option" data-icon="fas fa-bacterium"><i class="fas fa-bacterium"></i></div>
+<div class="icon-option" data-icon="fas fa-badge"><i class="fas fa-badge"></i></div>
+<div class="icon-option" data-icon="fas fa-balance-scale"><i class="fas fa-balance-scale"></i></div>
+<div class="icon-option" data-icon="fas fa-balance-scale-left"><i class="fas fa-balance-scale-left"></i></div>
+<div class="icon-option" data-icon="fas fa-balance-scale-right"><i class="fas fa-balance-scale-right"></i></div>
+<div class="icon-option" data-icon="fas fa-ban"><i class="fas fa-ban"></i></div>
+<div class="icon-option" data-icon="fas fa-band-aid"><i class="fas fa-band-aid"></i></div>
+<div class="icon-option" data-icon="fas fa-barcode"><i class="fas fa-barcode"></i></div>
+<div class="icon-option" data-icon="fas fa-bars"><i class="fas fa-bars"></i></div>
+<div class="icon-option" data-icon="fas fa-baseball-ball"><i class="fas fa-baseball-ball"></i></div>
+<div class="icon-option" data-icon="fas fa-basketball-ball"><i class="fas fa-basketball-ball"></i></div>
+<div class="icon-option" data-icon="fas fa-bath"><i class="fas fa-bath"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-empty"><i class="fas fa-battery-empty"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-full"><i class="fas fa-battery-full"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-half"><i class="fas fa-battery-half"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-quarter"><i class="fas fa-battery-quarter"></i></div>
+<div class="icon-option" data-icon="fas fa-battery-three-quarters"><i class="fas fa-battery-three-quarters"></i></div>
+<div class="icon-option" data-icon="fas fa-bed"><i class="fas fa-bed"></i></div>
+<div class="icon-option" data-icon="fas fa-beer"><i class="fas fa-beer"></i></div>
+<div class="icon-option" data-icon="fas fa-bell"><i class="fas fa-bell"></i></div>
+<div class="icon-option" data-icon="fas fa-bell-slash"><i class="fas fa-bell-slash"></i></div>
+<div class="icon-option" data-icon="fas fa-bezier-curve"><i class="fas fa-bezier-curve"></i></div>
+<div class="icon-option" data-icon="fas fa-bible"><i class="fas fa-bible"></i></div>
+<div class="icon-option" data-icon="fas fa-bicycle"><i class="fas fa-bicycle"></i></div>
+<div class="icon-option" data-icon="fas fa-biking"><i class="fas fa-biking"></i></div>
+<div class="icon-option" data-icon="fas fa-binoculars"><i class="fas fa-binoculars"></i></div>
+<div class="icon-option" data-icon="fas fa-biohazard"><i class="fas fa-biohazard"></i></div>
+<div class="icon-option" data-icon="fas fa-birthday-cake"><i class="fas fa-birthday-cake"></i></div>
+<div class="icon-option" data-icon="fas fa-blender"><i class="fas fa-blender"></i></div>
+<div class="icon-option" data-icon="fas fa-blind"><i class="fas fa-blind"></i></div>
+<div class="icon-option" data-icon="fas fa-blog"><i class="fas fa-blog"></i></div>
+<div class="icon-option" data-icon="fas fa-bold"><i class="fas fa-bold"></i></div>
+<div class="icon-option" data-icon="fas fa-bolt"><i class="fas fa-bolt"></i></div>
+<div class="icon-option" data-icon="fas fa-bomb"><i class="fas fa-bomb"></i></div>
+<div class="icon-option" data-icon="fas fa-bone"><i class="fas fa-bone"></i></div>
+<div class="icon-option" data-icon="fas fa-bong"><i class="fas fa-bong"></i></div>
+<div class="icon-option" data-icon="fas fa-book"><i class="fas fa-book"></i></div>
+<div class="icon-option" data-icon="fas fa-book-dead"><i class="fas fa-book-dead"></i></div>
+<div class="icon-option" data-icon="fas fa-book-medical"><i class="fas fa-book-medical"></i></div>
+<div class="icon-option" data-icon="fas fa-book-open"><i class="fas fa-book-open"></i></div>
+<div class="icon-option" data-icon="fas fa-book-reader"><i class="fas fa-book-reader"></i></div>
+<div class="icon-option" data-icon="fas fa-books"><i class="fas fa-books"></i></div>
+<div class="icon-option" data-icon="fas fa-boom"><i class="fas fa-boom"></i></div>
+<div class="icon-option" data-icon="fas fa-bowling-ball"><i class="fas fa-bowling-ball"></i></div>
+<div class="icon-option" data-icon="fas fa-box"><i class="fas fa-box"></i></div>
+<div class="icon-option" data-icon="fas fa-box-open"><i class="fas fa-box-open"></i></div>
+<div class="icon-option" data-icon="fas fa-boxes"><i class="fas fa-boxes"></i></div>
+<div class="icon-option" data-icon="fas fa-braille"><i class="fas fa-braille"></i></div>
+<div class="icon-option" data-icon="fas fa-brain"><i class="fas fa-brain"></i></div>
+<div class="icon-option" data-icon="fas fa-bread-slice"><i class="fas fa-bread-slice"></i></div>
+<div class="icon-option" data-icon="fas fa-briefcase"><i class="fas fa-briefcase"></i></div>
+<div class="icon-option" data-icon="fas fa-briefcase-medical"><i class="fas fa-briefcase-medical"></i></div>
+<div class="icon-option" data-icon="fas fa-broadcast-tower"><i class="fas fa-broadcast-tower"></i></div>
+<div class="icon-option" data-icon="fas fa-broom"><i class="fas fa-broom"></i></div>
+<div class="icon-option" data-icon="fas fa-brush"><i class="fas fa-brush"></i></div>
+<div class="icon-option" data-icon="fas fa-bug"><i class="fas fa-bug"></i></div>
+<div class="icon-option" data-icon="fas fa-building"><i class="fas fa-building"></i></div>
+<div class="icon-option" data-icon="fas fa-bullhorn"><i class="fas fa-bullhorn"></i></div>
+<div class="icon-option" data-icon="fas fa-bullseye"><i class="fas fa-bullseye"></i></div>
+<div class="icon-option" data-icon="fas fa-burn"><i class="fas fa-burn"></i></div>
+<div class="icon-option" data-icon="fas fa-bus"><i class="fas fa-bus"></i></div>
+<div class="icon-option" data-icon="fas fa-bus-alt"><i class="fas fa-bus-alt"></i></div>
+<div class="icon-option" data-icon="fas fa-business-time"><i class="fas fa-business-time"></i></div>
+<div class="icon-option" data-icon="fas fa-calculator"><i class="fas fa-calculator"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar"><i class="fas fa-calendar"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-alt"><i class="fas fa-calendar-alt"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-check"><i class="fas fa-calendar-check"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-day"><i class="fas fa-calendar-day"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-minus"><i class="fas fa-calendar-minus"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-plus"><i class="fas fa-calendar-plus"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-times"><i class="fas fa-calendar-times"></i></div>
+<div class="icon-option" data-icon="fas fa-calendar-week"><i class="fas fa-calendar-week"></i></div>
+
         </div>
         <div class="modal-actions">
             <button class="btn btn-secondary" onclick="hideIconPicker()">Cancel</button>
         </div>
     </div>
 </div>
+
 
     <script>
         let services = [];
@@ -1118,34 +1309,17 @@ select[id*="phrase-"] {
 
         // Initialize the app
 		document.addEventListener('DOMContentLoaded', async function() {
-			await loadCalendarConfig();
+			await loadCalendarConfig(); // wait for config before using it
 			loadServices();
 			if (isAdminMode) {
 				setupDragAndDrop();
 			}
-
-			// Add event handlers for icon selection
-			document.addEventListener('click', function(e) {
-				if (e.target.closest('.icon-option')) {
-					const iconClass = e.target.closest('.icon-option').dataset.icon;
-					document.getElementById('serviceIcon').value = iconClass;
-					hideIconPicker();
-				}
-			});
-
-			// Modal backdrop clicks no longer close the modal
-
-			// PREVENT MODAL CONTENT CLICKS FROM BUBBLING UP USING EVENT DELEGATION
-			document.addEventListener('click', function(e) {
-				const modalContent = e.target.closest('.modal-content');
-				if (modalContent) {
-					e.stopPropagation();
-					console.log('Modal content clicked - stopping propagation');
-				}
-			});
-
-			const optionsHtml = generatePhraseOptions(1);
+		
+			// Now safe to generate options
+			const optionsHtml = generatePhraseOptions(1); 
+			//console.log(optionsHtml);
 		});
+
 
         // API functions
         async function apiRequest(url, options = {}) {
@@ -1303,6 +1477,8 @@ select[id*="phrase-"] {
                     <div class="service-top-row">
                         <div class="service-title-url">
                             <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
+							
+                            <!-- <div class="service-type-badge url">URL</div> -->
                         </div>
                         ${isAdminMode ? `<div class="service-actions">
                             <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
@@ -1325,6 +1501,8 @@ select[id*="phrase-"] {
                     <div class="service-top-row">
                         <div class="service-title-url">
                             <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
+                            
+							<!--<div class="service-type-badge search">SEARCH</div> -->
                         </div>
                         ${isAdminMode ? `<div class="service-actions">
                             <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
@@ -1349,6 +1527,7 @@ select[id*="phrase-"] {
                     <div class="service-top-row">
                         <div class="service-title-url">
                             <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
+                            <!-- <div class="service-type-badge notes">NOTES</div>-->
                         </div>
                         ${isAdminMode ? `<div class="service-actions">
                             <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
@@ -1366,38 +1545,40 @@ select[id*="phrase-"] {
         }
 
         function createQuoteCard(service, index) {
-            return `
-                <div class="service-header">
-                    <div class="service-top-row">
-                        <div class="service-title-url">
-                            <h3>
-                                <i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}
-                            </h3>
-                        </div>
-                        ${isAdminMode ? `<div class="service-actions">
-                            <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="action-btn delete" onclick="deleteService(event, ${index})" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>` : ''}
-                    </div>
+    return `
+        <div class="service-header">
+            <div class="service-top-row">
+                <div class="service-title-url">
+                    <h3>
+                        <i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}
+                    </h3>
+                    <!--<div class="service-type-badge quote">QUOTE</div>-->
                 </div>
-                ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
-                
-                <div class="quote-content" id="quote-${index}">
-                    <div class="quote-text" style="
-                        white-space: pre-wrap;
-                        overflow-wrap: break-word;
-                        word-break: break-word;
-                    ">
-                        Loading quote...
-                    </div>
-                    <div class="quote-author"></div>
-                </div>
-            `;
-        }
+                ${isAdminMode ? `<div class="service-actions">
+                    <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn delete" onclick="deleteService(event, ${index})" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>` : ''}
+            </div>
+        </div>
+        ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+        
+        <div class="quote-content" id="quote-${index}">
+            <div class="quote-text" style="
+                white-space: pre-wrap;       /* preserves line breaks and wraps text */
+                overflow-wrap: break-word;   /* wrap long words */
+                word-break: break-word;      /* wrap long words */
+            ">
+                Loading quote...
+            </div>
+            <div class="quote-author"></div>
+        </div>
+    `;
+}
+
 
         function createCalendarCard(service, index) {
             const today = new Date();
@@ -1410,6 +1591,7 @@ select[id*="phrase-"] {
                     <div class="service-top-row">
                         <div class="service-title-url">
                             <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
+                            <!--<div class="service-type-badge calendar">CALENDAR</div>-->
                         </div>
                         ${isAdminMode ? `<div class="service-actions">
                             <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
@@ -1429,9 +1611,9 @@ select[id*="phrase-"] {
     <div style="
         display: flex;
         gap: 8px;
-        justify-content: center;
+        justify-content: center;  /* centers all selects horizontally */
         align-items: flex-start;
-        flex-wrap: wrap;
+        flex-wrap: wrap;          /* allows wrapping on small screens */
         margin-bottom: 8px;
     ">
         <select id="day-${index}" onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;max-width: 300px;border: 1px solid rgba(236, 72, 153, 0.3);border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
@@ -1457,11 +1639,12 @@ select[id*="phrase-"] {
     color: #be185d;
     margin-bottom: 8px;
     padding: 8px;
+   
     border-radius: 4px;
     text-align: center;
     word-break: break-word;
 ">
-    ${day} ${getMonthName(month)} ${year}
+    ${getMonthName(month)} ${day}, ${year}
 </div>
 
     <!-- Copy button -->
@@ -1478,6 +1661,8 @@ select[id*="phrase-"] {
         <i class="fas fa-copy"></i> Copy to Clipboard
     </button>
 </div>
+
+												
             `;
         }
 
@@ -1490,6 +1675,7 @@ select[id*="phrase-"] {
                     <div class="service-top-row">
                         <div class="service-title-url">
                             <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
+                            <!--<div class="service-type-badge iframe">IFRAME</div>-->
                         </div>
                         ${isAdminMode ? `<div class="service-actions">
                             <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
@@ -1513,9 +1699,20 @@ select[id*="phrase-"] {
 							referrerpolicy="no-referrer-when-downgrade"
 							allowfullscreen>
 					</iframe>
+					<!--
+					<div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
+						Note: Some sites may block embedding. <a href="${service.iframe_url}" target="_blank" style="color: #3b82f6;">Open in new tab</a>
+					</div>
+					-->
 				</div>
             `;
         }
+
+
+
+
+
+
 
 function showIconPicker() {
     document.getElementById('iconPickerModal').classList.add('show');
@@ -1534,6 +1731,11 @@ function showIconPicker() {
 function hideIconPicker() {
     document.getElementById('iconPickerModal').classList.remove('show');
 }
+
+
+
+
+
 
 function getPhraseCount(monthNumber) {
     if (!calendarConfig.months || !calendarConfig.months[monthNumber]) return 3;
@@ -1558,14 +1760,15 @@ function getPhraseCount(monthNumber) {
 			).join('');
 		}
 
+
         // Helper functions for calendar
         function generateMonthOptions(selectedMonth) {
-            const months = [
-                {value: 1, name: 'Января'}, {value: 2, name: 'Февраля'}, {value: 3, name: 'Марта'},
-                {value: 4, name: 'Апреля'}, {value: 5, name: 'Мая'}, {value: 6, name: 'Июня'},
-                {value: 7, name: 'Июля'}, {value: 8, name: 'Августа'}, {value: 9, name: 'Сентября'},
-                {value: 10, name: 'Октября'}, {value: 11, name: 'Ноября'}, {value: 12, name: 'Декабря'}
-            ];
+			const months = [
+					{value: 1, name: 'January'}, {value: 2, name: 'February'}, {value: 3, name: 'March'},
+					{value: 4, name: 'April'}, {value: 5, name: 'May'}, {value: 6, name: 'June'},
+					{value: 7, name: 'July'}, {value: 8, name: 'August'}, {value: 9, name: 'September'},
+					{value: 10, name: 'October'}, {value: 11, name: 'November'}, {value: 12, name: 'December'}
+    ];
             
             return months.map(month => 
                 `<option value="${month.value}" ${month.value === selectedMonth ? 'selected' : ''}>${month.name}</option>`
@@ -1585,14 +1788,14 @@ function getPhraseCount(monthNumber) {
 			return phrases.map(phrase => `<option value="${phrase}">${phrase}</option>`).join('');
 		}
 
-        function getMonthName(monthNumber) {
-            const monthNames = {
-                1: 'Января', 2: 'Февраля', 3: 'Марта', 4: 'Апреля',
-                5: 'Мая', 6: 'Июня', 7: 'Июля', 8: 'Августа',
-                9: 'Сентября', 10: 'Октября', 11: 'Ноября', 12: 'Декабря'
-            };
-            return monthNames[monthNumber] || monthNumber;
-        }
+		function getMonthName(monthNumber) {
+			const monthNames = {
+				1: 'January', 2: 'February', 3: 'March', 4: 'April',
+				5: 'May', 6: 'June', 7: 'July', 8: 'August',
+				9: 'September', 10: 'October', 11: 'November', 12: 'December'
+			};
+			return monthNames[monthNumber] || monthNumber;
+		}
 
 async function updateCalendarPhrase(event, index) {
     const day = document.getElementById(`day-${index}`).value;
@@ -1629,9 +1832,10 @@ async function updateCalendarPhrase(event, index) {
     }
 }
 
+
 async function copyToClipboard(elementId) {
     const element = document.getElementById(elementId);
-    const text = element.textContent.trim();
+    const text = element.textContent.trim(); // Remove leading/trailing spaces
     
     try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -1850,7 +2054,7 @@ async function copyToClipboard(elementId) {
             
             services = newServices;
         }
-
+		
         // Modal and service management functions
         function showAddModal() {
             editingIndex = -1;
@@ -1937,6 +2141,7 @@ async function copyToClipboard(elementId) {
             const description = document.getElementById('serviceDescription').value.trim();
             const type = document.getElementById('serviceType').value;
             const column = parseInt(document.getElementById('serviceColumn').value);
+
 
             if (!name) {
                 alert('Please fill in the tile name.');
@@ -2120,6 +2325,7 @@ async function copyToClipboard(elementId) {
                 }
             }, 3000);
         }
+
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
