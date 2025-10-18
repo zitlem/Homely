@@ -75,10 +75,10 @@ def load_calendar_config():
         else:
             # If no config file exists, create it with the default from our separate config file
             print(f"Calendar config file not found. Please ensure {CALENDAR_CONFIG_FILE} exists.")
-            return {"months": {}, "quotes": []}
+            return {"months": {}, "quotes": [], "siteTitle": "BCOS"}
     except Exception as e:
         print(f"Error loading calendar config: {e}")
-        return {"months": {}, "quotes": []}
+        return {"months": {}, "quotes": [], "siteTitle": "BCOS"}
 
 def save_calendar_config(config):
     """Save calendar configuration to JSON file"""
@@ -390,10 +390,16 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
-# Prevent favicon.ico 404s
+# Serve favicon
+@app.route('/favicon.svg')
+def favicon_svg():
+    from flask import send_from_directory
+    return send_from_directory('static', 'favicon.svg', mimetype='image/svg+xml')
+
 @app.route('/favicon.ico')
-def favicon():
-    return '', 204
+def favicon_ico():
+    from flask import send_from_directory
+    return send_from_directory('static', 'favicon.svg', mimetype='image/svg+xml')
 
 if __name__ == '__main__':
     # Ensure the services config file exists with default structure

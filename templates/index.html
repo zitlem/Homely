@@ -3,12 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title id="pageTitle">BCOS Homepage</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 	<!--
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='all.css') }}">
 	-->
 <link rel="stylesheet" href="{{ url_for('static', filename='all.css') }}">
 
+    <script>
+        // Load theme immediately before page renders to prevent flash
+        (function() {
+            const colorMatch = document.cookie.match(/themeColors=([^;]+)/);
+            if (colorMatch) {
+                try {
+                    const colors = JSON.parse(decodeURIComponent(colorMatch[1]));
+                    document.documentElement.style.setProperty('--bg-gradient-1', colors.bg1);
+                    document.documentElement.style.setProperty('--bg-gradient-2', colors.bg2);
+                    document.documentElement.style.setProperty('--bg-gradient-3', colors.bg3);
+                    document.documentElement.style.setProperty('--bg-gradient-4', colors.bg4);
+                    document.documentElement.style.setProperty('--text-primary', colors.text);
+                    document.documentElement.style.setProperty('--url-color', colors.url);
+                    document.documentElement.style.setProperty('--notes-color', colors.notes);
+                    if (colors.calendar) document.documentElement.style.setProperty('--calendar-color', colors.calendar);
+                    if (colors.quote) document.documentElement.style.setProperty('--quote-color', colors.quote);
+                    if (colors.hoverBorder) document.documentElement.style.setProperty('--card-hover-border', colors.hoverBorder);
+                    if (colors.opacity) document.documentElement.style.setProperty('--card-opacity', colors.opacity / 100);
+                    if (colors.hoverOpacity) document.documentElement.style.setProperty('--card-hover-opacity', colors.hoverOpacity / 100);
+                } catch (e) {
+                    console.error('Error loading theme:', e);
+                }
+            }
+        })();
+    </script>
 
 	<style>
         * {
@@ -17,25 +43,55 @@
             box-sizing: border-box;
         }
 
+html {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: linear-gradient(-45deg, #f8fafc, #e2e8f0, #ddd6fe, #fce7f3);
-    background-size: 400% 400%;
-    animation: subtleFlow 25s ease infinite;
-    color: #1e293b;
+    --bg-gradient-1: #e5e7eb;
+    --bg-gradient-2: #d1d5db;
+    --bg-gradient-3: #cbd5e1;
+    --bg-gradient-4: #e2e8f0;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --card-border: rgba(209, 213, 219, 0.6);
+    --card-shadow: rgba(0, 0, 0, 0.1);
+    --url-color: #3b82f6;
+    --notes-color: #f59e0b;
+    --calendar-color: #ec4899;
+    --quote-color: #8b5cf6;
+    --card-hover-border: #3b82f6;
+    --card-opacity: 0.8;
+    --card-hover-opacity: 0.95;
+    color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
-    position: relative;
+    position: static;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-4));
+    background-size: 400% 400%;
+    animation: subtleFlow 30s ease-in-out infinite;
+    z-index: -2;
+    pointer-events: none;
 }
 
 @keyframes subtleFlow {
-    0% { background-position: 0% 50%; }
-    33% { background-position: 100% 50%; }
-    66% { background-position: 50% 100%; }
-    100% { background-position: 0% 50%; }
-}
-
-
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 body::before {
@@ -43,19 +99,21 @@ body::before {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 25%),
-        radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 25%);
-    animation: floatingOrbs 30s ease-in-out infinite;
+    width: 100vw;
+    height: 100vh;
+    background-image:
+        radial-gradient(circle at 20% 30%, var(--orb-1, rgba(59, 130, 246, 0.15)) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, var(--orb-2, rgba(139, 92, 246, 0.15)) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, var(--orb-3, rgba(236, 72, 153, 0.1)) 0%, transparent 50%);
+    animation: floatingOrbs 25s ease-in-out infinite;
     pointer-events: none;
-    z-index: -1;
+    z-index: 0;
+    transition: all 0.5s ease;
 }
 
 @keyframes floatingOrbs {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(20px, -20px) scale(1.1); }
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 1; }
+    50% { transform: translate(30px, -30px) scale(1.2); opacity: 0.8; }
 }
 
 
@@ -65,11 +123,12 @@ body::before {
     margin: 0 auto;
     padding: 1.5rem;
     position: relative;
+    z-index: 1;
 }
 
 .columns-container {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: minmax(300px, 1fr) minmax(400px, 1.5fr) minmax(300px, 1fr);
     gap: 1.5rem;
     margin-bottom: 2rem;
     align-items: flex-start;
@@ -93,9 +152,9 @@ body::before {
 	
 /* Calendar card container */
 .calendar-content {
-    background: rgba(236, 72, 153, 0.05);
-    border: 1px solid rgba(236, 72, 153, 0.2);
-    border-radius: 8px;
+    background: color-mix(in srgb, var(--calendar-color) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--calendar-color) 30%, transparent);
+    border-radius: 12px;
     padding: 12px;
     margin: 0.5rem auto 0 auto;
     box-sizing: border-box;   /* include padding in width */
@@ -107,9 +166,9 @@ body::before {
 
 /* Quote card container */
 .quote-content {
-    background: rgba(139, 92, 246, 0.05);
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    border-radius: 8px;
+    background: color-mix(in srgb, var(--quote-color) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--quote-color) 30%, transparent);
+    border-radius: 12px;
     padding: 12px;                  /* match calendar padding */
     margin: 0.5rem auto 0 auto;
     box-sizing: border-box;          /* include padding in width */
@@ -123,7 +182,7 @@ body::before {
 /* Quote text */
 .quote-text {
     font-size: 0.875rem;
-    color: #6b21a8;
+    color: color-mix(in srgb, var(--quote-color) 100%, #000 10%);
     line-height: 1.4;
     white-space: pre-wrap;           /* preserves line breaks and wraps text */
     overflow-wrap: break-word;       /* wrap long words */
@@ -136,18 +195,18 @@ body::before {
 
 
 .service-card {
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    padding: 0.75rem;
-    transition: all 0.3s ease;
+    background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-opacity) * 100%), transparent);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
     cursor: pointer;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    box-shadow: 0 4px 6px -1px var(--card-shadow), 0 2px 4px -1px var(--card-shadow);
 }
 
 
@@ -160,17 +219,16 @@ body::before {
 
         .header h1 {
             font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-weight: 600;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
         }
 
         .header p {
             font-size: 1rem;
-            color: #64748b;
+            color: #94a3b8;
             font-weight: 400;
         }
 
@@ -178,7 +236,7 @@ body::before {
             position: fixed;
             top: 1rem;
             right: 1rem;
-            background: #f59e0b;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 12px;
@@ -186,6 +244,7 @@ body::before {
             font-weight: 600;
             z-index: 1000;
             display: none;
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--notes-color) 40%, transparent);
         }
 
         .admin-indicator.show {
@@ -226,15 +285,16 @@ body::before {
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(51, 65, 85, 0.7);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            color: #374151;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            color: #e2e8f0;
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.95);
-            transform: translateY(-1px);
+            background: rgba(51, 65, 85, 0.9);
+            border-color: rgba(148, 163, 184, 0.5);
+            transform: translateY(-2px);
         }
 
         .btn-danger {
@@ -266,82 +326,23 @@ body::before {
 
 
 
-        .service-card.url::before {
+        .service-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 2px;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .service-card.search::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #10b981, #059669);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .service-card.notes::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #f59e0b, #d97706);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .service-card.quote::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #8b5cf6, #7c3aed);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .service-card.calendar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #ec4899, #be185d);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .service-card.iframe::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #a855f7, #7c3aed);
+            background: linear-gradient(90deg, var(--card-hover-border), color-mix(in srgb, var(--card-hover-border) 100%, #000 30%));
             transform: translateX(-100%);
             transition: transform 0.3s ease;
         }
 
         .service-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            border-color: color-mix(in srgb, var(--card-hover-border) 50%, transparent);
+            background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-hover-opacity) * 100%), transparent);
         }
 
         .service-card:hover::before {
@@ -376,21 +377,38 @@ body::before {
             min-width: 0;
         }
 
-        .service-info h3 {
+        .service-title-url h3 {
             font-size: 1rem;
             font-weight: 600;
-            color: #1e293b;
+            color: var(--text-primary);
             margin: 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .service-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 1rem;
         }
 
         .service-info p {
-            color: #64748b;
+            color: var(--text-secondary);
             font-size: 0.75rem;
             margin: 0.25rem 0 0 0;
             line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding-right: 1rem;
         }
 
         .service-type-badge {
@@ -415,27 +433,27 @@ body::before {
         }
 
         .service-type-badge.notes {
-            background: rgba(245, 158, 11, 0.1);
-            color: #b45309;
-            border: 1px solid rgba(245, 158, 11, 0.2);
+            background: color-mix(in srgb, var(--notes-color) 10%, transparent);
+            color: color-mix(in srgb, var(--notes-color) 100%, #000 40%);
+            border: 1px solid color-mix(in srgb, var(--notes-color) 20%, transparent);
         }
 
         .service-type-badge.quote {
-            background: rgba(139, 92, 246, 0.1);
-            color: #6b21a8;
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            background: color-mix(in srgb, var(--quote-color) 10%, transparent);
+            color: color-mix(in srgb, var(--quote-color) 100%, #000 40%);
+            border: 1px solid color-mix(in srgb, var(--quote-color) 20%, transparent);
         }
 
         .service-type-badge.calendar {
-            background: rgba(236, 72, 153, 0.1);
-            color: #be185d;
-            border: 1px solid rgba(236, 72, 153, 0.2);
+            background: color-mix(in srgb, var(--calendar-color) 10%, transparent);
+            color: color-mix(in srgb, var(--calendar-color) 100%, #000 40%);
+            border: 1px solid color-mix(in srgb, var(--calendar-color) 20%, transparent);
         }
 
         .service-type-badge.iframe {
-            background: rgba(168, 85, 247, 0.1);
-            color: #7c3aed;
-            border: 1px solid rgba(168, 85, 247, 0.2);
+            background: color-mix(in srgb, var(--quote-color) 10%, transparent);
+            color: color-mix(in srgb, var(--quote-color) 100%, #000 40%);
+            border: 1px solid color-mix(in srgb, var(--quote-color) 20%, transparent);
         }
 
         .service-actions {
@@ -454,57 +472,64 @@ body::before {
             width: 26px;
             height: 26px;
             border: none;
-            border-radius: 4px;
-            background: rgba(0, 0, 0, 0.05);
-            color: #64748b;
+            border-radius: 6px;
+            background: color-mix(in srgb, var(--text-primary) 20%, transparent);
+            color: var(--text-primary);
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.7rem;
+            border: 1px solid color-mix(in srgb, var(--text-primary) 30%, transparent);
         }
 
         .action-btn:hover {
-            background: rgba(0, 0, 0, 0.1);
-            transform: scale(1.05);
+            background: color-mix(in srgb, var(--text-primary) 30%, transparent);
+            transform: scale(1.1);
         }
 
         .action-btn.edit:hover {
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
+            background: color-mix(in srgb, var(--url-color) 25%, transparent);
+            color: var(--url-color);
+            border-color: color-mix(in srgb, var(--url-color) 40%, transparent);
         }
 
         .action-btn.delete:hover {
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(239, 68, 68, 0.25);
             color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.4);
         }
 
         .search-box {
             width: 100%;
             padding: 8px 12px;
-            border: 1px solid rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
             border-radius: 8px;
             font-size: 0.875rem;
             margin-top: 0.5rem;
-            background: rgba(255, 255, 255, 0.8);
+            background: transparent;
+            color: var(--text-primary);
         }
 
         .search-box:focus {
             outline: none;
-            border-color: #10b981;
-            background: rgba(255, 255, 255, 1);
+            border-color: var(--url-color);
+            background: transparent;
         }
 
         .notes-content {
-            background: rgba(245, 158, 11, 0.05);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            border-radius: 8px;
+            background: color-mix(in srgb, var(--notes-color) 10%, transparent);
+            border: 1px solid color-mix(in srgb, var(--notes-color) 30%, transparent);
+            border-radius: 12px;
             padding: 8px 12px;
             margin-top: 0.5rem;
             font-size: 0.875rem;
             line-height: 1.4;
-            color: #92400e;
+            color: var(--notes-color);
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            word-break: break-word;
         }
 
 
@@ -535,7 +560,7 @@ body::before {
 
         .quote-author {
             font-size: 0.75rem;
-            color: #8b5cf6;
+            color: color-mix(in srgb, var(--quote-color) 100%, #000 20%);
             text-align: right;
         }
 
@@ -546,8 +571,8 @@ body::before {
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
             z-index: 1000;
             align-items: center;
             justify-content: center;
@@ -558,14 +583,15 @@ body::before {
         }
 
         .modal-content {
-            background: rgba(255, 255, 255, 0.98);
+            background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-opacity) * 100%), transparent);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--card-border);
             border-radius: 20px;
             padding: 2rem;
             width: 90%;
             max-width: 500px;
             position: relative;
+            box-shadow: 0 20px 60px var(--card-shadow);
             animation: modalSlide 0.3s ease-out;
         }
 
@@ -581,7 +607,7 @@ body::before {
         }
 
         .modal h2 {
-            color: #1e293b;
+            color: var(--text-primary);
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
         }
@@ -592,7 +618,7 @@ body::before {
 
         .form-group label {
             display: block;
-            color: #374151;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
             font-weight: 500;
         }
@@ -600,19 +626,18 @@ body::before {
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(0, 0, 0, 0.2);
+            background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-opacity) * 100%), transparent);
+            border: 1px solid var(--card-border);
             border-radius: 12px;
-            color: #1e293b;
+            color: var(--text-primary);
             font-size: 1rem;
             transition: all 0.2s ease;
         }
 
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
-            border-color: #3b82f6;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
         .form-group textarea {
@@ -676,32 +701,79 @@ body::before {
         }
 
 
-select[id*="day-"], 
-select[id*="month-"], 
-select[id*="year-"], 
+select[id*="day-"],
+select[id*="month-"],
+select[id*="year-"],
 select[id*="phrase-"] {
     scrollbar-width: none;
     -ms-overflow-style: none;
     background: transparent !important;
-    border: 1px solid rgba(236, 72, 153, 0.3) !important;
+    border: 1px solid color-mix(in srgb, var(--calendar-color) 30%, transparent) !important;
     outline: none;
     overflow-y: auto;
     padding: 4px 8px;
+    color: var(--text-primary);
 }
 
-select[id*="day-"]::-webkit-scrollbar, 
-select[id*="month-"]::-webkit-scrollbar, 
-select[id*="year-"]::-webkit-scrollbar, 
+select[id*="day-"] option,
+select[id*="month-"] option,
+select[id*="year-"] option,
+select[id*="phrase-"] option {
+    background: transparent;
+    color: var(--text-primary);
+    padding: 4px 8px;
+}
+
+select[id*="day-"] option:checked,
+select[id*="month-"] option:checked,
+select[id*="year-"] option:checked,
+select[id*="phrase-"] option:checked {
+    background: linear-gradient(135deg, var(--calendar-color) 0%, color-mix(in srgb, var(--calendar-color) 100%, #000 20%) 100%);
+    color: white;
+    font-weight: 600;
+}
+
+select[id*="day-"]::-webkit-scrollbar,
+select[id*="month-"]::-webkit-scrollbar,
+select[id*="year-"]::-webkit-scrollbar,
 select[id*="phrase-"]::-webkit-scrollbar {
     display: none;
 }
 
 /* Enable mouse wheel scrolling */
-select[id*="day-"], 
-select[id*="month-"], 
-select[id*="year-"], 
+select[id*="day-"],
+select[id*="month-"],
+select[id*="year-"],
 select[id*="phrase-"] {
     -webkit-overflow-scrolling: touch;
+}
+
+/* Calendar formatted phrase */
+.calendar-formatted-phrase {
+    font-weight: 600;
+    color: color-mix(in srgb, var(--calendar-color) 100%, #000 40%);
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    text-align: center;
+    word-break: break-word;
+}
+
+/* Calendar copy button */
+.calendar-copy-btn {
+    width: 100%;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, var(--calendar-color) 0%, color-mix(in srgb, var(--calendar-color) 100%, #000 40%) 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.calendar-copy-btn:hover {
+    opacity: 0.9;
 }
 
 @media (max-width: 1400px) {
@@ -712,32 +784,45 @@ select[id*="phrase-"] {
     }
 }
 
+@media (min-width: 1025px) and (max-width: 1150px) {
+    .columns-container {
+        grid-template-columns: minmax(250px, 1fr) minmax(350px, 1.5fr) minmax(250px, 1fr);
+    }
+}
+
 @media (max-width: 1024px) {
     .container {
         max-width: 100%;
         padding: 1rem;
     }
-    
+
     .columns-container {
         display: flex !important;
         flex-direction: column !important;
         gap: 1rem;
         grid-template-columns: none !important;
+        align-items: center !important;
     }
-    
+
     .column {
         width: 100% !important;
         min-width: unset !important;
-        max-width: 100% !important;
+        max-width: 500px !important;
     }
-    
-    .column[data-column="0"], 
-    .column[data-column="1"], 
+
+    .column[data-column="0"],
+    .column[data-column="1"],
     .column[data-column="2"] {
         width: 100% !important;
         min-width: unset !important;
+        max-width: 500px !important;
     }
-		    /* Calendar card container */
+
+    .service-card {
+        max-width: 500px !important;
+    }
+
+    /* Calendar card container */
     .calendar-content {
         max-width: none;
         min-width: 0;
@@ -833,27 +918,407 @@ select[id*="phrase-"] {
 	
 
 @media (max-width: 768px) {
+    body {
+        background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-4));
+        background-size: 400% 400%;
+        background-attachment: fixed;
+        animation: subtleFlow 30s ease-in-out infinite;
+        min-height: 100vh;
+        min-width: 100vw;
+    }
+
     body::before, body::after {
         display: none;
     }
-    
-    body {
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-        animation: none;
+
+    .theme-picker {
+        bottom: 1rem !important;
+        right: 1rem !important;
+        width: auto !important;
+        height: auto !important;
+        max-width: 60px !important;
+        max-height: 60px !important;
     }
-}
-	
-	
-    .btn {
-        padding: 8px 12px;
-        font-size: 0.8rem;
-    }
-    
-    .service-card {
-        padding: 0.5rem;
+
+    .theme-picker-toggle {
+        bottom: 1rem !important;
+        right: 1rem !important;
+        position: relative !important;
     }
 }
 
+/* Theme Picker Styles */
+.theme-picker {
+    position: fixed !important;
+    bottom: 32px !important;
+    right: 32px !important;
+    z-index: 99999 !important;
+    pointer-events: none !important;
+    transform: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    isolation: isolate !important;
+    width: fit-content !important;
+    height: fit-content !important;
+}
+
+.theme-picker > * {
+    pointer-events: auto !important;
+}
+
+.theme-picker-toggle {
+    position: fixed !important;
+    bottom: 32px !important;
+    right: 32px !important;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-opacity) * 100%), transparent);
+    border: 2px solid var(--card-border);
+    box-shadow: 0 4px 12px var(--card-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    z-index: 99999 !important;
+}
+
+.theme-picker-toggle:hover {
+    transform: scale(1.05) rotate(10deg);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.theme-picker-menu {
+    position: fixed !important;
+    bottom: 90px !important;
+    right: 32px !important;
+    background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-opacity) * 100%), transparent);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 8px 24px var(--card-shadow);
+    display: none;
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+    z-index: 100000 !important;
+    transform: none !important;
+    margin: 0 !important;
+    isolation: isolate !important;
+}
+
+.theme-picker-menu.show {
+    display: flex;
+    animation: slideUp 0.2s ease-out;
+}
+
+.theme-picker-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.theme-picker-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.theme-picker-menu::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 3px;
+}
+
+.theme-picker-menu::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.color-option {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 3px solid transparent;
+    border-radius: 10px;
+    position: relative;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.color-option.active {
+    border-color: rgba(59, 130, 246, 0.6);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.color-option.active::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 0.875rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.color-preview {
+    width: 100%;
+    height: 100%;
+    border-radius: 7px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.theme-section-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.theme-divider {
+    height: 1px;
+    background: var(--card-border);
+    margin: 0.75rem 0;
+}
+
+.custom-colors {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+}
+
+.color-control {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.color-control label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.color-control input[type="color"] {
+    width: 100%;
+    height: 36px;
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    cursor: pointer;
+    background: transparent;
+}
+
+.color-control input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 2px;
+}
+
+.color-control input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 4px;
+}
+
+.reset-theme-btn {
+    width: 100%;
+    padding: 0.5rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    color: #dc2626;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.reset-theme-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.5);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    .theme-picker-menu {
+        bottom: 70px !important;
+        right: 1rem !important;
+        left: auto !important;
+        width: 200px !important;
+        max-width: calc(100vw - 2rem);
+        max-height: calc(100vh - 100px);
+        padding: 0.5rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .theme-section-title {
+        font-size: 0.75rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .color-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.3rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .color-option {
+        width: 100% !important;
+        height: 30px !important;
+    }
+
+    .custom-colors {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.3rem !important;
+    }
+
+    .color-control {
+        margin-bottom: 0 !important;
+    }
+
+    .color-control label {
+        font-size: 0.65rem !important;
+        margin-bottom: 0.1rem !important;
+    }
+
+    .color-control input[type="color"] {
+        width: 100% !important;
+        height: 28px !important;
+    }
+
+    .color-control input[type="range"] {
+        height: 18px !important;
+    }
+
+    .reset-theme-btn {
+        font-size: 0.7rem !important;
+        padding: 0.4rem !important;
+        margin-top: 0.3rem !important;
+    }
+
+    .theme-divider {
+        margin: 0.3rem 0 !important;
+    }
+}
+
+    .modal-content {
+        width: 95% !important;
+        max-width: 95% !important;
+        padding: 1.5rem !important;
+        max-height: 85vh !important;
+        overflow-y: auto !important;
+    }
+
+    .modal h2 {
+        font-size: 1.3rem !important;
+    }
+
+    .modal-actions {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+    }
+
+    .modal-actions button {
+        width: 100% !important;
+    }
+
+    .custom-colors {
+        grid-template-columns: 1fr 1fr !important;
+    }
+
+    .color-control label {
+        font-size: 0.8rem !important;
+    }
+
+    .service-actions {
+        opacity: 1 !important;
+    }
+
+    .action-btn {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* Better touch targets */
+    .btn {
+        min-height: 44px !important;
+        padding: 12px 16px !important;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+        min-height: 44px !important;
+    }
+
+    .icon-grid {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)) !important;
+    }
+
+    .icon-option {
+        padding: 10px !important;
+        min-height: 50px !important;
+    }
+
+    /* Calendar editor on mobile */
+    select[id*="day-"],
+    select[id*="month-"],
+    select[id*="year-"],
+    select[id*="phrase-"] {
+        font-size: 14px !important;
+        min-width: 80px !important;
+    }
+
+    .calendar-copy-btn {
+        font-size: 0.9rem !important;
+        padding: 10px 16px !important;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+    .custom-colors {
+        grid-template-columns: 1fr !important;
+    }
+
+    .theme-section {
+        gap: 0.5rem !important;
+    }
+
+    .color-options {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+}
 
         }
     </style>
@@ -866,8 +1331,11 @@ select[id*="phrase-"] {
         </div>
         {% endif %}
 
-        <div class="header">
-            <h1>Homepage</h1>
+        <div class="header" style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
+            <h1 id="siteTitle">BCOS</h1>
+            <button id="editTitleBtn" onclick="editSiteTitle()" style="display: none; padding: 0.5rem 1rem; background: linear-gradient(135deg, var(--url-color) 0%, color-mix(in srgb, var(--url-color) 100%, #000 20%) 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.875rem;">
+                <i class="fas fa-edit"></i> Edit Title
+            </button>
 			
 			<!--
 			<h1><i class="fas fa-th-large"></i> Dashboard</h1>
@@ -1028,6 +1496,25 @@ select[id*="phrase-"] {
 
     <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleImport(event)">
 
+<!-- Calendar Phrases Editor Modal -->
+<div class="modal" id="calendarPhrasesModal">
+    <div class="modal-content" style="max-width: 1200px; max-height: 80vh; overflow-y: auto;">
+        <h2>Edit Calendar Phrases</h2>
+        <div id="calendarPhrasesEditor"></div>
+    </div>
+</div>
+
+<!-- Quotes Editor Modal -->
+<div class="modal" id="quotesModal">
+    <div class="modal-content" style="max-width: 800px; max-height: 80vh; overflow-y: auto;">
+        <h2>Edit Quotes</h2>
+        <div id="quotesEditor"></div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="hideQuotesModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveQuotes()">Save Quotes</button>
+        </div>
+    </div>
+</div>
 
 
 
@@ -1313,10 +1800,11 @@ select[id*="phrase-"] {
 			loadServices();
 			if (isAdminMode) {
 				setupDragAndDrop();
+				document.getElementById('editTitleBtn').style.display = 'block';
 			}
-		
+
 			// Now safe to generate options
-			const optionsHtml = generatePhraseOptions(1); 
+			const optionsHtml = generatePhraseOptions(1);
 			//console.log(optionsHtml);
 		});
 
@@ -1364,6 +1852,12 @@ select[id*="phrase-"] {
             try {
                 const data = await apiRequest('/api/calendar-config');
                 calendarConfig = data.config || {};
+
+                // Update site title if present
+                if (calendarConfig.siteTitle) {
+                    document.getElementById('siteTitle').textContent = calendarConfig.siteTitle;
+                    document.getElementById('pageTitle').textContent = calendarConfig.siteTitle + ' Homepage';
+                }
             } catch (error) {
                 //console.error('Failed to load calendar config:', error);
                 calendarConfig = {};
@@ -1491,7 +1985,7 @@ select[id*="phrase-"] {
                     </div>
                 </div>
                 ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
-                <div class="service-info"><p style="font-family: monospace; color: #3b82f6;">${service.url}</p></div>
+                <div class="service-info"><p style="font-family: monospace; color: var(--url-color);">${service.url}</p></div>
             `;
         }
 
@@ -1576,6 +2070,10 @@ select[id*="phrase-"] {
             </div>
             <div class="quote-author"></div>
         </div>
+
+        ${isAdminMode ? `<button onclick="editQuotes()" class="calendar-copy-btn" style="margin-top: 8px; background: linear-gradient(135deg, var(--quote-color) 0%, color-mix(in srgb, var(--quote-color) 100%, #000 40%) 100%);">
+            <i class="fas fa-edit"></i> Edit Quotes
+        </button>` : ''}
     `;
 }
 
@@ -1604,8 +2102,8 @@ select[id*="phrase-"] {
                     </div>
                 </div>
                 ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
-				
-<div class="calendar-content" style=" background: rgba(236, 72, 153, 0.05);border: 1px solid rgba(236, 72, 153, 0.2);border-radius: 8px;padding: 12px;margin-top: 0.5rem;box-sizing: border-box;">
+
+<div class="calendar-content">
 
     <!-- Flex container for selects -->
     <div style="
@@ -1616,50 +2114,41 @@ select[id*="phrase-"] {
         flex-wrap: wrap;          /* allows wrapping on small screens */
         margin-bottom: 8px;
     ">
-        <select id="day-${index}" onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;max-width: 300px;border: 1px solid rgba(236, 72, 153, 0.3);border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+        <select id="day-${index}" onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;max-width: 300px;border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
             ${generateDayOptions(day)}
         </select>
 
-        <select id="month-${index}"  onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;max-width: 300px;border: 1px solid rgba(236, 72, 153, 0.3);border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+        <select id="month-${index}"  onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;max-width: 300px;border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
             ${generateMonthOptions(month)}
         </select>
 
-        <select id="year-${index}" onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;max-width: 300px;border: 1px solid rgba(236, 72, 153, 0.3);border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+        <select id="year-${index}" onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;max-width: 300px;border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
             ${generateYearOptions(year)}
         </select>
 
-        <select id="phrase-${index}" onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;min-width: 100px;max-width: 300px;border: 1px solid rgba(236, 72, 153, 0.3);border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+        <select id="phrase-${index}" onchange="updateCalendarPhrase(event, ${index})" size="${getPhraseCount(month)}" style="width: auto;min-width: 100px;max-width: 300px;border-radius: 4px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
             ${generatePhraseOptions(month)}
         </select>
     </div>
 
     <!-- Formatted phrase display -->
-<div id="formatted-phrase-${index}" style="
-    font-weight: 600;
-    color: #be185d;
-    margin-bottom: 8px;
-    padding: 8px;
-   
-    border-radius: 4px;
-    text-align: center;
-    word-break: break-word;
-">
-    ${getMonthName(month)} ${day}, ${year}
+<div id="formatted-phrase-${index}" class="calendar-formatted-phrase">
+    ${formatCalendarPhrase(day, month, year)}
 </div>
 
-    <!-- Copy button -->
-    <button onclick="copyToClipboard('formatted-phrase-${index}')" style="
-        width: 100%;
-        padding: 6px 12px;
-        background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-size: 0.875rem;
-        cursor: pointer;
-    ">
-        <i class="fas fa-copy"></i> Copy to Clipboard
-    </button>
+    <!-- Copy and Clear buttons -->
+    <div style="display: flex; gap: 8px; justify-content: center; margin-top: 8px;">
+        <button onclick="clearPhrase(${index})" class="calendar-copy-btn" style="background: linear-gradient(135deg, color-mix(in srgb, var(--calendar-color) 70%, #fff) 0%, color-mix(in srgb, var(--calendar-color) 70%, #000 20%) 100%);">
+            <i class="fas fa-times"></i> Clear Phrase
+        </button>
+        <button onclick="copyToClipboard('formatted-phrase-${index}')" class="calendar-copy-btn">
+            <i class="fas fa-copy"></i> Copy to Clipboard
+        </button>
+    </div>
+
+    ${isAdminMode ? `<button onclick="editCalendarPhrases()" class="calendar-copy-btn" style="margin-top: 8px; background: linear-gradient(135deg, var(--url-color) 0%, color-mix(in srgb, var(--url-color) 100%, #000 40%) 100%);">
+        <i class="fas fa-edit"></i> Edit Calendar Phrases
+    </button>` : ''}
 </div>
 
 												
@@ -1763,14 +2252,15 @@ function getPhraseCount(monthNumber) {
 
         // Helper functions for calendar
         function generateMonthOptions(selectedMonth) {
-			const months = [
-					{value: 1, name: 'January'}, {value: 2, name: 'February'}, {value: 3, name: 'March'},
-					{value: 4, name: 'April'}, {value: 5, name: 'May'}, {value: 6, name: 'June'},
-					{value: 7, name: 'July'}, {value: 8, name: 'August'}, {value: 9, name: 'September'},
-					{value: 10, name: 'October'}, {value: 11, name: 'November'}, {value: 12, name: 'December'}
-    ];
-            
-            return months.map(month => 
+			const defaultMonthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+			const monthNames = calendarConfig.monthNames || defaultMonthNames;
+
+			const months = monthNames.map((name, index) => ({
+				value: index + 1,
+				name: name
+			}));
+
+            return months.map(month =>
                 `<option value="${month.value}" ${month.value === selectedMonth ? 'selected' : ''}>${month.name}</option>`
             ).join('');
         }
@@ -1789,29 +2279,43 @@ function getPhraseCount(monthNumber) {
 		}
 
 		function getMonthName(monthNumber) {
-			const monthNames = {
-				1: 'January', 2: 'February', 3: 'March', 4: 'April',
-				5: 'May', 6: 'June', 7: 'July', 8: 'August',
-				9: 'September', 10: 'October', 11: 'November', 12: 'December'
-			};
-			return monthNames[monthNumber] || monthNumber;
+			const defaultMonthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+			const monthNames = calendarConfig.monthNames || defaultMonthNames;
+			return monthNames[monthNumber - 1] || monthNumber;
+		}
+
+		function formatCalendarPhrase(day, month, year, phrase = '') {
+			const defaultFormat = '{month} {day}, {year} - {phrase}';
+			let format = calendarConfig.format || defaultFormat;
+			const monthName = getMonthName(parseInt(month));
+
+			// If no phrase, remove the {phrase} placeholder and adjacent separators
+			if (!phrase) {
+				// Remove separator before {phrase}: " - {phrase}" or "{phrase} - "
+				format = format
+					.replace(/\s*[-:;,|\/\\]\s*\{phrase\}\s*[-:;,|\/\\]?\s*/g, ' ')
+					.replace(/\{phrase\}\s*[-:;,|\/\\]\s*/g, '')
+					.replace(/\s*[-:;,|\/\\]\s*\{phrase\}/g, '');
+			}
+
+			let result = format
+				.replace('{month}', monthName)
+				.replace('{day}', day)
+				.replace('{year}', year)
+				.replace('{phrase}', phrase);
+
+			return result.trim().replace(/\s+/g, ' ');
 		}
 
 async function updateCalendarPhrase(event, index) {
     const day = document.getElementById(`day-${index}`).value;
     const month = document.getElementById(`month-${index}`).value;
     const year = document.getElementById(`year-${index}`).value;
-    const phrase = document.getElementById(`phrase-${index}`).value;
+    const phrase = document.getElementById(`phrase-${index}`).value || '';
 
     try {
-        const response = await apiRequest('/api/calendar-phrase', {
-            method: 'POST',
-            body: JSON.stringify({ day, month, year, phrase })
-        });
-
-        if (response.success) {
-            document.getElementById(`formatted-phrase-${index}`).textContent = response.formatted_phrase.trim();
-        }
+        const formattedPhrase = formatCalendarPhrase(day, month, year, phrase);
+        document.getElementById(`formatted-phrase-${index}`).textContent = formattedPhrase;
 
         // Update phrase options when month changes
         if (event && event.target && event.target.id.includes('month-')) {
@@ -1826,12 +2330,21 @@ async function updateCalendarPhrase(event, index) {
             phraseSelect.setAttribute('size', newSize);
             daySelect.setAttribute('size', newSize);
             yearSelect.setAttribute('size', newSize);
+
+            // Clear selection and update display without phrase
+            phraseSelect.value = '';
+            updateCalendarPhrase(null, index);
         }
     } catch (error) {
         //console.error('Failed to update calendar phrase:', error);
     }
 }
 
+function clearPhrase(index) {
+    const phraseSelect = document.getElementById(`phrase-${index}`);
+    phraseSelect.value = '';
+    updateCalendarPhrase(null, index);
+}
 
 async function copyToClipboard(elementId) {
     const element = document.getElementById(elementId);
@@ -2281,6 +2794,226 @@ async function copyToClipboard(elementId) {
             reader.readAsText(file);
         }
 
+        // Calendar Phrases Editor
+        function editCalendarPhrases() {
+            const editor = document.getElementById('calendarPhrasesEditor');
+            const defaultMonthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                                      'July', 'August', 'September', 'October', 'November', 'December'];
+
+            // Get current format settings or use defaults
+            const currentFormat = calendarConfig.format || '{month} {day}, {year} - {phrase}';
+            const currentMonthNames = calendarConfig.monthNames || defaultMonthNames;
+
+            let html = '<div style="display: flex; flex-direction: column; gap: 1rem;">';
+
+            // Format Settings Section
+            html += `
+                <div style="border: 2px solid var(--calendar-color); border-radius: 6px; padding: 0.75rem; background: color-mix(in srgb, var(--calendar-color) 5%, transparent);">
+                    <h3 style="margin: 0 0 0.5rem 0; color: var(--calendar-color); font-size: 1rem;">Calendar Settings</h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <div>
+                            <label style="font-weight: 600; margin-bottom: 0.25rem; display: block; font-size: 0.85rem;">Output Format</label>
+                            <input type="text" id="calendarFormat" value="${currentFormat}" placeholder="{month} {day}, {year} - {phrase}" style="width: 100%; padding: 6px; border: 1px solid var(--card-border); border-radius: 4px; background: transparent; color: var(--text-primary); font-family: monospace; font-size: 0.85rem;">
+                            <p style="font-size: 0.7rem; color: color-mix(in srgb, var(--text-primary) 60%, transparent); margin: 0.2rem 0 0 0;">
+                                Use: {month}, {day}, {year}, {phrase}
+                            </p>
+                        </div>
+
+                        <div>
+                            <label style="font-weight: 600; margin-bottom: 0.25rem; display: block; font-size: 0.85rem;">Month Names (comma-separated)</label>
+                            <input type="text" id="monthNames" value="${currentMonthNames.join(', ')}" style="width: 100%; padding: 6px; border: 1px solid var(--card-border); border-radius: 4px; background: transparent; color: var(--text-primary); font-size: 0.85rem;">
+                            <p style="font-size: 0.7rem; color: color-mix(in srgb, var(--text-primary) 60%, transparent); margin: 0.2rem 0 0 0;">
+                                12 month names for different languages
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Month Phrases Sections - 5 columns with buttons in remaining grid space
+            html += `
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem;">
+            `;
+
+            defaultMonthNames.forEach((defaultName, index) => {
+                const monthNum = (index + 1).toString();
+                const monthData = calendarConfig.months?.[monthNum] || { name: defaultName, phrases: [] };
+                const phrases = monthData.phrases || [];
+                const displayName = currentMonthNames[index] || defaultName;
+
+                html += `
+                    <div style="border: 1px solid var(--card-border); border-radius: 4px; padding: 0.5rem;">
+                        <h4 style="margin: 0 0 0.4rem 0; color: var(--calendar-color); font-size: 0.85rem;">${displayName}</h4>
+                        <textarea id="phrases-${monthNum}" rows="5" style="width: 100%; padding: 4px; border: 1px solid var(--card-border); border-radius: 4px; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 0.8rem; resize: vertical;">${phrases.join('\n')}</textarea>
+                    </div>
+                `;
+            });
+
+            // Add buttons in remaining grid cells
+            html += `
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; justify-content: flex-end;">
+                    <button class="btn btn-primary" onclick="saveCalendarPhrases()" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, var(--calendar-color) 0%, color-mix(in srgb, var(--calendar-color) 100%, #000 20%) 100%); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                    <button class="btn btn-secondary" onclick="hideCalendarPhrasesModal()" style="width: 100%; padding: 0.75rem; background: color-mix(in srgb, var(--text-secondary) 20%, transparent); color: var(--text-primary); border: 1px solid var(--card-border); border-radius: 4px; cursor: pointer;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            `;
+
+            html += '</div></div>';
+            editor.innerHTML = html;
+            document.getElementById('calendarPhrasesModal').classList.add('show');
+        }
+
+        function hideCalendarPhrasesModal() {
+            document.getElementById('calendarPhrasesModal').classList.remove('show');
+        }
+
+        async function saveCalendarPhrases() {
+            const months = {};
+            const defaultMonthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                                      'July', 'August', 'September', 'October', 'November', 'December'];
+
+            // Get format settings
+            const formatInput = document.getElementById('calendarFormat');
+            const monthNamesInput = document.getElementById('monthNames');
+
+            const customFormat = formatInput.value.trim() || '{month} {day}, {year} - {phrase}';
+            const customMonthNames = monthNamesInput.value.split(',').map(m => m.trim()).filter(m => m !== '');
+
+            // Validate month names (should be 12)
+            if (customMonthNames.length !== 12) {
+                showError('Please provide exactly 12 month names separated by commas');
+                return;
+            }
+
+            // Save format and month names to config
+            calendarConfig.format = customFormat;
+            calendarConfig.monthNames = customMonthNames;
+
+            customMonthNames.forEach((monthName, index) => {
+                const monthNum = (index + 1).toString();
+                const textarea = document.getElementById(`phrases-${monthNum}`);
+                const phrases = textarea.value.split('\n').filter(p => p.trim() !== '');
+
+                months[monthNum] = {
+                    name: monthName,
+                    phrases: phrases
+                };
+            });
+
+            calendarConfig.months = months;
+
+            try {
+                await apiRequest('/api/calendar-config', {
+                    method: 'POST',
+                    body: JSON.stringify({ config: calendarConfig })
+                });
+
+                hideCalendarPhrasesModal();
+                renderServices();
+                showSuccess('Calendar settings saved successfully!');
+            } catch (error) {
+                showError('Failed to save calendar settings');
+            }
+        }
+
+        // Quotes Editor
+        function editQuotes() {
+            const editor = document.getElementById('quotesEditor');
+            const quotes = calendarConfig.quotes || [];
+
+            // Convert quotes to notepad format: "quote text" - Author
+            const quotesText = quotes.map(q => `"${q.text}" - ${q.author}`).join('\n\n');
+
+            let html = `
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <p style="color: color-mix(in srgb, var(--text-primary) 70%, transparent); font-size: 0.875rem; margin: 0;">
+                        Format: <code style="background: color-mix(in srgb, var(--text-primary) 10%, transparent); padding: 2px 6px; border-radius: 4px;">"Quote text" - Author</code>
+                        <br>Separate each quote with a blank line.
+                    </p>
+                    <textarea id="quotesTextarea" rows="20" style="width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 8px; background: transparent; color: var(--text-primary); font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical;">${quotesText}</textarea>
+                </div>
+            `;
+
+            editor.innerHTML = html;
+            document.getElementById('quotesModal').classList.add('show');
+        }
+
+        function hideQuotesModal() {
+            document.getElementById('quotesModal').classList.remove('show');
+        }
+
+        async function saveQuotes() {
+            const quotesTextarea = document.getElementById('quotesTextarea');
+            const quotesText = quotesTextarea.value;
+            const quotes = [];
+
+            // Split by double newlines (blank lines) to get individual quotes
+            const quoteBlocks = quotesText.split(/\n\s*\n/).filter(block => block.trim());
+
+            quoteBlocks.forEach(block => {
+                // Match pattern: "quote text" - Author
+                const match = block.trim().match(/^"(.+?)"\s*-\s*(.+)$/s);
+                if (match) {
+                    const text = match[1].trim();
+                    const author = match[2].trim();
+                    if (text && author) {
+                        quotes.push({ text, author });
+                    }
+                }
+            });
+
+            if (quotes.length === 0) {
+                showError('No valid quotes found. Please use format: "Quote text" - Author');
+                return;
+            }
+
+            calendarConfig.quotes = quotes;
+
+            try {
+                await apiRequest('/api/calendar-config', {
+                    method: 'POST',
+                    body: JSON.stringify({ config: calendarConfig })
+                });
+
+                hideQuotesModal();
+                renderServices();
+                showSuccess(`${quotes.length} quote(s) saved successfully!`);
+            } catch (error) {
+                showError('Failed to save quotes');
+            }
+        }
+
+        // Site Title Editor
+        function editSiteTitle() {
+            const currentTitle = document.getElementById('siteTitle').textContent;
+            const newTitle = prompt('Enter new site title:', currentTitle);
+
+            if (newTitle !== null && newTitle.trim() !== '') {
+                saveSiteTitle(newTitle.trim());
+            }
+        }
+
+        async function saveSiteTitle(title) {
+            try {
+                calendarConfig.siteTitle = title;
+
+                await apiRequest('/api/calendar-config', {
+                    method: 'POST',
+                    body: JSON.stringify({ config: calendarConfig })
+                });
+
+                document.getElementById('siteTitle').textContent = title;
+                document.getElementById('pageTitle').textContent = title + ' Homepage';
+                showSuccess('Site title updated successfully!');
+            } catch (error) {
+                showError('Failed to save site title');
+            }
+        }
+
         // Utility functions
         function showLoading(show) {
             document.getElementById('loadingState').style.display = show ? 'block' : 'none';
@@ -2334,6 +3067,511 @@ async function copyToClipboard(elementId) {
             } else if (isAdminMode && e.ctrlKey && e.key === 'n') {
                 e.preventDefault();
                 showAddModal();
+            }
+        });
+
+        // Color Themes
+        const colorThemes = {
+            light: {
+                name: 'Light',
+                bg: ['#ffffff', '#f9fafb', '#f3f4f6', '#e5e7eb'],
+                text: '#111827',
+                textSecondary: '#4b5563',
+                card: 'rgba(255, 255, 255, 0.9)',
+                cardBorder: 'rgba(229, 231, 235, 0.8)',
+                cardShadow: 'rgba(0, 0, 0, 0.08)',
+                orbs: ['rgba(59, 130, 246, 0.1)', 'rgba(139, 92, 246, 0.1)', 'rgba(236, 72, 153, 0.08)'],
+                url: '#3b82f6',
+                notes: '#f59e0b',
+                calendar: '#ec4899',
+                quote: '#8b5cf6'
+            },
+            grey: {
+                name: 'Grey',
+                bg: ['#e5e7eb', '#d1d5db', '#cbd5e1', '#e2e8f0'],
+                text: '#1f2937',
+                textSecondary: '#6b7280',
+                card: 'rgba(255, 255, 255, 0.8)',
+                cardBorder: 'rgba(209, 213, 219, 0.6)',
+                cardShadow: 'rgba(0, 0, 0, 0.1)',
+                orbs: ['rgba(59, 130, 246, 0.15)', 'rgba(139, 92, 246, 0.15)', 'rgba(236, 72, 153, 0.1)'],
+                url: '#3b82f6',
+                notes: '#f59e0b',
+                calendar: '#ec4899',
+                quote: '#8b5cf6'
+            },
+            dark: {
+                name: 'Dark',
+                bg: ['#374151', '#4b5563', '#6b7280', '#9ca3af'],
+                text: '#f9fafb',
+                textSecondary: '#d1d5db',
+                card: 'rgba(55, 65, 81, 0.8)',
+                cardBorder: 'rgba(107, 114, 128, 0.4)',
+                cardShadow: 'rgba(0, 0, 0, 0.3)',
+                orbs: ['rgba(59, 130, 246, 0.25)', 'rgba(139, 92, 246, 0.25)', 'rgba(236, 72, 153, 0.2)'],
+                url: '#60a5fa',
+                notes: '#fbbf24',
+                calendar: '#f472b6',
+                quote: '#a78bfa'
+            },
+            blue: {
+                name: 'Blue',
+                bg: ['#dbeafe', '#bfdbfe', '#93c5fd', '#60a5fa'],
+                text: '#1e3a8a',
+                textSecondary: '#3b82f6',
+                card: 'rgba(255, 255, 255, 0.85)',
+                cardBorder: 'rgba(147, 197, 253, 0.6)',
+                cardShadow: 'rgba(37, 99, 235, 0.1)',
+                orbs: ['rgba(59, 130, 246, 0.2)', 'rgba(96, 165, 250, 0.15)', 'rgba(37, 99, 235, 0.1)'],
+                url: '#2563eb',
+                notes: '#f59e0b',
+                calendar: '#0ea5e9',
+                quote: '#6366f1'
+            },
+            purple: {
+                name: 'Purple',
+                bg: ['#f3e8ff', '#e9d5ff', '#d8b4fe', '#c084fc'],
+                text: '#581c87',
+                textSecondary: '#7c3aed',
+                card: 'rgba(255, 255, 255, 0.85)',
+                cardBorder: 'rgba(216, 180, 254, 0.6)',
+                cardShadow: 'rgba(124, 58, 237, 0.1)',
+                orbs: ['rgba(139, 92, 246, 0.2)', 'rgba(168, 85, 247, 0.15)', 'rgba(124, 58, 237, 0.1)'],
+                url: '#7c3aed',
+                notes: '#f59e0b',
+                calendar: '#ec4899',
+                quote: '#8b5cf6'
+            },
+            green: {
+                name: 'Green',
+                bg: ['#d1fae5', '#a7f3d0', '#6ee7b7', '#34d399'],
+                text: '#065f46',
+                textSecondary: '#059669',
+                card: 'rgba(255, 255, 255, 0.85)',
+                cardBorder: 'rgba(110, 231, 183, 0.6)',
+                cardShadow: 'rgba(5, 150, 105, 0.1)',
+                orbs: ['rgba(16, 185, 129, 0.2)', 'rgba(52, 211, 153, 0.15)', 'rgba(5, 150, 105, 0.1)'],
+                url: '#047857',
+                notes: '#f59e0b',
+                calendar: '#10b981',
+                quote: '#14b8a6'
+            },
+            pink: {
+                name: 'Pink',
+                bg: ['#fce7f3', '#fbcfe8', '#f9a8d4', '#f472b6'],
+                text: '#831843',
+                textSecondary: '#be185d',
+                card: 'rgba(255, 255, 255, 0.85)',
+                cardBorder: 'rgba(249, 168, 212, 0.6)',
+                cardShadow: 'rgba(190, 24, 93, 0.1)',
+                orbs: ['rgba(236, 72, 153, 0.2)', 'rgba(244, 114, 182, 0.15)', 'rgba(190, 24, 93, 0.1)'],
+                url: '#be185d',
+                notes: '#f97316',
+                calendar: '#ec4899',
+                quote: '#db2777'
+            },
+            orange: {
+                name: 'Orange',
+                bg: ['#fed7aa', '#fdba74', '#fb923c', '#f97316'],
+                text: '#7c2d12',
+                textSecondary: '#c2410c',
+                card: 'rgba(255, 255, 255, 0.85)',
+                cardBorder: 'rgba(251, 146, 60, 0.6)',
+                cardShadow: 'rgba(194, 65, 12, 0.1)',
+                orbs: ['rgba(249, 115, 22, 0.2)', 'rgba(251, 146, 60, 0.15)', 'rgba(194, 65, 12, 0.1)'],
+                url: '#c2410c',
+                notes: '#f59e0b',
+                calendar: '#fb923c',
+                quote: '#ea580c'
+            },
+            slate: {
+                name: 'Slate',
+                bg: ['#1e293b', '#334155', '#475569', '#64748b'],
+                text: '#f1f5f9',
+                textSecondary: '#94a3b8',
+                card: 'rgba(51, 65, 85, 0.7)',
+                cardBorder: 'rgba(148, 163, 184, 0.3)',
+                cardShadow: 'rgba(0, 0, 0, 0.2)',
+                orbs: ['rgba(59, 130, 246, 0.2)', 'rgba(139, 92, 246, 0.2)', 'rgba(236, 72, 153, 0.15)'],
+                url: '#60a5fa',
+                notes: '#fbbf24',
+                calendar: '#f472b6',
+                quote: '#a78bfa'
+            },
+            midnight: {
+                name: 'Midnight',
+                bg: ['#0f172a', '#1e1b4b', '#164e63', '#1e293b'],
+                text: '#f1f5f9',
+                textSecondary: '#94a3b8',
+                card: 'rgba(30, 41, 59, 0.7)',
+                cardBorder: 'rgba(148, 163, 184, 0.3)',
+                cardShadow: 'rgba(0, 0, 0, 0.3)',
+                orbs: ['rgba(59, 130, 246, 0.25)', 'rgba(139, 92, 246, 0.25)', 'rgba(236, 72, 153, 0.2)'],
+                url: '#60a5fa',
+                notes: '#fbbf24',
+                calendar: '#f472b6',
+                quote: '#a78bfa'
+            }
+        };
+
+        function setTheme(themeKey) {
+            const theme = colorThemes[themeKey];
+            if (!theme) return;
+
+            document.body.style.setProperty('--bg-gradient-1', theme.bg[0]);
+            document.body.style.setProperty('--bg-gradient-2', theme.bg[1]);
+            document.body.style.setProperty('--bg-gradient-3', theme.bg[2]);
+            document.body.style.setProperty('--bg-gradient-4', theme.bg[3]);
+            document.body.style.setProperty('--text-primary', theme.text);
+            document.body.style.setProperty('--text-secondary', theme.textSecondary);
+            document.body.style.setProperty('--card-bg', theme.card);
+            document.body.style.setProperty('--card-border', theme.cardBorder);
+            document.body.style.setProperty('--card-shadow', theme.cardShadow);
+            document.body.style.setProperty('--orb-1', theme.orbs[0]);
+            document.body.style.setProperty('--orb-2', theme.orbs[1]);
+            document.body.style.setProperty('--orb-3', theme.orbs[2]);
+            document.body.style.setProperty('--url-color', theme.url);
+            document.body.style.setProperty('--notes-color', theme.notes);
+            document.body.style.setProperty('--calendar-color', theme.calendar);
+            document.body.style.setProperty('--quote-color', theme.quote);
+            document.body.style.setProperty('--card-hover-border', theme.url);
+
+            // Update color picker inputs to match theme
+            document.getElementById('customBg1').value = theme.bg[0];
+            document.getElementById('customBg2').value = theme.bg[1];
+            document.getElementById('customBg3').value = theme.bg[2];
+            document.getElementById('customBg4').value = theme.bg[3];
+            document.getElementById('customText').value = theme.text;
+            document.getElementById('customUrl').value = theme.url;
+            document.getElementById('customNotes').value = theme.notes;
+            document.getElementById('customCalendar').value = theme.calendar;
+            document.getElementById('customQuote').value = theme.quote;
+            document.getElementById('customHoverBorder').value = theme.url;
+            document.getElementById('cardOpacity').value = 80;
+            document.getElementById('opacityValue').textContent = 80;
+            document.getElementById('cardHoverOpacity').value = 95;
+            document.getElementById('hoverOpacityValue').textContent = 95;
+
+            // Save the actual color values instead of theme name
+            saveThemeColors({
+                bg1: theme.bg[0],
+                bg2: theme.bg[1],
+                bg3: theme.bg[2],
+                bg4: theme.bg[3],
+                text: theme.text,
+                url: theme.url,
+                notes: theme.notes,
+                calendar: theme.calendar,
+                quote: theme.quote,
+                hoverBorder: theme.url,
+                opacity: 80,
+                hoverOpacity: 95
+            });
+
+            updateThemePickerActive(themeKey);
+        }
+
+        function getTheme() {
+            const match = document.cookie.match(/theme=([^;]+)/);
+            return match ? match[1] : 'grey';
+        }
+
+        function updateThemePickerActive(themeKey) {
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.theme === themeKey);
+            });
+        }
+
+        function updateCustomColor(type, value) {
+            // Clear preset selection
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+
+            // Update CSS variable
+            switch(type) {
+                case 'bg1':
+                    document.body.style.setProperty('--bg-gradient-1', value);
+                    break;
+                case 'bg2':
+                    document.body.style.setProperty('--bg-gradient-2', value);
+                    break;
+                case 'bg3':
+                    document.body.style.setProperty('--bg-gradient-3', value);
+                    break;
+                case 'bg4':
+                    document.body.style.setProperty('--bg-gradient-4', value);
+                    break;
+                case 'text':
+                    document.body.style.setProperty('--text-primary', value);
+                    break;
+                case 'url':
+                    document.body.style.setProperty('--url-color', value);
+                    break;
+                case 'notes':
+                    document.body.style.setProperty('--notes-color', value);
+                    break;
+                case 'calendar':
+                    document.body.style.setProperty('--calendar-color', value);
+                    break;
+                case 'quote':
+                    document.body.style.setProperty('--quote-color', value);
+                    break;
+                case 'hoverBorder':
+                    document.body.style.setProperty('--card-hover-border', value);
+                    break;
+            }
+
+            // Save custom colors to cookie
+            saveCustomColors();
+        }
+
+        function updateCardOpacity(value) {
+            const opacity = value / 100;
+            document.body.style.setProperty('--card-opacity', opacity);
+            document.getElementById('opacityValue').textContent = value;
+            saveCustomColors();
+        }
+
+        function updateCardHoverOpacity(value) {
+            const opacity = value / 100;
+            document.body.style.setProperty('--card-hover-opacity', opacity);
+            document.getElementById('hoverOpacityValue').textContent = value;
+            saveCustomColors();
+        }
+
+        function saveThemeColors(colors) {
+            document.cookie = `themeColors=${encodeURIComponent(JSON.stringify(colors))};path=/;max-age=31536000`;
+        }
+
+        function saveCustomColors() {
+            const customColors = {
+                bg1: document.getElementById('customBg1').value,
+                bg2: document.getElementById('customBg2').value,
+                bg3: document.getElementById('customBg3').value,
+                bg4: document.getElementById('customBg4').value,
+                text: document.getElementById('customText').value,
+                url: document.getElementById('customUrl').value,
+                notes: document.getElementById('customNotes').value,
+                calendar: document.getElementById('customCalendar').value,
+                quote: document.getElementById('customQuote').value,
+                hoverBorder: document.getElementById('customHoverBorder').value,
+                opacity: document.getElementById('cardOpacity').value,
+                hoverOpacity: document.getElementById('cardHoverOpacity').value
+            };
+            saveThemeColors(customColors);
+        }
+
+        function loadCustomColors() {
+            const match = document.cookie.match(/customColors=([^;]+)/);
+            if (match) {
+                try {
+                    const colors = JSON.parse(decodeURIComponent(match[1]));
+                    document.getElementById('customBg1').value = colors.bg1;
+                    document.getElementById('customBg2').value = colors.bg2;
+                    document.getElementById('customBg3').value = colors.bg3;
+                    document.getElementById('customBg4').value = colors.bg4;
+                    document.getElementById('customText').value = colors.text;
+                    document.getElementById('customUrl').value = colors.url;
+                    document.getElementById('customNotes').value = colors.notes;
+                    if (colors.calendar) document.getElementById('customCalendar').value = colors.calendar;
+                    if (colors.quote) document.getElementById('customQuote').value = colors.quote;
+
+                    document.body.style.setProperty('--bg-gradient-1', colors.bg1);
+                    document.body.style.setProperty('--bg-gradient-2', colors.bg2);
+                    document.body.style.setProperty('--bg-gradient-3', colors.bg3);
+                    document.body.style.setProperty('--bg-gradient-4', colors.bg4);
+                    document.body.style.setProperty('--text-primary', colors.text);
+                    document.body.style.setProperty('--url-color', colors.url);
+                    document.body.style.setProperty('--notes-color', colors.notes);
+                    if (colors.calendar) document.body.style.setProperty('--calendar-color', colors.calendar);
+                    if (colors.quote) document.body.style.setProperty('--quote-color', colors.quote);
+                } catch(e) {
+                    console.error('Error loading custom colors:', e);
+                }
+            }
+        }
+
+        function resetTheme() {
+            setTheme('grey');
+            document.getElementById('themePickerMenu').classList.remove('show');
+        }
+
+        // Initialize theme on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const colorMatch = document.cookie.match(/themeColors=([^;]+)/);
+            if (colorMatch) {
+                try {
+                    const colors = JSON.parse(decodeURIComponent(colorMatch[1]));
+                    document.body.style.setProperty('--bg-gradient-1', colors.bg1);
+                    document.body.style.setProperty('--bg-gradient-2', colors.bg2);
+                    document.body.style.setProperty('--bg-gradient-3', colors.bg3);
+                    document.body.style.setProperty('--bg-gradient-4', colors.bg4);
+                    document.body.style.setProperty('--text-primary', colors.text);
+                    document.body.style.setProperty('--url-color', colors.url);
+                    document.body.style.setProperty('--notes-color', colors.notes);
+                    if (colors.calendar) document.body.style.setProperty('--calendar-color', colors.calendar);
+                    if (colors.quote) document.body.style.setProperty('--quote-color', colors.quote);
+                    if (colors.hoverBorder) document.body.style.setProperty('--card-hover-border', colors.hoverBorder);
+                    if (colors.opacity) {
+                        document.body.style.setProperty('--card-opacity', colors.opacity / 100);
+                        document.getElementById('cardOpacity').value = colors.opacity;
+                        document.getElementById('opacityValue').textContent = colors.opacity;
+                    }
+                    if (colors.hoverOpacity) {
+                        document.body.style.setProperty('--card-hover-opacity', colors.hoverOpacity / 100);
+                        document.getElementById('cardHoverOpacity').value = colors.hoverOpacity;
+                        document.getElementById('hoverOpacityValue').textContent = colors.hoverOpacity;
+                    }
+
+                    // Set input field values
+                    document.getElementById('customBg1').value = colors.bg1;
+                    document.getElementById('customBg2').value = colors.bg2;
+                    document.getElementById('customBg3').value = colors.bg3;
+                    document.getElementById('customBg4').value = colors.bg4;
+                    document.getElementById('customText').value = colors.text;
+                    document.getElementById('customUrl').value = colors.url;
+                    document.getElementById('customNotes').value = colors.notes;
+                    if (colors.calendar) document.getElementById('customCalendar').value = colors.calendar;
+                    if (colors.quote) document.getElementById('customQuote').value = colors.quote;
+                    if (colors.hoverBorder) document.getElementById('customHoverBorder').value = colors.hoverBorder;
+                } catch(e) {
+                    console.error('Error loading theme colors:', e);
+                    applySystemTheme();
+                }
+            } else {
+                // Auto-detect dark mode preference if no theme saved
+                applySystemTheme();
+            }
+
+            // Listen for system theme changes
+            const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            darkModeQuery.addEventListener('change', (e) => {
+                const colorMatch = document.cookie.match(/themeColors=([^;]+)/);
+                // Only auto-switch if user hasn't set a custom theme
+                if (!colorMatch) {
+                    applySystemTheme();
+                }
+            });
+        });
+
+        function applySystemTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'grey');
+        }
+    </script>
+
+    <!-- Theme Picker -->
+    <div class="theme-picker">
+        <div class="theme-picker-toggle" onclick="toggleThemePicker()">
+            <i class="fas fa-palette"></i>
+        </div>
+        <div class="theme-picker-menu" id="themePickerMenu">
+            <div class="theme-section-title">Presets</div>
+            <div class="color-grid">
+                <div class="color-option" data-theme="light" onclick="setTheme('light')">
+                    <div class="color-preview" style="background: linear-gradient(135deg, #ffffff, #f3f4f6);"></div>
+                </div>
+                <div class="color-option" data-theme="grey" onclick="setTheme('grey')">
+                    <div class="color-preview" style="background: linear-gradient(135deg, #d1d5db, #e2e8f0);"></div>
+                </div>
+                <div class="color-option" data-theme="dark" onclick="setTheme('dark')">
+                    <div class="color-preview" style="background: linear-gradient(135deg, #4b5563, #6b7280);"></div>
+                </div>
+                <div class="color-option" data-theme="blue" onclick="setTheme('blue')">
+                    <div class="color-preview" style="background: linear-gradient(135deg, #93c5fd, #60a5fa);"></div>
+                </div>
+                <div class="color-option" data-theme="purple" onclick="setTheme('purple')">
+                    <div class="color-preview" style="background: linear-gradient(135deg, #d8b4fe, #c084fc);"></div>
+                </div>
+                <div class="color-option" data-theme="green" onclick="setTheme('green')">
+                    <div class="color-preview" style="background: linear-gradient(135deg, #6ee7b7, #34d399);"></div>
+                </div>
+                <div class="color-option" data-theme="pink" onclick="setTheme('pink')">
+                    <div class="color-preview" style="background: linear-gradient(135deg, #f9a8d4, #f472b6);"></div>
+                </div>
+                <div class="color-option" data-theme="orange" onclick="setTheme('orange')">
+                    <div class="color-preview" style="background: linear-gradient(135deg, #fb923c, #f97316);"></div>
+                </div>
+                <div class="color-option" data-theme="slate" onclick="setTheme('slate')">
+                    <div class="color-preview" style="background: linear-gradient(135deg, #334155, #475569);"></div>
+                </div>
+                <div class="color-option" data-theme="midnight" onclick="setTheme('midnight')">
+                    <div class="color-preview" style="background: linear-gradient(135deg, #0f172a, #1e1b4b);"></div>
+                </div>
+            </div>
+
+            <div class="theme-divider"></div>
+
+            <div class="theme-section-title">Custom Colors</div>
+            <div class="custom-colors">
+                <div class="color-control">
+                    <label>BG 1</label>
+                    <input type="color" id="customBg1" value="#e5e7eb" onchange="updateCustomColor('bg1', this.value)">
+                </div>
+                <div class="color-control">
+                    <label>BG 2</label>
+                    <input type="color" id="customBg2" value="#d1d5db" onchange="updateCustomColor('bg2', this.value)">
+                </div>
+                <div class="color-control">
+                    <label>BG 3</label>
+                    <input type="color" id="customBg3" value="#cbd5e1" onchange="updateCustomColor('bg3', this.value)">
+                </div>
+                <div class="color-control">
+                    <label>BG 4</label>
+                    <input type="color" id="customBg4" value="#e2e8f0" onchange="updateCustomColor('bg4', this.value)">
+                </div>
+                <div class="color-control">
+                    <label>Text</label>
+                    <input type="color" id="customText" value="#1f2937" onchange="updateCustomColor('text', this.value)">
+                </div>
+                <div class="color-control">
+                    <label>URL</label>
+                    <input type="color" id="customUrl" value="#3b82f6" onchange="updateCustomColor('url', this.value)">
+                </div>
+                <div class="color-control">
+                    <label>Notes</label>
+                    <input type="color" id="customNotes" value="#f59e0b" onchange="updateCustomColor('notes', this.value)">
+                </div>
+                <div class="color-control">
+                    <label>Calendar</label>
+                    <input type="color" id="customCalendar" value="#ec4899" onchange="updateCustomColor('calendar', this.value)">
+                </div>
+                <div class="color-control">
+                    <label>Quote</label>
+                    <input type="color" id="customQuote" value="#8b5cf6" onchange="updateCustomColor('quote', this.value)">
+                </div>
+                <div class="color-control">
+                    <label>Card Hover Border</label>
+                    <input type="color" id="customHoverBorder" value="#3b82f6" onchange="updateCustomColor('hoverBorder', this.value)">
+                </div>
+                <div class="color-control" style="grid-column: 1 / -1;">
+                    <label>Card Opacity: <span id="opacityValue">80</span>%</label>
+                    <input type="range" id="cardOpacity" min="0" max="100" value="80" onchange="updateCardOpacity(this.value)" style="width: 100%;">
+                </div>
+                <div class="color-control" style="grid-column: 1 / -1;">
+                    <label>Card Hover Opacity: <span id="hoverOpacityValue">95</span>%</label>
+                    <input type="range" id="cardHoverOpacity" min="0" max="100" value="95" onchange="updateCardHoverOpacity(this.value)" style="width: 100%;">
+                </div>
+            </div>
+
+            <button class="reset-theme-btn" onclick="resetTheme()">
+                <i class="fas fa-undo"></i> Reset to Default
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function toggleThemePicker() {
+            const menu = document.getElementById('themePickerMenu');
+            menu.classList.toggle('show');
+        }
+
+        // Close theme picker when clicking outside
+        document.addEventListener('click', function(e) {
+            const themePicker = document.querySelector('.theme-picker');
+            if (!themePicker.contains(e.target)) {
+                document.getElementById('themePickerMenu').classList.remove('show');
             }
         });
     </script>

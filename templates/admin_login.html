@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='all.min.css') }}">
     <style>
         * {
@@ -14,23 +15,37 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
-            color: #1e293b;
+            --bg-gradient-1: #e5e7eb;
+            --bg-gradient-2: #d1d5db;
+            --bg-gradient-3: #cbd5e1;
+            --bg-gradient-4: #e2e8f0;
+            --text-primary: #1f2937;
+            --url-color: #3b82f6;
+            --card-opacity: 0.8;
+            background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-4));
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
         .login-container {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-opacity) * 100%), transparent);
+            border: 1px solid color-mix(in srgb, var(--text-primary) 10%, transparent);
             border-radius: 20px;
             padding: 3rem;
             width: 100%;
             max-width: 400px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px color-mix(in srgb, var(--text-primary) 10%, transparent);
         }
 
         .login-header {
@@ -41,12 +56,12 @@
         .login-header h1 {
             font-size: 1.75rem;
             font-weight: 700;
-            color: #1e293b;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
         }
 
         .login-header p {
-            color: #64748b;
+            color: color-mix(in srgb, var(--text-primary) 60%, transparent);
             font-size: 0.875rem;
         }
 
@@ -56,7 +71,7 @@
 
         .form-group label {
             display: block;
-            color: #374151;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
             font-weight: 500;
         }
@@ -64,25 +79,25 @@
         .form-group input {
             width: 100%;
             padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(0, 0, 0, 0.2);
+            background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-opacity) * 100%), transparent);
+            border: 1px solid color-mix(in srgb, var(--text-primary) 20%, transparent);
             border-radius: 12px;
-            color: #1e293b;
+            color: var(--text-primary);
             font-size: 1rem;
             transition: all 0.2s ease;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #3b82f6;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: var(--url-color);
+            background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-opacity) * 100% + 10%), transparent);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--url-color) 10%, transparent);
         }
 
         .login-btn {
             width: 100%;
             padding: 12px 20px;
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            background: var(--url-color);
             color: white;
             border: none;
             border-radius: 12px;
@@ -95,7 +110,7 @@
 
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 8px 30px color-mix(in srgb, var(--url-color) 40%, transparent);
         }
 
         .login-btn:disabled {
@@ -108,9 +123,9 @@
         .back-btn {
             width: 100%;
             padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.8);
-            color: #374151;
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-opacity) * 100%), transparent);
+            color: var(--text-primary);
+            border: 1px solid color-mix(in srgb, var(--text-primary) 10%, transparent);
             border-radius: 12px;
             font-size: 0.9rem;
             font-weight: 500;
@@ -122,7 +137,7 @@
         }
 
         .back-btn:hover {
-            background: rgba(255, 255, 255, 0.95);
+            background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-opacity) * 100% + 10%), transparent);
             transform: translateY(-1px);
         }
 
@@ -220,8 +235,30 @@
             errorMessage.style.display = 'block';
         }
 
-        // Focus password field on load
+        // Load and apply theme
+        function loadTheme() {
+            const colorMatch = document.cookie.match(/themeColors=([^;]+)/);
+            if (colorMatch) {
+                try {
+                    const colors = JSON.parse(decodeURIComponent(colorMatch[1]));
+                    document.body.style.setProperty('--bg-gradient-1', colors.bg1);
+                    document.body.style.setProperty('--bg-gradient-2', colors.bg2);
+                    document.body.style.setProperty('--bg-gradient-3', colors.bg3);
+                    document.body.style.setProperty('--bg-gradient-4', colors.bg4);
+                    document.body.style.setProperty('--text-primary', colors.text);
+                    document.body.style.setProperty('--url-color', colors.url);
+                    if (colors.opacity) {
+                        document.body.style.setProperty('--card-opacity', colors.opacity / 100);
+                    }
+                } catch (e) {
+                    console.error('Error loading theme:', e);
+                }
+            }
+        }
+
+        // Focus password field on load and apply theme
         document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
             document.getElementById('password').focus();
         });
     </script>
