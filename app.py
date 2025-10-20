@@ -258,10 +258,22 @@ def delete_service(service_id):
 
 @app.route('/api/quote', methods=['GET'])
 def get_quote():
-    """Get a random quote"""
+    """Get quote of the day (same quote for the whole day)"""
     try:
         quotes = load_quotes()
+        if not quotes:
+            return jsonify({
+                'success': False,
+                'error': 'No quotes available'
+            }), 404
+
+        # Use today's date as seed for consistent daily quote
+        today = datetime.now().date()
+        seed = int(today.strftime('%Y%m%d'))
+        random.seed(seed)
         quote = random.choice(quotes)
+        random.seed()  # Reset seed to default behavior
+
         return jsonify({
             'success': True,
             'quote': quote
