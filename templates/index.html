@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">BCOS Homepage</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 	<!--
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='all.css') }}">
 	-->
@@ -24,8 +25,9 @@
                     document.documentElement.style.setProperty('--text-primary', colors.text);
                     document.documentElement.style.setProperty('--url-color', colors.url);
                     document.documentElement.style.setProperty('--notes-color', colors.notes);
-                    if (colors.calendar) document.documentElement.style.setProperty('--calendar-color', colors.calendar);
-                    if (colors.quote) document.documentElement.style.setProperty('--quote-color', colors.quote);
+                    document.documentElement.style.setProperty('--calendar-color', colors.calendar || '#ec4899');
+                    document.documentElement.style.setProperty('--quote-color', colors.quote || '#8b5cf6');
+                    document.documentElement.style.setProperty('--suggestions-color', colors.suggestions || '#14b8a6');
                     if (colors.hoverBorder) document.documentElement.style.setProperty('--card-hover-border', colors.hoverBorder);
                     if (colors.opacity) document.documentElement.style.setProperty('--card-opacity', colors.opacity / 100);
                     if (colors.hoverOpacity) document.documentElement.style.setProperty('--card-hover-opacity', colors.hoverOpacity / 100);
@@ -64,6 +66,7 @@ body {
     --notes-color: #f59e0b;
     --calendar-color: #ec4899;
     --quote-color: #8b5cf6;
+    --suggestions-color: #14b8a6;
     --card-hover-border: #3b82f6;
     --card-opacity: 0.8;
     --card-hover-opacity: 0.95;
@@ -213,7 +216,7 @@ body::before {
 
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             position: relative;
         }
 
@@ -350,15 +353,36 @@ body::before {
         }
 
         .service-card.dragging {
+            opacity: 0.3;
+            transform: scale(0.95);
+        }
+
+        .service-card.drag-placeholder {
+            border: 2px dashed var(--url-color);
+            background: color-mix(in srgb, var(--url-color) 10%, transparent);
             opacity: 0.5;
-            transform: rotate(5deg);
+        }
+
+        .service-card.drag-over::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #3b82f6;
+            z-index: 1000;
         }
 
         .service-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0;
+        }
+
+        .card-content {
+            margin-top: 0.5rem;
         }
 
         .service-top-row {
@@ -460,7 +484,7 @@ body::before {
             display: flex;
             gap: 4px;
             flex-shrink: 0;
-            opacity: 0;
+            opacity: 1;
             transition: opacity 0.2s ease;
         }
 
@@ -469,10 +493,10 @@ body::before {
         }
 
         .action-btn {
-            width: 26px;
-            height: 26px;
+            width: 18px;
+            height: 18px;
             border: none;
-            border-radius: 6px;
+            border-radius: 4px;
             background: color-mix(in srgb, var(--text-primary) 20%, transparent);
             color: var(--text-primary);
             cursor: pointer;
@@ -480,8 +504,10 @@ body::before {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             border: 1px solid color-mix(in srgb, var(--text-primary) 30%, transparent);
+            padding: 0;
+            flex-shrink: 0;
         }
 
         .action-btn:hover {
@@ -499,6 +525,32 @@ body::before {
             background: rgba(239, 68, 68, 0.25);
             color: #ef4444;
             border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .action-btn.toggle-visibility {
+            width: auto !important;
+            height: auto !important;
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            font-size: 0.9rem !important;
+            color: var(--text-primary);
+            opacity: 0.6;
+            min-width: 0 !important;
+            min-height: 0 !important;
+            line-height: 1 !important;
+        }
+
+        .action-btn.toggle-visibility:hover {
+            background: none;
+            transform: none;
+            opacity: 1;
+        }
+
+        .action-btn.toggle-visibility i {
+            display: block;
+            line-height: 1;
         }
 
         .search-box {
@@ -532,6 +584,456 @@ body::before {
             word-break: break-word;
         }
 
+        /* Suggestions card styling */
+        .suggestions-content {
+            background: color-mix(in srgb, var(--suggestions-color) 10%, transparent);
+            border: 1px solid color-mix(in srgb, var(--suggestions-color) 30%, transparent);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 0.5rem;
+        }
+
+        .suggestion-input-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .suggestion-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: transparent;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-input:focus {
+            outline: none;
+            border-color: var(--suggestions-color);
+            background: transparent;
+        }
+
+        .suggestion-submit-btn {
+            padding: 6px 12px;
+            background: linear-gradient(135deg, var(--suggestions-color) 0%, color-mix(in srgb, var(--suggestions-color) 100%, #000 40%) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .suggestion-submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .suggestions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 2px;
+        }
+
+        .suggestions-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .suggestions-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .suggestions-list::-webkit-scrollbar-thumb {
+            background: color-mix(in srgb, var(--suggestions-color) 30%, transparent);
+            border-radius: 4px;
+        }
+
+        .suggestions-list::-webkit-scrollbar-thumb:hover {
+            background: color-mix(in srgb, var(--suggestions-color) 50%, transparent);
+        }
+
+        .suggestion-item {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid color-mix(in srgb, var(--suggestions-color) 20%, transparent);
+            border-radius: 8px;
+            padding: 10px 12px;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: color-mix(in srgb, var(--suggestions-color) 35%, transparent);
+        }
+
+        .suggestion-text {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .suggestion-footer {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            justify-content: flex-end;
+        }
+
+        .vote-buttons {
+            display: flex;
+            gap: 2px;
+        }
+
+        .vote-btn {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid color-mix(in srgb, var(--suggestions-color) 30%, transparent);
+            border-radius: 5px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .vote-btn i {
+            font-size: 0.7rem;
+        }
+
+        .vote-btn.upvote:hover {
+            background: linear-gradient(135deg, var(--suggestions-color) 0%, color-mix(in srgb, var(--suggestions-color) 100%, #000 20%) 100%);
+            border-color: var(--suggestions-color);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px color-mix(in srgb, var(--suggestions-color) 40%, transparent);
+        }
+
+        .vote-btn.downvote:hover {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-color: #ef4444;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+        }
+
+        .vote-count {
+            font-weight: 700;
+            min-width: 16px;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+
+        .suggestion-score {
+            padding: 3px 8px;
+            background: linear-gradient(135deg, var(--suggestions-color) 0%, color-mix(in srgb, var(--suggestions-color) 100%, #000 20%) 100%);
+            color: white;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .suggestion-score.negative {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .suggestion-date {
+            font-size: 0.7rem;
+        }
+
+        .edit-suggestion-btn,
+        .delete-suggestion-btn {
+            padding: 4px 8px;
+            border: 1px solid;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+        }
+
+        .edit-suggestion-btn {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+
+        .edit-suggestion-btn:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .delete-suggestion-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .delete-suggestion-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .suggestion-date {
+            margin-left: auto;
+        }
+
+        .loading-suggestions,
+        .no-suggestions,
+        .error-suggestions {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .no-suggestions {
+            color: color-mix(in srgb, var(--suggestions-color) 100%, #000 20%);
+        }
+
+        .error-suggestions {
+            color: #ef4444;
+        }
+
+        /* Clipboard Card Styles */
+        .clipboard-content {
+            background: color-mix(in srgb, var(--url-color) 10%, transparent);
+            border: 1px solid color-mix(in srgb, var(--url-color) 30%, transparent);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 0.5rem;
+        }
+
+        .clipboard-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border: 1px solid color-mix(in srgb, var(--url-color) 20%, transparent);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.875rem;
+            resize: vertical;
+            margin-bottom: 8px;
+        }
+
+        .clipboard-textarea:focus {
+            outline: none;
+            border-color: var(--url-color);
+        }
+
+        .clipboard-formatting {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .clipboard-formatting .format-btn {
+            padding: 4px 10px;
+            border: 1px solid color-mix(in srgb, var(--url-color) 30%, transparent);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .clipboard-formatting .format-btn:hover {
+            background: var(--url-color);
+            color: white;
+            border-color: var(--url-color);
+        }
+
+        .clipboard-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .clipboard-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .clipboard-btn.primary {
+            background: linear-gradient(135deg, color-mix(in srgb, var(--url-color) 100%, #000 40%) 0%, color-mix(in srgb, var(--url-color) 100%, #000 65%) 100%);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--url-color) 40%, transparent);
+        }
+
+        .clipboard-btn.primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--url-color) 50%, transparent);
+        }
+
+        .clipboard-btn.secondary {
+            background: linear-gradient(135deg, color-mix(in srgb, var(--url-color) 100%, #000 40%) 0%, color-mix(in srgb, var(--url-color) 100%, #000 65%) 100%);
+            border: 1px solid color-mix(in srgb, var(--url-color) 50%, transparent);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .clipboard-btn.secondary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            border-color: var(--url-color);
+        }
+
+        /* File Share Card Styles */
+        .fileshare-content {
+            background: color-mix(in srgb, var(--url-color) 10%, transparent);
+            border: 1px solid color-mix(in srgb, var(--url-color) 30%, transparent);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 0.5rem;
+        }
+
+        .fileshare-upload {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: nowrap;
+            margin-top: 12px;
+        }
+
+        .fileshare-files {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 300px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 2px;
+            margin: -2px;
+        }
+
+        .fileshare-file-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid color-mix(in srgb, var(--url-color) 20%, transparent);
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .fileshare-file-item:hover {
+            background: color-mix(in srgb, var(--url-color) 15%, white);
+            border-color: var(--url-color);
+            transform: translateX(2px);
+        }
+
+        .fileshare-file-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+            color: var(--url-color);
+        }
+
+        .fileshare-file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .fileshare-file-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fileshare-file-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 8px;
+        }
+
+        .loading-files,
+        .no-files,
+        .error-files {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .error-files {
+            color: #ef4444;
+        }
+
+        .fileshare-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .fileshare-btn.primary {
+            background: linear-gradient(135deg, color-mix(in srgb, var(--url-color) 100%, #000 40%) 0%, color-mix(in srgb, var(--url-color) 100%, #000 65%) 100%);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--url-color) 40%, transparent);
+        }
+
+        .fileshare-btn.primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--url-color) 50%, transparent);
+        }
+
+        .fileshare-btn.secondary {
+            background: linear-gradient(135deg, color-mix(in srgb, var(--url-color) 100%, #000 40%) 0%, color-mix(in srgb, var(--url-color) 100%, #000 65%) 100%);
+            border: 1px solid color-mix(in srgb, var(--url-color) 50%, transparent);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .fileshare-btn.secondary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            border-color: var(--url-color);
+        }
 
 
 .icon-option {
@@ -1227,7 +1729,6 @@ select[id*="phrase-"] {
     .theme-divider {
         margin: 0.3rem 0 !important;
     }
-}
 
     .modal-content {
         width: 95% !important;
@@ -1266,6 +1767,13 @@ select[id*="phrase-"] {
         width: 32px !important;
         height: 32px !important;
         font-size: 0.85rem !important;
+    }
+
+    .action-btn.toggle-visibility {
+        width: auto !important;
+        height: auto !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
     }
 
     /* Better touch targets */
@@ -1348,6 +1856,15 @@ select[id*="phrase-"] {
             <button class="btn btn-primary" onclick="showAddModal()">
                 <i class="fas fa-plus"></i> Add Tile
             </button>
+            <button class="btn btn-secondary" onclick="saveCurrentVisibilityAsDefault()" title="Save current card visibility state as default for new users">
+                <i class="fas fa-eye"></i> Set Default Visibility
+            </button>
+            <button class="btn btn-secondary" onclick="nukeAllCookies()" title="Clear all user cookies and local storage" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border-color: #dc2626;">
+                <i class="fas fa-radiation"></i> Nuke All Cookies
+            </button>
+            <button class="btn btn-secondary" onclick="nukeVisibilitySettings()" title="Reset all user visibility settings to server defaults" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-color: #d97706;">
+                <i class="fas fa-eye-slash"></i> Nuke Visibility
+            </button>
             <button class="btn btn-secondary" onclick="exportServices()">
                 <i class="fas fa-download"></i> Export
             </button>
@@ -1414,6 +1931,9 @@ select[id*="phrase-"] {
                     <option value="quote">Quote of the Day</option>
                     <option value="calendar">Calendar/Date</option>
                     <option value="iframe">Iframe</option>
+                    <option value="suggestions">Suggestions Board</option>
+                    <option value="clipboard">Clipboard Sync NShare</option>
+                    <option value="fileshare">File Share NSync</option>
                 </select>
             </div>
             
@@ -1478,7 +1998,36 @@ select[id*="phrase-"] {
                     </select>
                 </div>
             </div>
-            
+
+            <!-- Suggestions Type Fields -->
+            <div class="type-specific-fields" id="suggestionsFields">
+                <div class="form-group">
+                    <small>Suggestions board allows anonymous submission and voting on suggestions.</small>
+                </div>
+            </div>
+
+            <!-- Clipboard Type Fields -->
+            <div class="type-specific-fields" id="clipboardFields">
+                <div class="form-group">
+                    <label for="clipboardServerUrl">NShare Server URL</label>
+                    <input type="text" id="clipboardServerUrl" placeholder="e.g., http://192.168.2.6">
+                    <small>URL of your nshare server (without /shared_text)</small>
+                </div>
+            </div>
+
+            <!-- File Share Type Fields -->
+            <div class="type-specific-fields" id="fileshareFields">
+                <div class="form-group">
+                    <label for="fileshareServerUrl">NShare Server URL</label>
+                    <input type="text" id="fileshareServerUrl" placeholder="e.g., http://192.168.2.6">
+                    <small>URL of your nshare server</small>
+                </div>
+                <div class="form-group">
+                    <label for="fileshareMaxFiles">Max Files to Display</label>
+                    <input type="number" id="fileshareMaxFiles" value="5" min="1" max="20">
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="serviceColumn">Column</label>
                 <select id="serviceColumn">
@@ -1791,11 +2340,67 @@ select[id*="phrase-"] {
 			notes: 'fas fa-sticky-note',
 			quote: 'fas fa-quote-right',
 			calendar: 'fas fa-calendar-alt',
-			iframe: 'fas fa-window-maximize'
+			iframe: 'fas fa-window-maximize',
+			suggestions: 'fas fa-lightbulb',
+			clipboard: 'fas fa-clipboard',
+			fileshare: 'fas fa-folder-open'
 		};
+
+        // Check for nuke timestamp and clear local storage if needed
+        async function checkNukeTimestamp() {
+            try {
+                const response = await fetch('/api/nuke-timestamp');
+                const data = await response.json();
+
+                if (data.success) {
+                    // Check for full cookie nuke
+                    if (data.timestamp) {
+                        const nukeTimestamp = data.timestamp;
+                        const lastNukeCheck = localStorage.getItem('lastNukeCheck');
+
+                        if (nukeTimestamp !== lastNukeCheck) {
+                            // Clear all local storage
+                            localStorage.clear();
+                            // Remember this nuke so we don't clear again
+                            localStorage.setItem('lastNukeCheck', nukeTimestamp);
+                            // Clear all cookies
+                            const cookies = document.cookie.split(";");
+                            for (let cookie of cookies) {
+                                const eqPos = cookie.indexOf("=");
+                                const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+                                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+                            }
+                            console.log('Cookies and local storage nuked at timestamp:', nukeTimestamp);
+                            // Reload the page to apply defaults
+                            window.location.reload();
+                        }
+                    }
+
+                    // Check for visibility-only nuke
+                    if (data.visibility_timestamp) {
+                        const visTimestamp = data.visibility_timestamp;
+                        const lastVisNukeCheck = localStorage.getItem('lastVisibilityNukeCheck');
+
+                        if (visTimestamp !== lastVisNukeCheck) {
+                            // Clear only visibility settings
+                            localStorage.removeItem('cardVisibility');
+                            // Remember this nuke so we don't clear again
+                            localStorage.setItem('lastVisibilityNukeCheck', visTimestamp);
+                            console.log('Visibility settings nuked at timestamp:', visTimestamp);
+                            // Reload the page to apply default visibility
+                            window.location.reload();
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking nuke timestamp:', error);
+            }
+        }
 
         // Initialize the app
 		document.addEventListener('DOMContentLoaded', async function() {
+            await checkNukeTimestamp(); // Check if cookies should be nuked
+			await loadDefaultVisibility(); // Load default visibility for new users
 			await loadCalendarConfig(); // wait for config before using it
 			loadServices();
 			if (isAdminMode) {
@@ -1813,23 +2418,116 @@ select[id*="phrase-"] {
         async function apiRequest(url, options = {}) {
             try {
                 const response = await fetch(url, {
+                    credentials: 'include',  // Include cookies for session authentication
                     headers: {
                         'Content-Type': 'application/json',
                         ...options.headers
                     },
                     ...options
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 return await response.json();
             } catch (error) {
                 //console.error('API request failed:', error);
                 showError('Failed to communicate with server: ' + error.message);
                 throw error;
             }
+        }
+
+        // Card visibility management functions
+        let defaultVisibilityLoaded = false;
+        let defaultVisibility = {};
+
+        async function loadDefaultVisibility() {
+            try {
+                const response = await fetch('/api/default-visibility');
+                const data = await response.json();
+                if (data.success) {
+                    defaultVisibility = data.visibility || {};
+                    defaultVisibilityLoaded = true;
+                }
+            } catch (e) {
+                console.error('Error loading default visibility:', e);
+                defaultVisibilityLoaded = true; // Mark as loaded even on error
+            }
+        }
+
+        function getCardVisibilityState() {
+            try {
+                const state = localStorage.getItem('cardVisibility');
+                if (state) {
+                    return JSON.parse(state);
+                } else if (defaultVisibilityLoaded && Object.keys(defaultVisibility).length > 0) {
+                    // First time user - apply default visibility
+                    saveCardVisibilityState(defaultVisibility);
+                    return defaultVisibility;
+                }
+                return {};
+            } catch (e) {
+                console.error('Error loading card visibility state:', e);
+                return {};
+            }
+        }
+
+        function saveCardVisibilityState(state) {
+            try {
+                localStorage.setItem('cardVisibility', JSON.stringify(state));
+            } catch (e) {
+                console.error('Error saving card visibility state:', e);
+            }
+        }
+
+        function getCardId(index) {
+            // Create a unique ID for the card based on name and type
+            if (services[index]) {
+                return `${services[index].type}_${services[index].name}`;
+            }
+            return `card_${index}`;
+        }
+
+        function isCardHidden(index) {
+            const state = getCardVisibilityState();
+            const cardId = getCardId(index);
+            return state[cardId] === true;
+        }
+
+        function setCardVisibility(index, hidden) {
+            const state = getCardVisibilityState();
+            const cardId = getCardId(index);
+            if (hidden) {
+                state[cardId] = true;
+            } else {
+                delete state[cardId];
+            }
+            saveCardVisibilityState(state);
+        }
+
+        function toggleCardVisibility(event, index) {
+            event.stopPropagation();
+
+            const isHidden = isCardHidden(index);
+            const newHiddenState = !isHidden;
+
+            // Update localStorage
+            setCardVisibility(index, newHiddenState);
+
+            // Update the card's content visibility using data-card-index attribute
+            const cardContent = document.querySelector(`.card-content[data-card-index="${index}"]`);
+            if (cardContent) {
+                cardContent.style.display = newHiddenState ? 'none' : 'block';
+            }
+
+            // Update the button icon
+            const button = event.currentTarget;
+            const icon = button.querySelector('i');
+            if (icon) {
+                icon.className = newHiddenState ? 'fas fa-eye-slash' : 'fas fa-eye';
+            }
+            button.title = newHiddenState ? 'Show' : 'Hide';
         }
 
         // Load services from server
@@ -1903,11 +2601,24 @@ select[id*="phrase-"] {
                 document.getElementById(`column${column}`).appendChild(card);
             });
 
-            // Initialize quotes after rendering
+            // Initialize quotes and suggestions after rendering
             setTimeout(() => {
                 services.forEach((service, index) => {
                     if (service.type === 'quote') {
                         loadQuoteForCard(index);
+                    } else if (service.type === 'suggestions') {
+                        loadSuggestionsForCard(index);
+                    } else if (service.type === 'clipboard') {
+                        loadClipboardContent(index);
+                        // Auto-save on textarea change
+                        setTimeout(() => {
+                            const textarea = document.getElementById(`clipboardText-${index}`);
+                            if (textarea) {
+                                textarea.addEventListener('blur', () => saveClipboardContent(index));
+                            }
+                        }, 200);
+                    } else if (service.type === 'fileshare') {
+                        loadFileshareContent(index);
                     }
                 });
             }, 100);
@@ -1943,6 +2654,15 @@ select[id*="phrase-"] {
                 case 'iframe':
                     cardContent = createIframeCard(service, index);
                     break;
+                case 'suggestions':
+                    cardContent = createSuggestionsCard(service, index);
+                    break;
+                case 'clipboard':
+                    cardContent = createClipboardCard(service, index);
+                    break;
+                case 'fileshare':
+                    cardContent = createFileshareCard(service, index);
+                    break;
                 default:
                     cardContent = createUrlCard(service, index);
             }
@@ -1966,14 +2686,18 @@ select[id*="phrase-"] {
         }
 
         function createUrlCard(service, index) {
+            const isHidden = isCardHidden(index);
             return `
                 <div class="service-header">
                     <div class="service-top-row">
                         <div class="service-title-url">
                             <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
-							
+
                             <!-- <div class="service-type-badge url">URL</div> -->
                         </div>
+                        <button class="action-btn toggle-visibility" onclick="toggleCardVisibility(event, ${index})" title="${isHidden ? 'Show' : 'Hide'}">
+                            <i class="fas fa-eye${isHidden ? '-slash' : ''}"></i>
+                        </button>
                         ${isAdminMode ? `<div class="service-actions">
                             <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
                                 <i class="fas fa-edit"></i>
@@ -1984,20 +2708,26 @@ select[id*="phrase-"] {
                         </div>` : ''}
                     </div>
                 </div>
-                ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
-                <div class="service-info"><p style="font-family: monospace; color: var(--url-color);">${service.url}</p></div>
+                <div class="card-content" data-card-index="${index}" style="display: ${isHidden ? 'none' : 'block'}">
+                    ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+                    <div class="service-info"><p style="font-family: monospace; color: var(--url-color);">${service.url}</p></div>
+                </div>
             `;
         }
 
         function createSearchCard(service, index) {
+            const isHidden = isCardHidden(index);
             return `
                 <div class="service-header">
                     <div class="service-top-row">
                         <div class="service-title-url">
                             <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
-                            
-							<!--<div class="service-type-badge search">SEARCH</div> -->
+
+                            <!--<div class="service-type-badge search">SEARCH</div> -->
                         </div>
+                        <button class="action-btn toggle-visibility" onclick="toggleCardVisibility(event, ${index})" title="${isHidden ? 'Show' : 'Hide'}">
+                            <i class="fas fa-eye${isHidden ? '-slash' : ''}"></i>
+                        </button>
                         ${isAdminMode ? `<div class="service-actions">
                             <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
                                 <i class="fas fa-edit"></i>
@@ -2008,14 +2738,17 @@ select[id*="phrase-"] {
                         </div>` : ''}
                     </div>
                 </div>
-                ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
-                <input type="text" class="search-box" placeholder="Search..." 
-                       onkeypress="handleSearch(event, '${service.search_url}')"
-                       onclick="event.stopPropagation()">
+                <div class="card-content" data-card-index="${index}" style="display: ${isHidden ? 'none' : 'block'}">
+                    ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+                    <input type="text" class="search-box" placeholder="Search..."
+                           onkeypress="handleSearch(event, '${service.search_url}')"
+                           onclick="event.stopPropagation()">
+                </div>
             `;
         }
 
         function createNotesCard(service, index) {
+            const isHidden = isCardHidden(index);
             return `
                 <div class="service-header">
                     <div class="service-top-row">
@@ -2023,6 +2756,9 @@ select[id*="phrase-"] {
                             <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
                             <!-- <div class="service-type-badge notes">NOTES</div>-->
                         </div>
+                        <button class="action-btn toggle-visibility" onclick="toggleCardVisibility(event, ${index})" title="${isHidden ? 'Show' : 'Hide'}">
+                            <i class="fas fa-eye${isHidden ? '-slash' : ''}"></i>
+                        </button>
                         ${isAdminMode ? `<div class="service-actions">
                             <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
                                 <i class="fas fa-edit"></i>
@@ -2033,12 +2769,15 @@ select[id*="phrase-"] {
                         </div>` : ''}
                     </div>
                 </div>
-                ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
-                <div class="notes-content">${(service.notes_content || '').replace(/\n/g, '<br>')}</div>
+                <div class="card-content" data-card-index="${index}" style="display: ${isHidden ? 'none' : 'block'}">
+                    ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+                    <div class="notes-content">${(service.notes_content || '').replace(/\n/g, '<br>')}</div>
+                </div>
             `;
         }
 
         function createQuoteCard(service, index) {
+    const isHidden = isCardHidden(index);
     return `
         <div class="service-header">
             <div class="service-top-row">
@@ -2048,6 +2787,9 @@ select[id*="phrase-"] {
                     </h3>
                     <!--<div class="service-type-badge quote">QUOTE</div>-->
                 </div>
+                <button class="action-btn toggle-visibility" onclick="toggleCardVisibility(event, ${index})" title="${isHidden ? 'Show' : 'Hide'}">
+                    <i class="fas fa-eye${isHidden ? '-slash' : ''}"></i>
+                </button>
                 ${isAdminMode ? `<div class="service-actions">
                     <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
                         <i class="fas fa-edit"></i>
@@ -2058,22 +2800,24 @@ select[id*="phrase-"] {
                 </div>` : ''}
             </div>
         </div>
-        ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
-        
-        <div class="quote-content" id="quote-${index}">
-            <div class="quote-text" style="
-                white-space: pre-wrap;       /* preserves line breaks and wraps text */
-                overflow-wrap: break-word;   /* wrap long words */
-                word-break: break-word;      /* wrap long words */
-            ">
-                Loading quote...
-            </div>
-            <div class="quote-author"></div>
-        </div>
+        <div class="card-content" data-card-index="${index}" style="display: ${isHidden ? 'none' : 'block'}">
+            ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
 
-        ${isAdminMode ? `<button onclick="editQuotes()" class="calendar-copy-btn" style="margin-top: 8px; background: linear-gradient(135deg, var(--quote-color) 0%, color-mix(in srgb, var(--quote-color) 100%, #000 40%) 100%);">
-            <i class="fas fa-edit"></i> Edit Quotes
-        </button>` : ''}
+            <div class="quote-content" id="quote-${index}">
+                <div class="quote-text" style="
+                    white-space: pre-wrap;       /* preserves line breaks and wraps text */
+                    overflow-wrap: break-word;   /* wrap long words */
+                    word-break: break-word;      /* wrap long words */
+                ">
+                    Loading quote...
+                </div>
+                <div class="quote-author"></div>
+            </div>
+
+            ${isAdminMode ? `<button onclick="editQuotes()" class="calendar-copy-btn" style="margin-top: 8px; background: linear-gradient(135deg, var(--quote-color) 0%, color-mix(in srgb, var(--quote-color) 100%, #000 40%) 100%);">
+                <i class="fas fa-edit"></i> Edit Quotes
+            </button>` : ''}
+        </div>
     `;
 }
 
@@ -2083,7 +2827,8 @@ select[id*="phrase-"] {
             const day = today.getDate();
             const month = today.getMonth() + 1;
             const year = today.getFullYear();
-            
+            const isHidden = isCardHidden(index);
+
             return `
                 <div class="service-header">
                     <div class="service-top-row">
@@ -2091,6 +2836,9 @@ select[id*="phrase-"] {
                             <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
                             <!--<div class="service-type-badge calendar">CALENDAR</div>-->
                         </div>
+                        <button class="action-btn toggle-visibility" onclick="toggleCardVisibility(event, ${index})" title="${isHidden ? 'Show' : 'Hide'}">
+                            <i class="fas fa-eye${isHidden ? '-slash' : ''}"></i>
+                        </button>
                         ${isAdminMode ? `<div class="service-actions">
                             <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
                                 <i class="fas fa-edit"></i>
@@ -2101,7 +2849,8 @@ select[id*="phrase-"] {
                         </div>` : ''}
                     </div>
                 </div>
-                ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+                <div class="card-content" data-card-index="${index}" style="display: ${isHidden ? 'none' : 'block'}">
+                    ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
 
 <div class="calendar-content">
 
@@ -2150,15 +2899,17 @@ select[id*="phrase-"] {
         <i class="fas fa-edit"></i> Edit Calendar Phrases
     </button>` : ''}
 </div>
+                </div>
 
-												
+
             `;
         }
 
         function createIframeCard(service, index) {
             const width = service.iframe_width === 'auto' ? '100%' : service.iframe_width;
             const height = service.iframe_height === 'auto' ? '300px' : service.iframe_height;
-            
+            const isHidden = isCardHidden(index);
+
             return `
                 <div class="service-header">
                     <div class="service-top-row">
@@ -2166,6 +2917,9 @@ select[id*="phrase-"] {
                             <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
                             <!--<div class="service-type-badge iframe">IFRAME</div>-->
                         </div>
+                        <button class="action-btn toggle-visibility" onclick="toggleCardVisibility(event, ${index})" title="${isHidden ? 'Show' : 'Hide'}">
+                            <i class="fas fa-eye${isHidden ? '-slash' : ''}"></i>
+                        </button>
                         ${isAdminMode ? `<div class="service-actions">
                             <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
                                 <i class="fas fa-edit"></i>
@@ -2176,36 +2930,583 @@ select[id*="phrase-"] {
                         </div>` : ''}
                     </div>
                 </div>
-                ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
-				
-				<div style="margin-top: 0.5rem;">
-					<iframe src="${service.iframe_url}" 
-							width="${width}" 
-							height="${height}"
-							style="border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; max-width: 100%;"
-							frameborder="0"
-							sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
-							referrerpolicy="no-referrer-when-downgrade"
-							allowfullscreen>
-					</iframe>
+                <div class="card-content" data-card-index="${index}" style="display: ${isHidden ? 'none' : 'block'}">
+                    ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+
+                    <div style="margin-top: 0.5rem;">
+                        <iframe src="${service.iframe_url}"
+                                width="${width}"
+                                height="${height}"
+                                style="border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; max-width: 100%;"
+                                frameborder="0"
+                                sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                allowfullscreen>
+                        </iframe>
 					<!--
 					<div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
 						Note: Some sites may block embedding. <a href="${service.iframe_url}" target="_blank" style="color: #3b82f6;">Open in new tab</a>
 					</div>
 					-->
-				</div>
+                    </div>
+                </div>
             `;
         }
 
+        function createSuggestionsCard(service, index) {
+            const isHidden = isCardHidden(index);
+            return `
+                <div class="service-header">
+                    <div class="service-top-row">
+                        <div class="service-title-url">
+                            <h3><i class="${service.icon || serviceIcons[service.type] || 'fas fa-cube'}"></i> ${service.name}</h3>
+                        </div>
+                        <button class="action-btn toggle-visibility" onclick="toggleCardVisibility(event, ${index})" title="${isHidden ? 'Show' : 'Hide'}">
+                            <i class="fas fa-eye${isHidden ? '-slash' : ''}"></i>
+                        </button>
+                        ${isAdminMode ? `<div class="service-actions">
+                            <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteService(event, ${index})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>` : ''}
+                    </div>
+                </div>
+                <div class="card-content" data-card-index="${index}" style="display: ${isHidden ? 'none' : 'block'}">
+                    ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
 
+                    <div class="suggestions-content">
+                        <div class="suggestion-input-container">
+                            <input type="text"
+                                   class="suggestion-input"
+                                   id="suggestionInput-${index}"
+                                   placeholder="Share your suggestion..."
+                                   maxlength="500">
+                            <button class="suggestion-submit-btn" onclick="submitSuggestion(event, ${index})">
+                                <i class="fas fa-paper-plane"></i> Submit
+                            </button>
+                        </div>
 
+                        <div class="suggestions-list" id="suggestionsList-${index}">
+                            <div class="loading-suggestions">Loading suggestions...</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
+        // Suggestions functions
+        async function loadSuggestionsForCard(index) {
+            try {
+                const response = await fetch('/api/suggestions');
+                const data = await response.json();
 
+                if (data.success) {
+                    const listContainer = document.getElementById(`suggestionsList-${index}`);
+                    if (!listContainer) return;
+
+                    if (data.suggestions.length === 0) {
+                        listContainer.innerHTML = '<div class="no-suggestions">No suggestions yet. Be the first to share!</div>';
+                        return;
+                    }
+
+                    listContainer.innerHTML = data.suggestions.map(suggestion => {
+                        const upvotes = suggestion.upvotes || suggestion.votes || 0;
+                        const downvotes = suggestion.downvotes || 0;
+                        const score = suggestion.score || (upvotes - downvotes);
+
+                        return `
+                        <div class="suggestion-item" data-suggestion-id="${suggestion.id}">
+                            <div class="suggestion-text" id="suggestion-text-${suggestion.id}">${escapeHtml(suggestion.text)}</div>
+                            <div class="suggestion-footer">
+                                <span class="suggestion-date">${formatDate(suggestion.created_at)}</span>
+                                <span class="suggestion-score ${score < 0 ? 'negative' : ''}">${score > 0 ? '+' : ''}${score}</span>
+                                ${isAdminMode ? `
+                                    <button class="edit-suggestion-btn" onclick="editSuggestionItem(event, ${suggestion.id}, ${index})" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="delete-suggestion-btn" onclick="deleteSuggestionItem(event, ${suggestion.id}, ${index})" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                ` : ''}
+                                <div class="vote-buttons">
+                                    <button class="vote-btn upvote"
+                                            onclick="voteSuggestion(event, ${suggestion.id}, ${index}, 'up')">
+                                        <i class="fas fa-arrow-up"></i>
+                                        <span class="vote-count">${upvotes}</span>
+                                    </button>
+                                    <button class="vote-btn downvote"
+                                            onclick="voteSuggestion(event, ${suggestion.id}, ${index}, 'down')">
+                                        <i class="fas fa-arrow-down"></i>
+                                        <span class="vote-count">${downvotes}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;}).join('');
+                }
+            } catch (error) {
+                console.error('Error loading suggestions:', error);
+                const listContainer = document.getElementById(`suggestionsList-${index}`);
+                if (listContainer) {
+                    listContainer.innerHTML = '<div class="error-suggestions">Error loading suggestions</div>';
+                }
+            }
+        }
+
+        async function submitSuggestion(event, index) {
+            event.stopPropagation();
+            const input = document.getElementById(`suggestionInput-${index}`);
+            const suggestionText = input.value.trim();
+
+            if (!suggestionText) {
+                alert('Please enter a suggestion');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/suggestions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ suggestion: suggestionText })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    input.value = '';
+                    await loadSuggestionsForCard(index);
+                } else {
+                    alert(data.error || 'Failed to submit suggestion');
+                }
+            } catch (error) {
+                console.error('Error submitting suggestion:', error);
+                alert('Error submitting suggestion');
+            }
+        }
+
+        async function voteSuggestion(event, suggestionId, index, voteType) {
+            event.stopPropagation();
+
+            try {
+                const response = await fetch(`/api/suggestions/${suggestionId}/vote`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ type: voteType })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    await loadSuggestionsForCard(index);
+                } else {
+                    alert(data.error || 'Failed to vote');
+                }
+            } catch (error) {
+                console.error('Error voting:', error);
+                alert('Error voting on suggestion');
+            }
+        }
+
+        async function editSuggestionItem(event, suggestionId, index) {
+            event.stopPropagation();
+
+            const textElement = document.getElementById(`suggestion-text-${suggestionId}`);
+            const currentText = textElement.textContent;
+
+            const newText = prompt('Edit suggestion:', currentText);
+
+            if (newText === null || newText.trim() === '') {
+                return;
+            }
+
+            if (newText.trim() === currentText) {
+                return; // No changes
+            }
+
+            try {
+                const response = await fetch(`/api/suggestions/${suggestionId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: newText.trim() })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    await loadSuggestionsForCard(index);
+                } else {
+                    alert(data.error || 'Failed to update suggestion');
+                }
+            } catch (error) {
+                console.error('Error editing suggestion:', error);
+                alert('Error editing suggestion');
+            }
+        }
+
+        async function deleteSuggestionItem(event, suggestionId, index) {
+            event.stopPropagation();
+
+            if (!confirm('Are you sure you want to delete this suggestion?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/suggestions/${suggestionId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    await loadSuggestionsForCard(index);
+                } else {
+                    alert(data.error || 'Failed to delete suggestion');
+                }
+            } catch (error) {
+                console.error('Error deleting suggestion:', error);
+                alert('Error deleting suggestion');
+            }
+        }
+
+        // Clipboard Card Functions
+        function createClipboardCard(service, index) {
+            const isHidden = isCardHidden(index);
+            let serverUrl = service.clipboard_server_url || 'http://192.168.2.8';
+            // Ensure URL has protocol
+            if (!serverUrl.startsWith('http://') && !serverUrl.startsWith('https://')) {
+                serverUrl = 'http://' + serverUrl;
+            }
+
+            return `
+                <div class="service-header">
+                    <div class="service-top-row">
+                        <div class="service-title-url">
+                            <h3><i class="${service.icon || serviceIcons[service.type]}"></i> ${service.name}</h3>
+                        </div>
+                        <button class="action-btn toggle-visibility" onclick="toggleCardVisibility(event, ${index})" title="${isHidden ? 'Show' : 'Hide'}">
+                            <i class="fas fa-eye${isHidden ? '-slash' : ''}"></i>
+                        </button>
+                        ${isAdminMode ? `<div class="service-actions">
+                            <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteService(event, ${index})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>` : ''}
+                    </div>
+                </div>
+                <div class="card-content" data-card-index="${index}" style="display: ${isHidden ? 'none' : 'block'}">
+                    ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+                    <div class="clipboard-content">
+                        <textarea class="clipboard-textarea" id="clipboardText-${index}" placeholder="Shared clipboard..."></textarea>
+                        <div class="clipboard-formatting">
+                            <button class="format-btn" onclick="formatClipboardText(${index}, 'upper')">UPPER</button>
+                            <button class="format-btn" onclick="formatClipboardText(${index}, 'lower')">lower</button>
+                            <button class="format-btn" onclick="formatClipboardText(${index}, 'title')">Title Case</button>
+                        </div>
+                        <div class="clipboard-actions">
+                            <button class="clipboard-btn primary" onclick="copyClipboardText(${index})">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                            <button class="clipboard-btn secondary" onclick="clearClipboardText(${index})">
+                                <i class="fas fa-times"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        let clipboardSockets = {};
+        let fileshareSocketsMap = {};
+
+        async function loadClipboardContent(index) {
+            const service = services[index];
+            let serverUrl = service.clipboard_server_url || 'http://192.168.2.8';
+            // Ensure URL has protocol
+            if (!serverUrl.startsWith('http://') && !serverUrl.startsWith('https://')) {
+                serverUrl = 'http://' + serverUrl;
+            }
+            const textarea = document.getElementById(`clipboardText-${index}`);
+
+            if (!textarea) return;
+
+            try {
+                // Load initial content
+                const response = await fetch(`${serverUrl}/shared_text`);
+                const data = await response.json();
+                textarea.value = data.content || '';
+
+                // Setup Socket.IO for real-time bidirectional sync
+                if (!clipboardSockets[index]) {
+                    const socket = io(serverUrl);
+                    clipboardSockets[index] = socket;
+
+                    // Listen for updates from server
+                    socket.on('shared_text_updated', (data) => {
+                        const currentTextarea = document.getElementById(`clipboardText-${index}`);
+                        if (currentTextarea && document.activeElement !== currentTextarea) {
+                            // Only update if user isn't currently typing
+                            currentTextarea.value = data.content || '';
+                        }
+                    });
+
+                    socket.on('connect_error', (error) => {
+                        console.error('Socket connection error:', error);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading clipboard:', error);
+            }
+        }
+
+        async function saveClipboardContent(index) {
+            const service = services[index];
+            let serverUrl = service.clipboard_server_url || 'http://192.168.2.8';
+            // Ensure URL has protocol
+            if (!serverUrl.startsWith('http://') && !serverUrl.startsWith('https://')) {
+                serverUrl = 'http://' + serverUrl;
+            }
+            const textarea = document.getElementById(`clipboardText-${index}`);
+
+            try {
+                await fetch(`${serverUrl}/shared_text`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: textarea.value })
+                });
+            } catch (error) {
+                console.error('Error saving clipboard:', error);
+            }
+        }
+
+        function copyClipboardText(index) {
+            const textarea = document.getElementById(`clipboardText-${index}`);
+            textarea.select();
+            document.execCommand('copy');
+            showAlert('Copied to clipboard!', 'success');
+        }
+
+        function clearClipboardText(index) {
+            const textarea = document.getElementById(`clipboardText-${index}`);
+            textarea.value = '';
+            saveClipboardContent(index);
+        }
+
+        function formatClipboardText(index, format) {
+            const textarea = document.getElementById(`clipboardText-${index}`);
+            let text = textarea.value;
+
+            switch (format) {
+                case 'upper':
+                    text = text.toUpperCase();
+                    break;
+                case 'lower':
+                    text = text.toLowerCase();
+                    break;
+                case 'title':
+                    text = text.replace(/\w\S*/g, (txt) => {
+                        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                    });
+                    break;
+            }
+
+            textarea.value = text;
+            saveClipboardContent(index);
+        }
+
+        // File Share Card Functions
+        function createFileshareCard(service, index) {
+            const isHidden = isCardHidden(index);
+            let serverUrl = service.fileshare_server_url || 'http://192.168.2.8';
+            // Ensure URL has protocol
+            if (!serverUrl.startsWith('http://') && !serverUrl.startsWith('https://')) {
+                serverUrl = 'http://' + serverUrl;
+            }
+
+            return `
+                <div class="service-header">
+                    <div class="service-top-row">
+                        <div class="service-title-url">
+                            <h3><i class="${service.icon || serviceIcons[service.type]}"></i> ${service.name}</h3>
+                        </div>
+                        <button class="action-btn toggle-visibility" onclick="toggleCardVisibility(event, ${index})" title="${isHidden ? 'Show' : 'Hide'}">
+                            <i class="fas fa-eye${isHidden ? '-slash' : ''}"></i>
+                        </button>
+                        ${isAdminMode ? `<div class="service-actions">
+                            <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteService(event, ${index})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>` : ''}
+                    </div>
+                </div>
+                <div class="card-content" data-card-index="${index}" style="display: ${isHidden ? 'none' : 'block'}">
+                    ${service.description ? `<div class="service-info"><p>${service.description}</p></div>` : ''}
+                    <div class="fileshare-content">
+                        <div class="fileshare-files" id="fileshareList-${index}">
+                            <div class="loading-files">Loading files...</div>
+                        </div>
+                        <div class="fileshare-upload">
+                            <input type="file" id="fileInput-${index}" style="display: none;" onchange="uploadFileToNshare(${index})" multiple>
+                            <button class="fileshare-btn secondary" onclick="document.getElementById('fileInput-${index}').click()">
+                                <i class="fas fa-upload"></i> Upload Files
+                            </button>
+                            <a href="${serverUrl}" target="_blank" class="fileshare-btn primary">
+                                <i class="fas fa-folder-open"></i> Browse Files
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function uploadFileToNshare(index) {
+            const service = services[index];
+            let serverUrl = service.fileshare_server_url || 'http://192.168.2.8';
+            // Ensure URL has protocol
+            if (!serverUrl.startsWith('http://') && !serverUrl.startsWith('https://')) {
+                serverUrl = 'http://' + serverUrl;
+            }
+            const fileInput = document.getElementById(`fileInput-${index}`);
+            const files = fileInput.files;
+
+            if (!files || files.length === 0) return;
+
+            try {
+                const formData = new FormData();
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('files', files[i]);
+                }
+
+                const response = await fetch(`${serverUrl}/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    fileInput.value = '';
+                    // File list will update automatically via Socket.IO
+                } else {
+                    alert('Upload failed');
+                }
+            } catch (error) {
+                console.error('Error uploading files:', error);
+                alert('Error uploading files');
+            }
+        }
+
+        async function loadFileshareContent(index) {
+            const service = services[index];
+            let serverUrl = service.fileshare_server_url || 'http://192.168.2.8';
+            // Ensure URL has protocol
+            if (!serverUrl.startsWith('http://') && !serverUrl.startsWith('https://')) {
+                serverUrl = 'http://' + serverUrl;
+            }
+            const maxFiles = service.fileshare_max_files || 5;
+            const listContainer = document.getElementById(`fileshareList-${index}`);
+
+            if (!listContainer) return;
+
+            // Function to update file list
+            const updateFileList = async () => {
+                try {
+                    const response = await fetch(`${serverUrl}/api/files?limit=${maxFiles}`);
+                    const data = await response.json();
+
+                    if (data.success && data.files && data.files.length > 0) {
+                        const baseUrl = data.base_url || serverUrl;
+                        listContainer.innerHTML = data.files.map(file => {
+                            const downloadUrl = file.is_dir
+                                ? `${baseUrl}?path=${encodeURIComponent(file.path)}`
+                                : `${baseUrl}/download?path=${encodeURIComponent(file.path)}`;
+
+                            return `
+                                <a href="${downloadUrl}" class="fileshare-file-item" ${file.is_dir ? '' : 'download'} target="_blank">
+                                    <i class="${file.icon} fileshare-file-icon"></i>
+                                    <div class="fileshare-file-info">
+                                        <div class="fileshare-file-name">${escapeHtml(file.name)}</div>
+                                        <div class="fileshare-file-meta">
+                                            ${file.is_dir ? '<span>Folder</span>' : `<span>${file.size_formatted}</span>`}
+                                            <span>${file.modified}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            `;
+                        }).join('');
+                    } else {
+                        listContainer.innerHTML = '<div class="no-files">No files available</div>';
+                    }
+                } catch (error) {
+                    console.error('Error loading files:', error);
+                    listContainer.innerHTML = '<div class="error-files">Error loading files</div>';
+                }
+            };
+
+            // Initial load
+            await updateFileList();
+
+            // Setup Socket.IO for real-time updates
+            if (!fileshareSocketsMap[index]) {
+                const socket = io(serverUrl);
+                fileshareSocketsMap[index] = socket;
+
+                // Listen for file updates from server
+                socket.on('file_updated', (data) => {
+                    // Reload file list when files change
+                    updateFileList();
+                });
+
+                socket.on('connect_error', (error) => {
+                    console.error('Socket connection error:', error);
+                });
+            }
+        }
+
+        function getUserIP() {
+            // This is a placeholder - the actual IP checking is done server-side
+            return 'client';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffMins < 1) return 'just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            return date.toLocaleDateString();
+        }
 
 
 function showIconPicker() {
     document.getElementById('iconPickerModal').classList.add('show');
-    
+
     // Add specific event prevention for this modal (backup method)
     setTimeout(() => {
         const modalContent = document.querySelector('#iconPickerModal .modal-content');
@@ -2214,6 +3515,17 @@ function showIconPicker() {
                 e.stopPropagation();
             });
         }
+
+        // Add click handlers to all icon options
+        const iconOptions = document.querySelectorAll('#iconPickerModal .icon-option');
+        iconOptions.forEach(option => {
+            option.onclick = function(e) {
+                e.stopPropagation();
+                const iconClass = this.getAttribute('data-icon');
+                document.getElementById('serviceIcon').value = iconClass;
+                hideIconPicker();
+            };
+        });
     }, 100);
 }
 
@@ -2454,12 +3766,17 @@ async function copyToClipboard(elementId) {
 
         function handleDragEnd(e) {
             if (!e.target.classList.contains('service-card')) return;
-            
+
             e.target.classList.remove('dragging');
             draggedService = null;
-            
+
+            // Clean up all drag indicators
             document.querySelectorAll('.column').forEach(col => {
                 col.classList.remove('drag-over');
+            });
+
+            document.querySelectorAll('.service-card.drag-over').forEach(card => {
+                card.classList.remove('drag-over');
             });
         }
 
@@ -2481,32 +3798,67 @@ async function copyToClipboard(elementId) {
             }
         }
 
+        let dragOverElement = null;
+
         function handleColumnDragOver(e) {
             e.preventDefault();
             if (!draggedService) return;
 
             const servicesList = e.currentTarget;
+
+            // Remove previous drag-over highlight
+            document.querySelectorAll('.service-card.drag-over').forEach(el => {
+                el.classList.remove('drag-over');
+            });
+
+            // Find where the card would be inserted
             const afterElement = getDragAfterElement(servicesList, e.clientY);
-            
-            if (afterElement == null) {
-                servicesList.appendChild(draggedService);
+
+            // Highlight the position where card will land
+            if (afterElement) {
+                afterElement.classList.add('drag-over');
+                dragOverElement = afterElement;
             } else {
-                servicesList.insertBefore(draggedService, afterElement);
+                // Will be inserted at the end, highlight the last card
+                const cards = servicesList.querySelectorAll('.service-card:not(.dragging)');
+                if (cards.length > 0) {
+                    const lastCard = cards[cards.length - 1];
+                    lastCard.style.borderBottom = '3px solid var(--url-color)';
+                    setTimeout(() => {
+                        lastCard.style.borderBottom = '';
+                    }, 100);
+                }
             }
         }
 
         function handleColumnDrop(e) {
             e.preventDefault();
             if (!draggedService) return;
-            
+
+            // Remove all drag-over highlights
+            document.querySelectorAll('.service-card.drag-over').forEach(el => {
+                el.classList.remove('drag-over');
+            });
+
             const servicesList = e.currentTarget;
             const column = servicesList.closest('.column');
             const newColumn = parseInt(column.dataset.column);
             const serviceIndex = parseInt(draggedService.dataset.serviceIndex);
-            
+
+            // Calculate where to insert in the target column
+            const afterElement = getDragAfterElement(servicesList, e.clientY);
+
+            // Insert the dragged element at the correct position
+            if (afterElement == null) {
+                servicesList.appendChild(draggedService);
+            } else {
+                servicesList.insertBefore(draggedService, afterElement);
+            }
+
+            // Update column and reorder services array based on new DOM order
             services[serviceIndex].column = newColumn;
             reorderServicesArray();
-            
+
             saveServicesToServer().then(() => {
                 renderServices();
             }).catch(() => {
@@ -2630,8 +3982,15 @@ async function copyToClipboard(elementId) {
                     document.getElementById('iframeWidth').value = service.iframe_width || 'auto';
                     document.getElementById('iframeHeight').value = service.iframe_height || 'auto';
                     break;
+                case 'clipboard':
+                    document.getElementById('clipboardServerUrl').value = service.clipboard_server_url || 'http://192.168.2.8';
+                    break;
+                case 'fileshare':
+                    document.getElementById('fileshareServerUrl').value = service.fileshare_server_url || 'http://192.168.2.8';
+                    document.getElementById('fileshareMaxFiles').value = service.fileshare_max_files || 5;
+                    break;
             }
-            
+
             handleTypeChange();
             document.getElementById('serviceModal').classList.add('show');
         }
@@ -2696,6 +4055,31 @@ async function copyToClipboard(elementId) {
                     service.iframe_width = document.getElementById('iframeWidth').value;
                     service.iframe_height = document.getElementById('iframeHeight').value;
                     break;
+                case 'clipboard':
+                    let clipboardServerUrl = document.getElementById('clipboardServerUrl').value.trim();
+                    if (!clipboardServerUrl) {
+                        alert('Please fill in the NShare server URL.');
+                        return;
+                    }
+                    // Ensure URL has protocol
+                    if (!clipboardServerUrl.startsWith('http://') && !clipboardServerUrl.startsWith('https://')) {
+                        clipboardServerUrl = 'http://' + clipboardServerUrl;
+                    }
+                    service.clipboard_server_url = clipboardServerUrl;
+                    break;
+                case 'fileshare':
+                    let fileshareServerUrl = document.getElementById('fileshareServerUrl').value.trim();
+                    if (!fileshareServerUrl) {
+                        alert('Please fill in the NShare server URL.');
+                        return;
+                    }
+                    // Ensure URL has protocol
+                    if (!fileshareServerUrl.startsWith('http://') && !fileshareServerUrl.startsWith('https://')) {
+                        fileshareServerUrl = 'http://' + fileshareServerUrl;
+                    }
+                    service.fileshare_server_url = fileshareServerUrl;
+                    service.fileshare_max_files = parseInt(document.getElementById('fileshareMaxFiles').value) || 5;
+                    break;
             }
 
             if (editingIndex >= 0) {
@@ -2715,6 +4099,66 @@ async function copyToClipboard(elementId) {
 
         function hideModal() {
             document.getElementById('serviceModal').classList.remove('show');
+        }
+
+        async function saveCurrentVisibilityAsDefault() {
+            if (confirm('Save the current card visibility state as default for new users?')) {
+                try {
+                    const currentVisibility = getCardVisibilityState();
+
+                    const response = await apiRequest('/api/default-visibility', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ visibility: currentVisibility })
+                    });
+
+                    if (response.success) {
+                        alert('Default visibility settings saved successfully!');
+                    } else {
+                        showError(response.error || 'Failed to save default visibility');
+                    }
+                } catch (error) {
+                    showError('Failed to save default visibility');
+                }
+            }
+        }
+
+        async function nukeAllCookies() {
+            if (confirm('⚠️ WARNING ⚠️\n\nThis will immediately clear ALL cookies and local storage for EVERYONE on the site!\n\nThis includes:\n- Theme settings\n- Card visibility preferences\n- Any saved preferences\n\nAll users will be reset to defaults.\n\nAre you ABSOLUTELY sure you want to do this?')) {
+                if (confirm('Last chance! This action cannot be undone.\n\nClick OK to nuke all cookies and local storage.')) {
+                    try {
+                        const response = await apiRequest('/api/nuke-cookies', {
+                            method: 'POST'
+                        });
+
+                        if (response.success) {
+                            alert('✅ Successfully nuked all cookies!\n\nTimestamp: ' + response.timestamp + '\n\nAll users will have their cookies cleared on next page load.');
+                        } else {
+                            showError(response.error || 'Failed to nuke cookies');
+                        }
+                    } catch (error) {
+                        showError('Failed to nuke cookies: ' + error.message);
+                    }
+                }
+            }
+        }
+
+        async function nukeVisibilitySettings() {
+            if (confirm('⚠️ WARNING ⚠️\n\nThis will reset ALL users\' card visibility settings to server defaults!\n\nAll users will have their hidden/shown card preferences cleared.\n\nAre you sure you want to do this?')) {
+                try {
+                    const response = await apiRequest('/api/nuke-visibility', {
+                        method: 'POST'
+                    });
+
+                    if (response.success) {
+                        alert('✅ Successfully nuked visibility settings!\n\nTimestamp: ' + response.timestamp + '\n\nAll users will have their visibility settings reset to defaults on next page load.');
+                    } else {
+                        showError(response.error || 'Failed to nuke visibility settings');
+                    }
+                } catch (error) {
+                    showError('Failed to nuke visibility settings: ' + error.message);
+                }
+            }
         }
 
         async function adminLogout() {
@@ -3084,7 +4528,8 @@ async function copyToClipboard(elementId) {
                 url: '#3b82f6',
                 notes: '#f59e0b',
                 calendar: '#ec4899',
-                quote: '#8b5cf6'
+                quote: '#8b5cf6',
+                suggestions: '#14b8a6'
             },
             grey: {
                 name: 'Grey',
@@ -3098,7 +4543,8 @@ async function copyToClipboard(elementId) {
                 url: '#3b82f6',
                 notes: '#f59e0b',
                 calendar: '#ec4899',
-                quote: '#8b5cf6'
+                quote: '#8b5cf6',
+                suggestions: '#14b8a6'
             },
             dark: {
                 name: 'Dark',
@@ -3112,7 +4558,8 @@ async function copyToClipboard(elementId) {
                 url: '#60a5fa',
                 notes: '#fbbf24',
                 calendar: '#f472b6',
-                quote: '#a78bfa'
+                quote: '#a78bfa',
+                suggestions: '#5eead4'
             },
             blue: {
                 name: 'Blue',
@@ -3126,7 +4573,8 @@ async function copyToClipboard(elementId) {
                 url: '#2563eb',
                 notes: '#f59e0b',
                 calendar: '#0ea5e9',
-                quote: '#6366f1'
+                quote: '#6366f1',
+                suggestions: '#06b6d4'
             },
             purple: {
                 name: 'Purple',
@@ -3140,7 +4588,8 @@ async function copyToClipboard(elementId) {
                 url: '#7c3aed',
                 notes: '#f59e0b',
                 calendar: '#ec4899',
-                quote: '#8b5cf6'
+                quote: '#8b5cf6',
+                suggestions: '#a855f7'
             },
             green: {
                 name: 'Green',
@@ -3154,7 +4603,8 @@ async function copyToClipboard(elementId) {
                 url: '#047857',
                 notes: '#f59e0b',
                 calendar: '#10b981',
-                quote: '#14b8a6'
+                quote: '#14b8a6',
+                suggestions: '#059669'
             },
             pink: {
                 name: 'Pink',
@@ -3168,7 +4618,8 @@ async function copyToClipboard(elementId) {
                 url: '#be185d',
                 notes: '#f97316',
                 calendar: '#ec4899',
-                quote: '#db2777'
+                quote: '#db2777',
+                suggestions: '#f43f5e'
             },
             orange: {
                 name: 'Orange',
@@ -3182,7 +4633,8 @@ async function copyToClipboard(elementId) {
                 url: '#c2410c',
                 notes: '#f59e0b',
                 calendar: '#fb923c',
-                quote: '#ea580c'
+                quote: '#ea580c',
+                suggestions: '#dc2626'
             },
             slate: {
                 name: 'Slate',
@@ -3196,7 +4648,8 @@ async function copyToClipboard(elementId) {
                 url: '#60a5fa',
                 notes: '#fbbf24',
                 calendar: '#f472b6',
-                quote: '#a78bfa'
+                quote: '#a78bfa',
+                suggestions: '#2dd4bf'
             },
             midnight: {
                 name: 'Midnight',
@@ -3210,7 +4663,8 @@ async function copyToClipboard(elementId) {
                 url: '#60a5fa',
                 notes: '#fbbf24',
                 calendar: '#f472b6',
-                quote: '#a78bfa'
+                quote: '#a78bfa',
+                suggestions: '#06b6d4'
             }
         };
 
@@ -3234,6 +4688,7 @@ async function copyToClipboard(elementId) {
             document.body.style.setProperty('--notes-color', theme.notes);
             document.body.style.setProperty('--calendar-color', theme.calendar);
             document.body.style.setProperty('--quote-color', theme.quote);
+            document.body.style.setProperty('--suggestions-color', theme.suggestions);
             document.body.style.setProperty('--card-hover-border', theme.url);
 
             // Update color picker inputs to match theme
@@ -3246,6 +4701,7 @@ async function copyToClipboard(elementId) {
             document.getElementById('customNotes').value = theme.notes;
             document.getElementById('customCalendar').value = theme.calendar;
             document.getElementById('customQuote').value = theme.quote;
+            document.getElementById('customSuggestions').value = theme.suggestions;
             document.getElementById('customHoverBorder').value = theme.url;
             document.getElementById('cardOpacity').value = 80;
             document.getElementById('opacityValue').textContent = 80;
@@ -3263,6 +4719,7 @@ async function copyToClipboard(elementId) {
                 notes: theme.notes,
                 calendar: theme.calendar,
                 quote: theme.quote,
+                suggestions: theme.suggestions,
                 hoverBorder: theme.url,
                 opacity: 80,
                 hoverOpacity: 95
@@ -3317,6 +4774,9 @@ async function copyToClipboard(elementId) {
                 case 'quote':
                     document.body.style.setProperty('--quote-color', value);
                     break;
+                case 'suggestions':
+                    document.body.style.setProperty('--suggestions-color', value);
+                    break;
                 case 'hoverBorder':
                     document.body.style.setProperty('--card-hover-border', value);
                     break;
@@ -3355,6 +4815,7 @@ async function copyToClipboard(elementId) {
                 notes: document.getElementById('customNotes').value,
                 calendar: document.getElementById('customCalendar').value,
                 quote: document.getElementById('customQuote').value,
+                suggestions: document.getElementById('customSuggestions').value,
                 hoverBorder: document.getElementById('customHoverBorder').value,
                 opacity: document.getElementById('cardOpacity').value,
                 hoverOpacity: document.getElementById('cardHoverOpacity').value
@@ -3374,8 +4835,9 @@ async function copyToClipboard(elementId) {
                     document.getElementById('customText').value = colors.text;
                     document.getElementById('customUrl').value = colors.url;
                     document.getElementById('customNotes').value = colors.notes;
-                    if (colors.calendar) document.getElementById('customCalendar').value = colors.calendar;
-                    if (colors.quote) document.getElementById('customQuote').value = colors.quote;
+                    document.getElementById('customCalendar').value = colors.calendar || '#ec4899';
+                    document.getElementById('customQuote').value = colors.quote || '#8b5cf6';
+                    document.getElementById('customSuggestions').value = colors.suggestions || '#14b8a6';
 
                     document.body.style.setProperty('--bg-gradient-1', colors.bg1);
                     document.body.style.setProperty('--bg-gradient-2', colors.bg2);
@@ -3384,16 +4846,31 @@ async function copyToClipboard(elementId) {
                     document.body.style.setProperty('--text-primary', colors.text);
                     document.body.style.setProperty('--url-color', colors.url);
                     document.body.style.setProperty('--notes-color', colors.notes);
-                    if (colors.calendar) document.body.style.setProperty('--calendar-color', colors.calendar);
-                    if (colors.quote) document.body.style.setProperty('--quote-color', colors.quote);
+                    document.body.style.setProperty('--calendar-color', colors.calendar || '#ec4899');
+                    document.body.style.setProperty('--quote-color', colors.quote || '#8b5cf6');
+                    document.body.style.setProperty('--suggestions-color', colors.suggestions || '#14b8a6');
                 } catch(e) {
                     console.error('Error loading custom colors:', e);
                 }
             }
         }
 
-        function resetTheme() {
+        async function resetTheme() {
             setTheme('grey');
+
+            // Also reset card visibility to defaults
+            localStorage.removeItem('cardVisibility');
+
+            // If default visibility is configured, apply it
+            if (Object.keys(defaultVisibility).length > 0) {
+                saveCardVisibilityState(defaultVisibility);
+            }
+
+            // Reload the page to apply visibility changes
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+
             document.getElementById('themePickerMenu').classList.remove('show');
         }
 
@@ -3410,8 +4887,9 @@ async function copyToClipboard(elementId) {
                     document.body.style.setProperty('--text-primary', colors.text);
                     document.body.style.setProperty('--url-color', colors.url);
                     document.body.style.setProperty('--notes-color', colors.notes);
-                    if (colors.calendar) document.body.style.setProperty('--calendar-color', colors.calendar);
-                    if (colors.quote) document.body.style.setProperty('--quote-color', colors.quote);
+                    document.body.style.setProperty('--calendar-color', colors.calendar || '#ec4899');
+                    document.body.style.setProperty('--quote-color', colors.quote || '#8b5cf6');
+                    document.body.style.setProperty('--suggestions-color', colors.suggestions || '#14b8a6');
                     if (colors.hoverBorder) document.body.style.setProperty('--card-hover-border', colors.hoverBorder);
                     if (colors.opacity) {
                         document.body.style.setProperty('--card-opacity', colors.opacity / 100);
@@ -3432,8 +4910,9 @@ async function copyToClipboard(elementId) {
                     document.getElementById('customText').value = colors.text;
                     document.getElementById('customUrl').value = colors.url;
                     document.getElementById('customNotes').value = colors.notes;
-                    if (colors.calendar) document.getElementById('customCalendar').value = colors.calendar;
-                    if (colors.quote) document.getElementById('customQuote').value = colors.quote;
+                    document.getElementById('customCalendar').value = colors.calendar || '#ec4899';
+                    document.getElementById('customQuote').value = colors.quote || '#8b5cf6';
+                    document.getElementById('customSuggestions').value = colors.suggestions || '#14b8a6';
                     if (colors.hoverBorder) document.getElementById('customHoverBorder').value = colors.hoverBorder;
                 } catch(e) {
                     console.error('Error loading theme colors:', e);
@@ -3540,6 +5019,10 @@ async function copyToClipboard(elementId) {
                 <div class="color-control">
                     <label>Quote</label>
                     <input type="color" id="customQuote" value="#8b5cf6" onchange="updateCustomColor('quote', this.value)">
+                </div>
+                <div class="color-control">
+                    <label>Suggestions</label>
+                    <input type="color" id="customSuggestions" value="#10b981" onchange="updateCustomColor('suggestions', this.value)">
                 </div>
                 <div class="color-control">
                     <label>Card Hover Border</label>
