@@ -1,198 +1,347 @@
 {
+  "format": "{month} {day}, {year} - {phrase}",
+  "monthNames": [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ],
   "months": {
     "1": {
       "name": "January",
       "phrases": [
-        " ",
-        "10 AM",
-        "6 PM",
-        "7 PM"
+        {
+          "endTime": "10:30",
+          "startTime": "09:00",
+          "text": "10:00 AM"
+        },
+        {
+          "endTime": "18:15",
+          "startTime": "17:00",
+          "text": "6:00 PM"
+        },
+        {
+          "endTime": "19:30",
+          "startTime": "18:20",
+          "text": "7:00 PM"
+        }
       ]
     },
     "2": {
       "name": "February",
       "phrases": [
-        " ",
-        "10 AM",
-        "6 PM",
-        "7 PM"
+        {
+          "endTime": "10:30",
+          "startTime": "09:00",
+          "text": "10:00 AM"
+        },
+        {
+          "endTime": "18:15",
+          "startTime": "17:00",
+          "text": "6:00 PM"
+        },
+        {
+          "endTime": "19:30",
+          "startTime": "18:20",
+          "text": "7:00 PM"
+        }
       ]
     },
     "3": {
       "name": "March",
       "phrases": [
-        " ",
-        "10 AM",
-        "6 PM",
-        "7 PM"
+        {
+          "endTime": "10:30",
+          "startTime": "09:00",
+          "text": "10:00 AM"
+        },
+        {
+          "endTime": "18:15",
+          "startTime": "17:00",
+          "text": "6:00 PM"
+        },
+        {
+          "endTime": "19:30",
+          "startTime": "18:20",
+          "text": "7:00 PM"
+        }
       ]
     },
     "4": {
       "name": "April",
       "phrases": [
-        " ",
-        "10 AM",
-        "6 PM",
-        "7 PM"
+        {
+          "endTime": "10:30",
+          "startTime": "09:00",
+          "text": "10:00 AM"
+        },
+        {
+          "endTime": "18:15",
+          "startTime": "17:00",
+          "text": "6:00 PM"
+        },
+        {
+          "endTime": "19:30",
+          "startTime": "18:20",
+          "text": "7:00 PM"
+        }
       ]
     },
     "5": {
       "name": "May",
       "phrases": [
-        " ",
-        "10 AM",
-        "6 PM",
-        "7 PM"
+        {
+          "endTime": "10:30",
+          "startTime": "09:00",
+          "text": "10:00 AM"
+        },
+        {
+          "endTime": "18:15",
+          "startTime": "17:00",
+          "text": "6:00 PM"
+        },
+        {
+          "endTime": "19:30",
+          "startTime": "18:20",
+          "text": "7:00 PM"
+        }
       ]
     },
     "6": {
       "name": "June",
       "phrases": [
-        " ",
-        "10 AM",
-        "6 PM",
-        "7 PM"
+        {
+          "endTime": "10:30",
+          "startTime": "09:00",
+          "text": "10:00 AM"
+        },
+        {
+          "endTime": "18:15",
+          "startTime": "17:00",
+          "text": "6:00 PM"
+        },
+        {
+          "endTime": "19:30",
+          "startTime": "18:20",
+          "text": "7:00 PM"
+        }
       ]
     },
     "7": {
       "name": "July",
       "phrases": [
-        " ",
-        "10 AM",
-        "6 PM",
-        "7 PM"
+        {
+          "endTime": "10:30",
+          "startTime": "09:00",
+          "text": "10:00 AM"
+        },
+        {
+          "endTime": "18:15",
+          "startTime": "17:00",
+          "text": "6:00 PM"
+        },
+        {
+          "endTime": "19:30",
+          "startTime": "18:20",
+          "text": "7:00 PM"
+        }
       ]
     },
     "8": {
       "name": "August",
       "phrases": [
-        " ",
-        "10 AM",
-        "6 PM",
-        "7 PM"
+        {
+          "endTime": "10:30",
+          "startTime": "09:00",
+          "text": "10:00 AM"
+        },
+        {
+          "endTime": "18:15",
+          "startTime": "17:00",
+          "text": "6:00 PM"
+        },
+        {
+          "endTime": "19:30",
+          "startTime": "18:20",
+          "text": "7:00 PM"
+        }
       ]
     },
     "9": {
       "name": "September",
       "phrases": [
-        " ",
-        "10 AM",
-        "6 PM",
-        "7 PM"
+        {
+          "endTime": "10:30",
+          "startTime": "09:00",
+          "text": "10:00 AM"
+        },
+        {
+          "endTime": "18:15",
+          "startTime": "17:00",
+          "text": "6:00 PM"
+        },
+        {
+          "endTime": "19:30",
+          "startTime": "18:20",
+          "text": "7:00 PM"
+        }
       ]
     },
     "10": {
       "name": "October",
       "phrases": [
-        " ",
-        "10 AM",
-        "6 PM",
-        "7 PM"
+        {
+          "endTime": "10:30",
+          "startTime": "09:00",
+          "text": "10:00 AM"
+        },
+        {
+          "endTime": "18:15",
+          "startTime": "17:00",
+          "text": "6:00 PM"
+        },
+        {
+          "endTime": "19:30",
+          "startTime": "18:20",
+          "text": "7:00 PM"
+        }
       ]
     },
     "11": {
       "name": "November",
       "phrases": [
-        " ",
-        "10 AM",
-        "6 PM",
-        "7 PM"
+        {
+          "endTime": "10:30",
+          "startTime": "09:00",
+          "text": "10:00 AM"
+        },
+        {
+          "endTime": "18:15",
+          "startTime": "17:00",
+          "text": "6:00 PM"
+        },
+        {
+          "endTime": "19:30",
+          "startTime": "18:20",
+          "text": "7:00 PM"
+        }
       ]
     },
     "12": {
       "name": "December",
       "phrases": [
-        " ",
-        "10 AM",
-        "6 PM",
-        "7 PM"
+        {
+          "endTime": "10:30",
+          "startTime": "09:00",
+          "text": "10:00 AM"
+        },
+        {
+          "endTime": "18:15",
+          "startTime": "17:00",
+          "text": "6:00 PM"
+        },
+        {
+          "endTime": "19:30",
+          "startTime": "18:20",
+          "text": "7:00 PM"
+        },
+        {
+          "endTime": "21:30",
+          "startTime": "20:00",
+          "text": "9:00 PM"
+        }
       ]
     }
   },
-  
-  
-  
   "quotes": [
     {
-      "text": "The Lord is my shepherd; I shall not want.",
-      "author": "Psalm 23:1"
+      "author": "Psalm 23:1",
+      "text": "The Lord is my shepherd; I shall not want."
     },
     {
-      "text": "For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope.",
-      "author": "Jeremiah 29:11"
+      "author": "Jeremiah 29:11",
+      "text": "For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope."
     },
     {
-      "text": "I can do all things through Christ who strengthens me.",
-      "author": "Philippians 4:13"
+      "author": "Philippians 4:13",
+      "text": "I can do all things through Christ who strengthens me."
     },
     {
-      "text": "The Lord is near to all who call on him, to all who call on him in truth.",
-      "author": "Psalm 145:18"
+      "author": "Psalm 145:18",
+      "text": "The Lord is near to all who call on him, to all who call on him in truth."
     },
     {
-      "text": "Cast all your anxiety on him because he cares for you.",
-      "author": "1 Peter 5:7"
+      "author": "1 Peter 5:7",
+      "text": "Cast all your anxiety on him because he cares for you."
     },
     {
-      "text": "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.",
-      "author": "Joshua 1:9"
+      "author": "Joshua 1:9",
+      "text": "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go."
     },
     {
-      "text": "The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning; great is your faithfulness.",
-      "author": "Lamentations 3:22-23"
+      "author": "Lamentations 3:22-23",
+      "text": "The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning; great is your faithfulness."
     },
     {
-      "text": "The fear of the Lord is the beginning of wisdom, and knowledge of the Holy One is understanding.",
-      "author": "Proverbs 9:10"
+      "author": "Proverbs 9:10",
+      "text": "The fear of the Lord is the beginning of wisdom, and knowledge of the Holy One is understanding."
     },
     {
-      "text": "Come to me, all you who are weary and burdened, and I will give you rest.",
-      "author": "Matthew 11:28"
+      "author": "Matthew 11:28",
+      "text": "Come to me, all you who are weary and burdened, and I will give you rest."
     },
     {
-      "text": "This is the day that the Lord has made; let us rejoice and be glad in it.",
-      "author": "Psalm 118:24"
-    },
-	{
-      "text": "Господь — Пастырь мой; я ни в чём не буду нуждаться.",
-      "author": "Псалом 22:1"
+      "author": "Psalm 118:24",
+      "text": "This is the day that the Lord has made; let us rejoice and be glad in it."
     },
     {
-      "text": "Ибо только Я знаю намерения, какие имею о вас, говорит Господь, намерения во благо, а не на зло, чтобы дать вам будущность и надежду.",
-      "author": "Иеремия 29:11"
+      "author": "Псалом 22:1",
+      "text": "Господь — Пастырь мой; я ни в чём не буду нуждаться."
     },
     {
-      "text": "Всё могу в укрепляющем меня Иисусе Христе.",
-      "author": "Филиппийцам 4:13"
+      "author": "Иеремия 29:11",
+      "text": "Ибо только Я знаю намерения, какие имею о вас, говорит Господь, намерения во благо, а не на зло, чтобы дать вам будущность и надежду."
     },
     {
-      "text": "Близок Господь ко всем призывающим Его, ко всем призывающим Его в истине.",
-      "author": "Псалом 144:18"
+      "author": "Филиппийцам 4:13",
+      "text": "Всё могу в укрепляющем меня Иисусе Христе."
     },
     {
-      "text": "Все заботы ваши возложите на Него, ибо Он печётся о вас.",
-      "author": "1 Петра 5:7"
+      "author": "Псалом 144:18",
+      "text": "Близок Господь ко всем призывающим Его, ко всем призывающим Его в истине."
     },
     {
-      "text": "Будь тверд и мужественен; не страшись и не ужасайся, ибо с тобою Господь, Бог твой, везде, куда ни пойдёшь.",
-      "author": "Иисус Навин 1:9"
+      "author": "1 Петра 5:7",
+      "text": "Все заботы ваши возложите на Него, ибо Он печётся о вас."
     },
     {
-      "text": "Милость Господня не истощилась, не окончилась милосердие Его; оно обновляется каждое утро; велика верность Твоя!",
-      "author": "Плач Иеремии 3:22-23"
+      "author": "Иисус Навин 1:9",
+      "text": "Будь тверд и мужественен; не страшись и не ужасайся, ибо с тобою Господь, Бог твой, везде, куда ни пойдёшь."
     },
     {
-      "text": "Начало мудрости — страх Господень, и познание Святого — разум.",
-      "author": "Притчи 9:10"
+      "author": "Плач Иеремии 3:22-23",
+      "text": "Милость Господня не истощилась, не окончилась милосердие Его; оно обновляется каждое утро; велика верность Твоя!"
     },
     {
-      "text": "Придите ко Мне все труждающиеся и обременённые, и Я успокою вас.",
-      "author": "Матфея 11:28"
+      "author": "Притчи 9:10",
+      "text": "Начало мудрости — страх Господень, и познание Святого — разум."
     },
     {
-      "text": "Сей день сотворил Господь; возрадуемся и возвеселимся в оный.",
-      "author": "Псалом 117:24"
+      "author": "Матфея 11:28",
+      "text": "Придите ко Мне все труждающиеся и обременённые, и Я успокою вас."
+    },
+    {
+      "author": "Псалом 117:24",
+      "text": "Сей день сотворил Господь; возрадуемся и возвеселимся в оный."
     }
-  ]
- 
+  ],
+  "siteTitle": "My Home"
 }

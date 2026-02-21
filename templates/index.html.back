@@ -212,124 +212,6 @@ body::before {
     box-shadow: 0 4px 6px -1px var(--card-shadow), 0 2px 4px -1px var(--card-shadow);
 }
 
-/* URL Group Card Styles */
-.service-card.url-group {
-    padding: 0;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    transition: none;
-    overflow: visible;
-}
-
-.service-card.url-group:hover {
-    transform: none;
-    box-shadow: none;
-    border-color: transparent;
-    background: transparent;
-}
-
-.service-card.url-group::before {
-    display: none;
-}
-
-.service-card.url-group:hover::before {
-    display: none;
-}
-
-.service-card.url-group .service-top-row {
-    justify-content: flex-end;
-}
-
-.service-card.url-group .card-content {
-    margin: 0;
-    padding: 0;
-}
-
-.service-card.url-group .url-group-container {
-    margin: 0;
-    padding: 0;
-}
-
-.url-group-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    gap: 0.75rem;
-    width: 100%;
-    padding: 0;
-}
-
-.url-group-container.count-2 {
-    grid-template-columns: 1fr 1fr;
-}
-
-.url-group-container.count-3 {
-    grid-template-columns: 1fr 1fr 1fr;
-}
-
-.url-group-container.count-4 {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-}
-
-.mini-card {
-    background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-opacity) * 100%), transparent);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 0.75rem 0.5rem;
-    margin: 2px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.mini-card:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    border-color: color-mix(in srgb, var(--card-hover-border) 50%, transparent);
-    background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-hover-opacity) * 100%), transparent);
-}
-
-.mini-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--card-hover-border), color-mix(in srgb, var(--card-hover-border) 100%, #000 30%));
-    clip-path: inset(0 round 12px 12px 0 0);
-    opacity: 0;
-    transition: opacity 0.6s ease;
-    z-index: 1;
-}
-
-.mini-card:hover::before {
-    opacity: 1;
-}
-
-        .mini-card i {
-            font-size: 1.25rem;
-            color: inherit;
-        }
-
-.mini-card span {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1.2;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
 
 
         .header {
@@ -490,23 +372,6 @@ body::before {
             height: 3px;
             background: #3b82f6;
             z-index: 1000;
-        }
-
-        .service-card.drag-over-bottom {
-            box-shadow: 0 3px 0 0 #3b82f6;
-        }
-
-        body.is-dragging .service-card {
-            transition: none !important;
-        }
-        body.is-dragging .service-card:hover {
-            transform: none !important;
-            box-shadow: 0 4px 6px -1px var(--card-shadow), 0 2px 4px -1px var(--card-shadow) !important;
-            border-color: var(--card-border) !important;
-            background: color-mix(in srgb, var(--bg-gradient-1) calc(var(--card-opacity) * 100%), transparent) !important;
-        }
-        body.is-dragging .service-card:hover::before {
-            transform: translateX(-100%) !important;
         }
 
         .service-header {
@@ -1227,8 +1092,6 @@ body::before {
             padding: 2rem;
             width: 90%;
             max-width: 500px;
-            max-height: 85vh;
-            overflow-y: auto;
             position: relative;
             box-shadow: 0 20px 60px var(--card-shadow);
             animation: modalSlide 0.3s ease-out;
@@ -1322,31 +1185,13 @@ body::before {
             color: #64748b;
         }
 
-        .error-message, .success-message {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 9999;
-            max-width: 400px;
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 12px;
             padding: 1rem;
-            backdrop-filter: blur(12px);
-            animation: toastSlideIn 0.3s ease-out;
-            pointer-events: auto;
-        }
-        .error-message {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            color: #ff6b6b;
-        }
-        .success-message {
-            background: rgba(34, 197, 94, 0.15);
-            border: 1px solid rgba(34, 197, 94, 0.4);
-            color: #4ade80;
-        }
-        @keyframes toastSlideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            margin: 1rem 0;
+            color: #dc2626;
         }
 
         .type-specific-fields {
@@ -2054,24 +1899,28 @@ select[id*="phrase-"] {
     <div class="modal" id="serviceModal">
         <div class="modal-content">
             <h2 id="modalTitle">Add Tile</h2>
-            <div id="commonFields">
-                <div class="form-group">
-                    <label for="serviceName">Tile Name</label>
-                    <input type="text" id="serviceName" placeholder="e.g., My Notes">
-                </div>
-                <div class="form-group">
-                    <label for="serviceIcon">Icon</label>
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <input type="text" id="serviceIcon" placeholder="Icon class" style="flex: 1;">
-                        <button type="button" class="btn btn-secondary" onclick="showIconPicker()" style="padding: 8px 16px;">
-                            <i class="fas fa-icons"></i> Choose
-                        </button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="serviceDescription">Description</label>
-                    <input type="text" id="serviceDescription" placeholder="Brief description">
-                </div>
+            <div class="form-group">
+                <label for="serviceName">Tile Name</label>
+                <input type="text" id="serviceName" placeholder="e.g., My Notes">
+				
+				
+				
+<div class="form-group">
+    <label for="serviceIcon">Icon</label>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <input type="text" id="serviceIcon" placeholder="Icon class"  style="flex: 1;">
+        <button type="button" class="btn btn-secondary" onclick="showIconPicker()" style="padding: 8px 16px;">
+            <i class="fas fa-icons"></i> Choose
+        </button>
+    </div>
+</div>
+				
+				
+				
+            </div>
+            <div class="form-group">
+                <label for="serviceDescription">Description</label>
+                <input type="text" id="serviceDescription" placeholder="Brief description">
             </div>
             <div class="form-group">
                 <label for="serviceType">Tile Type</label>
@@ -2085,7 +1934,6 @@ select[id*="phrase-"] {
                     <option value="suggestions">Suggestions Board</option>
                     <option value="clipboard">Clipboard Sync NShare</option>
                     <option value="fileshare">File Share NSync</option>
-                    <option value="url-group">URL Group</option>
                 </select>
             </div>
             
@@ -2177,95 +2025,6 @@ select[id*="phrase-"] {
                 <div class="form-group">
                     <label for="fileshareMaxFiles">Max Files to Display</label>
                     <input type="number" id="fileshareMaxFiles" value="5" min="1" max="20">
-                </div>
-            </div>
-
-            <!-- URL Group Type Fields -->
-            <div class="type-specific-fields" id="url-groupFields">
-                <div class="form-group">
-                    <small>URL Group displays 2-4 mini URL cards in a row.</small>
-                </div>
-                <div id="urlGroupServicesContainer">
-                    <!-- Mini service 1 -->
-                    <div class="url-group-service" data-index="0">
-                        <div class="form-group">
-                            <label>Service 1 Name</label>
-                            <input type="text" class="url-group-name" placeholder="e.g., YouTube">
-                        </div>
-                        <div class="form-group">
-                            <label>Service 1 URL</label>
-                            <input type="text" class="url-group-url" placeholder="e.g., https://youtube.com">
-                        </div>
-                        <div class="form-group">
-                            <label>Service 1 Icon</label>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <input type="text" class="url-group-icon" placeholder="e.g., fas fa-youtube" style="flex: 1;">
-                                <button type="button" class="btn btn-secondary" onclick="showUrlGroupIconPicker(0)" style="padding: 8px 16px;">
-                                    <i class="fas fa-icons"></i> Choose
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Mini service 2 -->
-                    <div class="url-group-service" data-index="1">
-                        <div class="form-group">
-                            <label>Service 2 Name</label>
-                            <input type="text" class="url-group-name" placeholder="e.g., Netflix">
-                        </div>
-                        <div class="form-group">
-                            <label>Service 2 URL</label>
-                            <input type="text" class="url-group-url" placeholder="e.g., https://netflix.com">
-                        </div>
-                        <div class="form-group">
-                            <label>Service 2 Icon</label>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <input type="text" class="url-group-icon" placeholder="e.g., fas fa-film" style="flex: 1;">
-                                <button type="button" class="btn btn-secondary" onclick="showUrlGroupIconPicker(1)" style="padding: 8px 16px;">
-                                    <i class="fas fa-icons"></i> Choose
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Mini service 3 (optional) -->
-                    <div class="url-group-service" data-index="2">
-                        <div class="form-group">
-                            <label>Service 3 Name (Optional)</label>
-                            <input type="text" class="url-group-name" placeholder="e.g., Spotify">
-                        </div>
-                        <div class="form-group">
-                            <label>Service 3 URL (Optional)</label>
-                            <input type="text" class="url-group-url" placeholder="e.g., https://spotify.com">
-                        </div>
-                        <div class="form-group">
-                            <label>Service 3 Icon (Optional)</label>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <input type="text" class="url-group-icon" placeholder="e.g., fas fa-music" style="flex: 1;">
-                                <button type="button" class="btn btn-secondary" onclick="showUrlGroupIconPicker(2)" style="padding: 8px 16px;">
-                                    <i class="fas fa-icons"></i> Choose
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Mini service 4 (optional) -->
-                    <div class="url-group-service" data-index="3">
-                        <div class="form-group">
-                            <label>Service 4 Name (Optional)</label>
-                            <input type="text" class="url-group-name" placeholder="e.g., Disney+">
-                        </div>
-                        <div class="form-group">
-                            <label>Service 4 URL (Optional)</label>
-                            <input type="text" class="url-group-url" placeholder="e.g., https://disneyplus.com">
-                        </div>
-                        <div class="form-group">
-                            <label>Service 4 Icon (Optional)</label>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <input type="text" class="url-group-icon" placeholder="e.g., fas fa-star" style="flex: 1;">
-                                <button type="button" class="btn btn-secondary" onclick="showUrlGroupIconPicker(3)" style="padding: 8px 16px;">
-                                    <i class="fas fa-icons"></i> Choose
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -2584,8 +2343,7 @@ select[id*="phrase-"] {
 			iframe: 'fas fa-window-maximize',
 			suggestions: 'fas fa-lightbulb',
 			clipboard: 'fas fa-clipboard',
-			fileshare: 'fas fa-folder-open',
-		'url-group': 'fas fa-th-large'
+			fileshare: 'fas fa-folder-open'
 		};
 
         // Check for nuke timestamp and clear local storage if needed
@@ -2863,9 +2621,6 @@ select[id*="phrase-"] {
                         loadFileshareContent(index);
                     }
                 });
-                // Auto-select phrases based on time of day
-                phraseUserOverride.clear();
-                startPhraseAutoSelect();
             }, 100);
         }
 
@@ -2908,9 +2663,6 @@ select[id*="phrase-"] {
                 case 'fileshare':
                     cardContent = createFileshareCard(service, index);
                     break;
-                case 'url-group':
-                    cardContent = createUrlGroupCard(service, index);
-                    break;
                 default:
                     cardContent = createUrlCard(service, index);
             }
@@ -2929,64 +2681,10 @@ select[id*="phrase-"] {
                     }
                 });
             }
-
-            // Show tooltip on truncated mini card names
-            if (service.type === 'url-group') {
-                card.querySelectorAll('.mini-card span').forEach(span => {
-                    span.addEventListener('mouseenter', () => {
-                        span.title = span.scrollWidth > span.clientWidth ? span.textContent : '';
-                    });
-                });
-            }
-
+            
             return card;
         }
 
-
-
-        function createUrlGroupCard(service, index) {
-            const isHidden = isCardHidden(index);
-            const groupServices = service.services || [];
-            const count = groupServices.length;
-            
-            // Generate mini cards HTML
-            let miniCardsHtml = groupServices.map((miniService, miniIndex) => `
-                <div class="mini-card" data-mini-index="${miniIndex}" onclick="openMiniCardUrl(event, '${miniService.url}')">
-                    <i class="${miniService.icon || 'fas fa-external-link-alt'}"></i>
-                    <span>${miniService.name}</span>
-                </div>
-            `).join('');
-            
-            return `
-                ${isAdminMode ? `
-                <div class="service-header">
-                    <div class="service-top-row">
-                        <div class="service-actions">
-                            <button class="action-btn edit" onclick="editService(event, ${index})" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="action-btn delete" onclick="deleteService(event, ${index})" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                ` : ''}
-                <div class="card-content" data-card-index="${index}" style="display: ${isHidden ? 'none' : 'block'}">
-                    <div class="url-group-container count-${count}">
-                        ${miniCardsHtml}
-                    </div>
-                </div>
-            `;
-        }
-
-        function openMiniCardUrl(event, url) {
-            event.stopPropagation();
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                url = 'http://' + url;
-            }
-            window.open(url, '_blank');
-        }
         function createUrlCard(service, index) {
             const isHidden = isCardHidden(index);
             return `
@@ -3835,47 +3533,6 @@ function hideIconPicker() {
     document.getElementById('iconPickerModal').classList.remove('show');
 }
 
-// Global variable to track which URL Group icon field is being edited
-let currentUrlGroupIconIndex = null;
-
-function showUrlGroupIconPicker(index) {
-    currentUrlGroupIconIndex = index;
-    document.getElementById('iconPickerModal').classList.add('show');
-
-    // Add specific event prevention for this modal (backup method)
-    setTimeout(() => {
-        const modalContent = document.querySelector('#iconPickerModal .modal-content');
-        if (modalContent) {
-            modalContent.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        }
-
-        // Add click handlers to all icon options
-        const iconOptions = document.querySelectorAll('#iconPickerModal .icon-option');
-        iconOptions.forEach(option => {
-            option.onclick = function(e) {
-                e.stopPropagation();
-                const iconClass = this.getAttribute('data-icon');
-                
-                // If editing URL Group icon, populate the correct field
-                if (currentUrlGroupIconIndex !== null) {
-                    const serviceDivs = document.querySelectorAll('.url-group-service');
-                    if (serviceDivs[currentUrlGroupIconIndex]) {
-                        serviceDivs[currentUrlGroupIconIndex].querySelector('.url-group-icon').value = iconClass;
-                    }
-                    currentUrlGroupIconIndex = null;
-                } else {
-                    // Default: populate main service icon
-                    document.getElementById('serviceIcon').value = iconClass;
-                }
-                
-                hideIconPicker();
-            };
-        });
-    }, 100);
-}
-
 
 
 
@@ -3885,94 +3542,6 @@ function getPhraseCount(monthNumber) {
     if (!calendarConfig.months || !calendarConfig.months[monthNumber]) return 3;
     const phrases = calendarConfig.months[monthNumber].phrases || [];
     return Math.max(3, phrases.length);
-}
-
-// Helper to get phrase text (handles both string and object formats)
-function getPhraseText(phrase) {
-    return typeof phrase === 'object' && phrase !== null ? phrase.text : phrase;
-}
-
-// Auto-select phrase based on current time
-const phraseUserOverride = new Map();
-let phraseAutoSelectInterval = null;
-
-function timeToMinutes(timeStr) {
-    const [h, m] = timeStr.split(':').map(Number);
-    return h * 60 + m;
-}
-
-function rangesOverlap(aStart, aEnd, bStart, bEnd) {
-    // Convert ranges to sets of "covered" half-day flags to handle overnight wraps
-    // A range covers a minute if: normal (s<e): min>=s && min<e, overnight (s>e): min>=s || min<e
-    function covers(s, e, min) {
-        if (s === e) return false;
-        return s < e ? (min >= s && min < e) : (min >= s || min < e);
-    }
-    // Sample a few points from range B and check if A covers them (and vice versa)
-    // More robust: check if any boundary of one falls inside the other
-    const points = [bStart, bEnd > 0 ? bEnd - 1 : 1439, aStart, aEnd > 0 ? aEnd - 1 : 1439];
-    for (const p of [bStart, (bEnd > 0 ? bEnd - 1 : 1439)]) {
-        if (covers(aStart, aEnd, p)) return true;
-    }
-    for (const p of [aStart, (aEnd > 0 ? aEnd - 1 : 1439)]) {
-        if (covers(bStart, bEnd, p)) return true;
-    }
-    return false;
-}
-
-function autoSelectPhrase(index) {
-    if (phraseUserOverride.get(index)) return;
-
-    const monthSelect = document.getElementById(`month-${index}`);
-    if (!monthSelect) return;
-    const monthNum = monthSelect.value;
-    if (!calendarConfig.months || !calendarConfig.months[monthNum]) return;
-
-    const phrases = calendarConfig.months[monthNum].phrases || [];
-    const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-    let matchedPhrase = '';
-    for (const phrase of phrases) {
-        if (typeof phrase !== 'object' || !phrase.startTime || !phrase.endTime) continue;
-        const start = timeToMinutes(phrase.startTime);
-        const end = timeToMinutes(phrase.endTime);
-
-        if (start < end) {
-            if (currentMinutes >= start && currentMinutes < end) {
-                matchedPhrase = phrase.text;
-                break;
-            }
-        } else if (start > end) {
-            // Overnight range (e.g., 19:00-06:00)
-            if (currentMinutes >= start || currentMinutes < end) {
-                matchedPhrase = phrase.text;
-                break;
-            }
-        }
-    }
-
-    const phraseSelect = document.getElementById(`phrase-${index}`);
-    if (phraseSelect) {
-        phraseSelect.value = matchedPhrase;
-        updateCalendarPhrase(null, index);
-    }
-}
-
-function startPhraseAutoSelect() {
-    if (phraseAutoSelectInterval) clearInterval(phraseAutoSelectInterval);
-
-    // Run auto-select for all calendar cards
-    function runAutoSelect() {
-        services.forEach((service, index) => {
-            if (service.type === 'calendar') {
-                autoSelectPhrase(index);
-            }
-        });
-    }
-
-    runAutoSelect();
-    phraseAutoSelectInterval = setInterval(runAutoSelect, 60000);
 }
 
 		function generateDayOptions(selectedDay) {
@@ -4012,16 +3581,13 @@ function startPhraseAutoSelect() {
 			if (!calendarConfig.months || !calendarConfig.months[monthNumber.toString()]) {
 				return '<option value="">No phrases available</option>';
 			}
-
+			
 			const phrases = calendarConfig.months[monthNumber.toString()].phrases || [];
 			if (phrases.length === 0) {
 				return '<option value="">No phrases available</option>';
 			}
-
-			return phrases.map(phrase => {
-				const text = getPhraseText(phrase);
-				return `<option value="${text}">${text}</option>`;
-			}).join('');
+			
+			return phrases.map(phrase => `<option value="${phrase}">${phrase}</option>`).join('');
 		}
 
 		function getMonthName(monthNumber) {
@@ -4059,11 +3625,6 @@ async function updateCalendarPhrase(event, index) {
     const year = document.getElementById(`year-${index}`).value;
     const phrase = document.getElementById(`phrase-${index}`).value || '';
 
-    // Track user override when phrase is manually changed
-    if (event && event.target && event.target.id.includes('phrase-')) {
-        phraseUserOverride.set(index, true);
-    }
-
     try {
         const formattedPhrase = formatCalendarPhrase(day, month, year, phrase);
         document.getElementById(`formatted-phrase-${index}`).textContent = formattedPhrase;
@@ -4082,10 +3643,9 @@ async function updateCalendarPhrase(event, index) {
             daySelect.setAttribute('size', newSize);
             yearSelect.setAttribute('size', newSize);
 
-            // Clear override and re-run auto-select for new month
-            phraseUserOverride.delete(index);
+            // Clear selection and update display without phrase
             phraseSelect.value = '';
-            autoSelectPhrase(index);
+            updateCalendarPhrase(null, index);
         }
     } catch (error) {
         //console.error('Failed to update calendar phrase:', error);
@@ -4095,7 +3655,6 @@ async function updateCalendarPhrase(event, index) {
 function clearPhrase(index) {
     const phraseSelect = document.getElementById(`phrase-${index}`);
     phraseSelect.value = '';
-    phraseUserOverride.set(index, true);
     updateCalendarPhrase(null, index);
 }
 
@@ -4174,12 +3733,6 @@ async function copyToClipboard(elementId) {
             if (fieldsElement) {
                 fieldsElement.classList.add('show');
             }
-            
-            // Show/hide common fields based on type
-            const commonFields = document.getElementById('commonFields');
-            if (commonFields) {
-                commonFields.style.display = serviceType === 'url-group' ? 'none' : 'block';
-            }
         }
 
         // Drag and drop functions (admin only)
@@ -4208,7 +3761,6 @@ async function copyToClipboard(elementId) {
             
             draggedService = e.target;
             e.target.classList.add('dragging');
-            document.body.classList.add('is-dragging');
             e.dataTransfer.effectAllowed = 'move';
         }
 
@@ -4216,7 +3768,6 @@ async function copyToClipboard(elementId) {
             if (!e.target.classList.contains('service-card')) return;
 
             e.target.classList.remove('dragging');
-            document.body.classList.remove('is-dragging');
             draggedService = null;
 
             // Clean up all drag indicators
@@ -4226,9 +3777,6 @@ async function copyToClipboard(elementId) {
 
             document.querySelectorAll('.service-card.drag-over').forEach(card => {
                 card.classList.remove('drag-over');
-            });
-            document.querySelectorAll('.service-card.drag-over-bottom').forEach(card => {
-                card.classList.remove('drag-over-bottom');
             });
         }
 
@@ -4258,12 +3806,9 @@ async function copyToClipboard(elementId) {
 
             const servicesList = e.currentTarget;
 
-            // Remove previous drag-over highlights
+            // Remove previous drag-over highlight
             document.querySelectorAll('.service-card.drag-over').forEach(el => {
                 el.classList.remove('drag-over');
-            });
-            document.querySelectorAll('.service-card.drag-over-bottom').forEach(el => {
-                el.classList.remove('drag-over-bottom');
             });
 
             // Find where the card would be inserted
@@ -4277,7 +3822,11 @@ async function copyToClipboard(elementId) {
                 // Will be inserted at the end, highlight the last card
                 const cards = servicesList.querySelectorAll('.service-card:not(.dragging)');
                 if (cards.length > 0) {
-                    cards[cards.length - 1].classList.add('drag-over-bottom');
+                    const lastCard = cards[cards.length - 1];
+                    lastCard.style.borderBottom = '3px solid var(--url-color)';
+                    setTimeout(() => {
+                        lastCard.style.borderBottom = '';
+                    }, 100);
                 }
             }
         }
@@ -4289,9 +3838,6 @@ async function copyToClipboard(elementId) {
             // Remove all drag-over highlights
             document.querySelectorAll('.service-card.drag-over').forEach(el => {
                 el.classList.remove('drag-over');
-            });
-            document.querySelectorAll('.service-card.drag-over-bottom').forEach(el => {
-                el.classList.remove('drag-over-bottom');
             });
 
             const servicesList = e.currentTarget;
@@ -4322,12 +3868,9 @@ async function copyToClipboard(elementId) {
 
         async function handleDrop(e) {
             e.preventDefault();
-
+            
             const column = e.target.closest('.column');
             if (!column || !draggedService) return;
-
-            // If dropped on services-list, handleColumnDrop already handled reordering
-            if (e.target.closest('.services-list')) return;
             
             const newColumn = parseInt(column.dataset.column);
             const serviceIndex = parseInt(draggedService.dataset.serviceIndex);
@@ -4397,13 +3940,6 @@ async function copyToClipboard(elementId) {
             document.getElementById('iframeWidth').value = 'auto';
             document.getElementById('iframeHeight').value = 'auto';
             
-            // Reset URL Group fields
-            document.querySelectorAll('.url-group-service').forEach(div => {
-                div.querySelector('.url-group-name').value = '';
-                div.querySelector('.url-group-url').value = '';
-                div.querySelector('.url-group-icon').value = '';
-            });
-            
             handleTypeChange();
             document.getElementById('serviceModal').classList.add('show');
             
@@ -4453,18 +3989,6 @@ async function copyToClipboard(elementId) {
                     document.getElementById('fileshareServerUrl').value = service.fileshare_server_url || 'http://192.168.2.8';
                     document.getElementById('fileshareMaxFiles').value = service.fileshare_max_files || 5;
                     break;
-                case 'url-group':
-                    if (service.services && service.services.length > 0) {
-                        const serviceDivs = document.querySelectorAll('.url-group-service');
-                        service.services.forEach((miniService, idx) => {
-                            if (serviceDivs[idx]) {
-                                serviceDivs[idx].querySelector('.url-group-name').value = miniService.name || '';
-                                serviceDivs[idx].querySelector('.url-group-url').value = miniService.url || '';
-                                serviceDivs[idx].querySelector('.url-group-icon').value = miniService.icon || '';
-                            }
-                        });
-                    }
-                    break;
             }
 
             handleTypeChange();
@@ -4491,7 +4015,7 @@ async function copyToClipboard(elementId) {
             const column = parseInt(document.getElementById('serviceColumn').value);
 
 
-            if (type !== 'url-group' && !name) {
+            if (!name) {
                 alert('Please fill in the tile name.');
                 return;
             }
@@ -4555,29 +4079,6 @@ async function copyToClipboard(elementId) {
                     }
                     service.fileshare_server_url = fileshareServerUrl;
                     service.fileshare_max_files = parseInt(document.getElementById('fileshareMaxFiles').value) || 5;
-                    break;
-                case 'url-group':
-                    const urlGroupServices = [];
-                    const serviceDivs = document.querySelectorAll('.url-group-service');
-                    serviceDivs.forEach(div => {
-                        const name = div.querySelector('.url-group-name').value.trim();
-                        const url = div.querySelector('.url-group-url').value.trim();
-                        const icon = div.querySelector('.url-group-icon').value.trim();
-                        if (name && url) {
-                            urlGroupServices.push({
-                                name: name,
-                                url: url,
-                                icon: icon || 'fas fa-external-link-alt'
-                            });
-                        }
-                    });
-                    
-                    if (urlGroupServices.length < 2) {
-                        alert('Please fill in at least 2 services for the URL Group.');
-                        return;
-                    }
-                    
-                    service.services = urlGroupServices;
                     break;
             }
 
@@ -4776,7 +4277,7 @@ async function copyToClipboard(elementId) {
 
             // Month Phrases Sections - 5 columns with buttons in remaining grid space
             html += `
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.5rem;">
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem;">
             `;
 
             defaultMonthNames.forEach((defaultName, index) => {
@@ -4785,36 +4286,10 @@ async function copyToClipboard(elementId) {
                 const phrases = monthData.phrases || [];
                 const displayName = currentMonthNames[index] || defaultName;
 
-                let phrasesHtml = '';
-                phrases.forEach((phrase, pIdx) => {
-                    const text = getPhraseText(phrase);
-                    const startTime = (typeof phrase === 'object' && phrase.startTime) ? phrase.startTime : '';
-                    const endTime = (typeof phrase === 'object' && phrase.endTime) ? phrase.endTime : '';
-                    phrasesHtml += `
-                        <div class="phrase-row" style="margin-bottom: 5px; border-bottom: 1px solid color-mix(in srgb, var(--card-border) 50%, transparent); padding-bottom: 5px;">
-                            <div style="display: flex; gap: 3px; align-items: center; margin-bottom: 2px;">
-                                <input type="text" class="phrase-text-${monthNum}" value="${text}" placeholder="Phrase" style="flex: 1; min-width: 0; padding: 3px; border: 1px solid var(--card-border); border-radius: 3px; background: transparent; color: var(--text-primary); font-size: 0.75rem;">
-                                <button onclick="this.closest('.phrase-row').remove()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 2px 4px; font-size: 0.8rem;" title="Remove phrase"><i class="fas fa-times"></i></button>
-                            </div>
-                            <div style="display: flex; gap: 3px; align-items: center;">
-                                <input type="time" class="phrase-start-${monthNum}" value="${startTime}" title="Auto-select start time" style="flex: 1; min-width: 0; padding: 2px; border: 1px solid var(--card-border); border-radius: 3px; background: transparent; color: var(--text-primary); font-size: 0.7rem;">
-                                <span style="font-size: 0.65rem; color: var(--text-secondary);">to</span>
-                                <input type="time" class="phrase-end-${monthNum}" value="${endTime}" title="Auto-select end time" style="flex: 1; min-width: 0; padding: 2px; border: 1px solid var(--card-border); border-radius: 3px; background: transparent; color: var(--text-primary); font-size: 0.7rem;">
-                                <button onclick="copyTimeToSimilar(this)" style="background: none; border: none; color: var(--calendar-color); cursor: pointer; padding: 2px 4px; font-size: 0.7rem; flex-shrink: 0;" title="Copy time to same phrase in other months"><i class="fas fa-clock"></i></button>
-                            </div>
-                        </div>
-                    `;
-                });
-
                 html += `
                     <div style="border: 1px solid var(--card-border); border-radius: 4px; padding: 0.5rem;">
                         <h4 style="margin: 0 0 0.4rem 0; color: var(--calendar-color); font-size: 0.85rem;">${displayName}</h4>
-                        <div id="phrase-list-${monthNum}">
-                            ${phrasesHtml}
-                        </div>
-                        <button onclick="addPhraseRow('${monthNum}')" style="width: 100%; padding: 3px; margin-top: 3px; background: color-mix(in srgb, var(--calendar-color) 15%, transparent); border: 1px dashed var(--card-border); border-radius: 3px; color: var(--calendar-color); cursor: pointer; font-size: 0.75rem;">
-                            <i class="fas fa-plus"></i> Add
-                        </button>
+                        <textarea id="phrases-${monthNum}" rows="5" style="width: 100%; padding: 4px; border: 1px solid var(--card-border); border-radius: 4px; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 0.8rem; resize: vertical;">${phrases.join('\n')}</textarea>
                     </div>
                 `;
             });
@@ -4822,12 +4297,8 @@ async function copyToClipboard(elementId) {
             // Add buttons in remaining grid cells
             html += `
                 <div style="display: flex; flex-direction: column; gap: 0.5rem; justify-content: flex-end;">
-                    <div id="calendarEditorNotif" style="font-size: 0.8rem; border-radius: 4px; padding: 0; text-align: center; word-break: break-word;"></div>
                     <button class="btn btn-primary" onclick="saveCalendarPhrases()" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, var(--calendar-color) 0%, color-mix(in srgb, var(--calendar-color) 100%, #000 20%) 100%); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
                         <i class="fas fa-save"></i> Save
-                    </button>
-                    <button onclick="openBulkEdit()" style="width: 100%; padding: 0.75rem; background: color-mix(in srgb, var(--calendar-color) 20%, transparent); color: var(--text-primary); border: 1px solid var(--calendar-color); border-radius: 4px; cursor: pointer; font-weight: 600;">
-                        <i class="fas fa-code"></i> Bulk Edit
                     </button>
                     <button class="btn btn-secondary" onclick="hideCalendarPhrasesModal()" style="width: 100%; padding: 0.75rem; background: color-mix(in srgb, var(--text-secondary) 20%, transparent); color: var(--text-primary); border: 1px solid var(--card-border); border-radius: 4px; cursor: pointer;">
                         <i class="fas fa-times"></i> Cancel
@@ -4844,202 +4315,6 @@ async function copyToClipboard(elementId) {
             document.getElementById('calendarPhrasesModal').classList.remove('show');
         }
 
-        function showCalendarEditorNotif(msg, isError) {
-            const el = document.getElementById('calendarEditorNotif');
-            if (!el) return;
-            el.textContent = msg;
-            el.style.padding = '0.5rem';
-            el.style.color = isError ? '#ff6b6b' : '#4caf50';
-            el.style.background = isError ? 'color-mix(in srgb, #ff6b6b 10%, transparent)' : 'color-mix(in srgb, #4caf50 10%, transparent)';
-            el.style.border = `1px solid ${isError ? '#ff6b6b' : '#4caf50'}`;
-            clearTimeout(el._timeout);
-            el._timeout = setTimeout(() => { el.textContent = ''; el.style.padding = '0'; el.style.background = 'none'; el.style.border = 'none'; }, 5000);
-        }
-
-        function addPhraseRow(monthNum) {
-            const container = document.getElementById(`phrase-list-${monthNum}`);
-            const row = document.createElement('div');
-            row.className = 'phrase-row';
-            row.style.cssText = 'margin-bottom: 5px; border-bottom: 1px solid color-mix(in srgb, var(--card-border) 50%, transparent); padding-bottom: 5px;';
-            row.innerHTML = `
-                <div style="display: flex; gap: 3px; align-items: center; margin-bottom: 2px;">
-                    <input type="text" class="phrase-text-${monthNum}" value="" placeholder="Phrase" style="flex: 1; min-width: 0; padding: 3px; border: 1px solid var(--card-border); border-radius: 3px; background: transparent; color: var(--text-primary); font-size: 0.75rem;">
-                    <button onclick="this.closest('.phrase-row').remove()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 2px 4px; font-size: 0.8rem;" title="Remove phrase"><i class="fas fa-times"></i></button>
-                </div>
-                <div style="display: flex; gap: 3px; align-items: center;">
-                    <input type="time" class="phrase-start-${monthNum}" value="" title="Auto-select start time" style="flex: 1; min-width: 0; padding: 2px; border: 1px solid var(--card-border); border-radius: 3px; background: transparent; color: var(--text-primary); font-size: 0.7rem;">
-                    <span style="font-size: 0.65rem; color: var(--text-secondary);">to</span>
-                    <input type="time" class="phrase-end-${monthNum}" value="" title="Auto-select end time" style="flex: 1; min-width: 0; padding: 2px; border: 1px solid var(--card-border); border-radius: 3px; background: transparent; color: var(--text-primary); font-size: 0.7rem;">
-                    <button onclick="copyTimeToSimilar(this)" style="background: none; border: none; color: var(--calendar-color); cursor: pointer; padding: 2px 4px; font-size: 0.7rem; flex-shrink: 0;" title="Copy time to same phrase in other months"><i class="fas fa-clock"></i></button>
-                </div>
-            `;
-            container.appendChild(row);
-        }
-
-        function copyTimeToSimilar(btn) {
-            const row = btn.closest('.phrase-row');
-            const textInput = row.querySelector('input[type="text"]');
-            const startInput = row.querySelectorAll('input[type="time"]')[0];
-            const endInput = row.querySelectorAll('input[type="time"]')[1];
-            const phraseText = textInput.value.trim();
-            const startVal = startInput.value;
-            const endVal = endInput.value;
-
-            if (!phraseText) return;
-
-            let count = 0;
-            for (let m = 1; m <= 12; m++) {
-                const textInputs = document.querySelectorAll(`.phrase-text-${m}`);
-                const startInputs = document.querySelectorAll(`.phrase-start-${m}`);
-                const endInputs = document.querySelectorAll(`.phrase-end-${m}`);
-                textInputs.forEach((input, i) => {
-                    if (input.value.trim() === phraseText && input !== textInput) {
-                        startInputs[i].value = startVal;
-                        endInputs[i].value = endVal;
-                        count++;
-                    }
-                });
-            }
-
-            // Brief visual feedback
-            const orig = btn.style.color;
-            btn.style.color = 'var(--success-color, #4caf50)';
-            btn.title = `Copied to ${count} other month(s)`;
-            setTimeout(() => { btn.style.color = orig; btn.title = 'Copy time to same phrase in other months'; }, 1500);
-        }
-
-        function openBulkEdit() {
-            const defaultMonthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                                      'July', 'August', 'September', 'October', 'November', 'December'];
-            const monthNames = calendarConfig.monthNames || defaultMonthNames;
-            let text = '';
-
-            for (let m = 1; m <= 12; m++) {
-                const textInputs = document.querySelectorAll(`.phrase-text-${m}`);
-                const startInputs = document.querySelectorAll(`.phrase-start-${m}`);
-                const endInputs = document.querySelectorAll(`.phrase-end-${m}`);
-                text += `[${monthNames[m - 1]}]\n`;
-                textInputs.forEach((input, i) => {
-                    const t = input.value.trim();
-                    if (!t) return;
-                    const s = startInputs[i] ? startInputs[i].value : '';
-                    const e = endInputs[i] ? endInputs[i].value : '';
-                    if (s && e) {
-                        text += `${t} | ${s} - ${e}\n`;
-                    } else {
-                        text += `${t}\n`;
-                    }
-                });
-                text += '\n';
-            }
-
-            const editor = document.getElementById('calendarPhrasesEditor');
-            const overlay = document.createElement('div');
-            overlay.id = 'bulkEditOverlay';
-            overlay.style.cssText = 'position: absolute; inset: 0; background: var(--bg-gradient-1, #1a1a2e); border-radius: 12px; display: flex; flex-direction: column; padding: 1rem; z-index: 10;';
-            overlay.innerHTML = `
-                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
-                    Format: <code>[Month]</code> header, then <code>phrase</code> or <code>phrase | HH:MM - HH:MM</code> per line
-                </div>
-                <textarea id="bulkEditTextarea" style="flex: 1; width: 100%; padding: 0.75rem; border: 1px solid var(--card-border); border-radius: 6px; background: transparent; color: var(--text-primary); font-family: monospace; font-size: 0.85rem; resize: none; tab-size: 4;">${text.trimEnd()}</textarea>
-                <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem; justify-content: flex-end;">
-                    <button onclick="closeBulkEdit()" style="padding: 0.5rem 1rem; background: color-mix(in srgb, var(--text-secondary) 20%, transparent); color: var(--text-primary); border: 1px solid var(--card-border); border-radius: 4px; cursor: pointer;">
-                        Cancel
-                    </button>
-                    <button onclick="applyBulkEdit()" style="padding: 0.5rem 1rem; background: linear-gradient(135deg, var(--calendar-color) 0%, color-mix(in srgb, var(--calendar-color) 100%, #000 20%) 100%); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
-                        <i class="fas fa-check"></i> Apply
-                    </button>
-                </div>
-            `;
-            editor.style.position = 'relative';
-            editor.appendChild(overlay);
-        }
-
-        function closeBulkEdit() {
-            const overlay = document.getElementById('bulkEditOverlay');
-            if (overlay) overlay.remove();
-        }
-
-        function applyBulkEdit() {
-            const textarea = document.getElementById('bulkEditTextarea');
-            const lines = textarea.value.split('\n');
-            const defaultMonthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                                      'July', 'August', 'September', 'October', 'November', 'December'];
-            const monthNames = calendarConfig.monthNames || defaultMonthNames;
-
-            // Parse into month -> phrases map
-            const parsed = {};
-            let currentMonth = null;
-
-            for (const line of lines) {
-                const trimmed = line.trim();
-                if (!trimmed) continue;
-
-                // Check for [MonthName] header
-                const headerMatch = trimmed.match(/^\[(.+)\]$/);
-                if (headerMatch) {
-                    const name = headerMatch[1].trim();
-                    const monthIdx = monthNames.findIndex(m => m.toLowerCase() === name.toLowerCase());
-                    if (monthIdx !== -1) {
-                        currentMonth = (monthIdx + 1).toString();
-                        if (!parsed[currentMonth]) parsed[currentMonth] = [];
-                    }
-                    continue;
-                }
-
-                if (!currentMonth) continue;
-
-                // Parse phrase line: "text | HH:MM - HH:MM" or just "text"
-                const parts = trimmed.split('|');
-                const phraseText = parts[0].trim();
-                let startTime = '', endTime = '';
-
-                if (parts.length > 1) {
-                    const timePart = parts[1].trim();
-                    const timeMatch = timePart.match(/(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/);
-                    if (timeMatch) {
-                        startTime = timeMatch[1];
-                        endTime = timeMatch[2];
-                    }
-                }
-
-                if (phraseText) {
-                    parsed[currentMonth].push({ text: phraseText, startTime, endTime });
-                }
-            }
-
-            // Rebuild phrase lists in the UI
-            for (let m = 1; m <= 12; m++) {
-                const monthNum = m.toString();
-                const container = document.getElementById(`phrase-list-${monthNum}`);
-                if (!container) continue;
-
-                const phrases = parsed[monthNum] || [];
-                container.innerHTML = '';
-
-                phrases.forEach(phrase => {
-                    const row = document.createElement('div');
-                    row.className = 'phrase-row';
-                    row.style.cssText = 'margin-bottom: 5px; border-bottom: 1px solid color-mix(in srgb, var(--card-border) 50%, transparent); padding-bottom: 5px;';
-                    row.innerHTML = `
-                        <div style="display: flex; gap: 3px; align-items: center; margin-bottom: 2px;">
-                            <input type="text" class="phrase-text-${monthNum}" value="${phrase.text}" placeholder="Phrase" style="flex: 1; min-width: 0; padding: 3px; border: 1px solid var(--card-border); border-radius: 3px; background: transparent; color: var(--text-primary); font-size: 0.75rem;">
-                            <button onclick="this.closest('.phrase-row').remove()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 2px 4px; font-size: 0.8rem;" title="Remove phrase"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div style="display: flex; gap: 3px; align-items: center;">
-                            <input type="time" class="phrase-start-${monthNum}" value="${phrase.startTime}" title="Auto-select start time" style="flex: 1; min-width: 0; padding: 2px; border: 1px solid var(--card-border); border-radius: 3px; background: transparent; color: var(--text-primary); font-size: 0.7rem;">
-                            <span style="font-size: 0.65rem; color: var(--text-secondary);">to</span>
-                            <input type="time" class="phrase-end-${monthNum}" value="${phrase.endTime}" title="Auto-select end time" style="flex: 1; min-width: 0; padding: 2px; border: 1px solid var(--card-border); border-radius: 3px; background: transparent; color: var(--text-primary); font-size: 0.7rem;">
-                            <button onclick="copyTimeToSimilar(this)" style="background: none; border: none; color: var(--calendar-color); cursor: pointer; padding: 2px 4px; font-size: 0.7rem; flex-shrink: 0;" title="Copy time to same phrase in other months"><i class="fas fa-clock"></i></button>
-                        </div>
-                    `;
-                    container.appendChild(row);
-                });
-            }
-
-            closeBulkEdit();
-        }
-
         async function saveCalendarPhrases() {
             const months = {};
             const defaultMonthNames = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -5054,7 +4329,7 @@ async function copyToClipboard(elementId) {
 
             // Validate month names (should be 12)
             if (customMonthNames.length !== 12) {
-                showCalendarEditorNotif('Please provide exactly 12 month names separated by commas', true);
+                showError('Please provide exactly 12 month names separated by commas');
                 return;
             }
 
@@ -5064,47 +4339,14 @@ async function copyToClipboard(elementId) {
 
             customMonthNames.forEach((monthName, index) => {
                 const monthNum = (index + 1).toString();
-                const textInputs = document.querySelectorAll(`.phrase-text-${monthNum}`);
-                const startInputs = document.querySelectorAll(`.phrase-start-${monthNum}`);
-                const endInputs = document.querySelectorAll(`.phrase-end-${monthNum}`);
-                const phrases = [];
-
-                textInputs.forEach((input, i) => {
-                    const text = input.value.trim();
-                    if (text) {
-                        phrases.push({
-                            text: text,
-                            startTime: startInputs[i] ? startInputs[i].value : '',
-                            endTime: endInputs[i] ? endInputs[i].value : ''
-                        });
-                    }
-                });
+                const textarea = document.getElementById(`phrases-${monthNum}`);
+                const phrases = textarea.value.split('\n').filter(p => p.trim() !== '');
 
                 months[monthNum] = {
                     name: monthName,
                     phrases: phrases
                 };
             });
-
-            // Validate no overlapping time ranges within each month
-            for (const [monthNum, monthData] of Object.entries(months)) {
-                const scheduled = monthData.phrases.filter(p => p.startTime && p.endTime);
-                for (let i = 0; i < scheduled.length; i++) {
-                    const a = scheduled[i];
-                    const aStart = timeToMinutes(a.startTime);
-                    const aEnd = timeToMinutes(a.endTime);
-                    for (let j = i + 1; j < scheduled.length; j++) {
-                        const b = scheduled[j];
-                        const bStart = timeToMinutes(b.startTime);
-                        const bEnd = timeToMinutes(b.endTime);
-
-                        if (rangesOverlap(aStart, aEnd, bStart, bEnd)) {
-                            showCalendarEditorNotif(`${monthData.name}: "${a.text}" (${a.startTime}-${a.endTime}) overlaps with "${b.text}" (${b.startTime}-${b.endTime})`, true);
-                            return;
-                        }
-                    }
-                }
-            }
 
             calendarConfig.months = months;
 
@@ -5116,9 +4358,9 @@ async function copyToClipboard(elementId) {
 
                 hideCalendarPhrasesModal();
                 renderServices();
-                showCalendarEditorNotif('Calendar settings saved successfully!', false);
+                showSuccess('Calendar settings saved successfully!');
             } catch (error) {
-                showCalendarEditorNotif('Failed to save calendar settings', true);
+                showError('Failed to save calendar settings');
             }
         }
 
@@ -5223,13 +4465,13 @@ async function copyToClipboard(elementId) {
 
         function showError(message) {
             document.querySelectorAll('.error-message').forEach(el => el.remove());
-
+            
             const errorDiv = document.createElement('div');
             errorDiv.className = 'error-message';
             errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
-
-            document.body.appendChild(errorDiv);
-
+            
+            document.querySelector('.container').insertBefore(errorDiv, document.querySelector('.columns-container'));
+            
             setTimeout(() => {
                 if (errorDiv.parentNode) {
                     errorDiv.remove();
@@ -5239,13 +4481,21 @@ async function copyToClipboard(elementId) {
 
         function showSuccess(message) {
             document.querySelectorAll('.success-message, .error-message').forEach(el => el.remove());
-
+            
             const successDiv = document.createElement('div');
             successDiv.className = 'success-message';
+            successDiv.style.cssText = `
+                background: rgba(34, 197, 94, 0.1);
+                border: 1px solid rgba(34, 197, 94, 0.3);
+                border-radius: 12px;
+                padding: 1rem;
+                margin: 1rem 0;
+                color: #15803d;
+            `;
             successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-
-            document.body.appendChild(successDiv);
-
+            
+            document.querySelector('.container').insertBefore(successDiv, document.querySelector('.columns-container'));
+            
             setTimeout(() => {
                 if (successDiv.parentNode) {
                     successDiv.remove();
